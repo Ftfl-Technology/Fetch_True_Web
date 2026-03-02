@@ -100,10 +100,10 @@ export default function Recommendation({ moduleId }: SectionProps) {
             >
                 {mappedServices.length > 0 ? (
                     
-                    mappedServices.map((item) => (
+                    mappedServices.map((item,index) => (
                         <>
                         <div
-                            key={item.id}
+                            key={index}
                             onClick={() =>
                                 router.push(`/MainModules/Education/ServiceDetails/${item.id}?service=${encodeURIComponent(item.title)}`)
                             }

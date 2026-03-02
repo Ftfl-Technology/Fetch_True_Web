@@ -336,7 +336,7 @@ export default function TopTrendingHome() {
   /* ================= RENDER ================= */
 
   return (
-    <div className="p-4 lg:p-18">
+    <div className="p-4 lg:p-2 lg:ml-12">
       <h2 className="text-xl font-semibold mb-6">Top Trending</h2>
 
       <div className="relative w-full">

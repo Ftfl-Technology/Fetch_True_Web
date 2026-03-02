@@ -413,11 +413,11 @@ import { useMostPopularServiceByCategory }
 import { useTopTrendingServiceByCategoryIdContext }
     from "@/src/context/TopTrendingServiceByCategoryIdContext";
 import axios from "axios";
-import Image from "next/image"; // Added for img optimization
+import Image from "next/image"; 
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
-/* ---------- TYPES ---------- */
+/*  TYPES  */
 type Category = {
     _id: string;
     name: string;
@@ -436,7 +436,7 @@ type KeyValueItem = {
     _id: string;
 };
 
-// ✅ FIXED: Define the service types from each context
+
 interface BaseService {
     _id: string;
     serviceName: string;
@@ -457,7 +457,7 @@ interface BaseService {
     };
 }
 
-// ✅ FIXED: Add subcategory property to the types
+
 interface RecommendedService extends BaseService {
     subcategory?: {
         _id: string;
@@ -522,7 +522,7 @@ export type UnifiedService = {
 
 export default function CategoryPage() {
     const params = useParams();
-    // ✅ FIXED: Remove unused router and moduleId
+   
     const categoryId = params.categoryId as string;
 
     // ---------- CONTEXTS ----------
@@ -820,7 +820,7 @@ export default function CategoryPage() {
                         </div>
                     </section>
         
-                    {/* ================= NAVBAR MOBILE ================= */}
+                    {/*  NAVBAR MOBILE  */}
                     <section>
                         <div
                             className="
@@ -833,7 +833,7 @@ export default function CategoryPage() {
                                         gap-3
                                     "
                         >
-                            {/* ===== ROW 1: HEADER ===== */}
+                            {/*  ROW 1: HEADER  */}
                             <div className="flex items-center justify-between">
                                 {/* LEFT */}
                                 <div className="flex items-center gap-3 p-8 min-w-0">
@@ -893,7 +893,7 @@ export default function CategoryPage() {
                                     : "bg-white hover:bg-gray-50 border-gray-200"
                                 }`}
                         >
-                            {/* ✅ FIXED: Replace img with Next.js Image */}
+                           
                             <div className="relative w-[28px] h-[28px]">
                                 <Image
                                     src={item.image}

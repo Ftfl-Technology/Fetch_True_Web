@@ -654,12 +654,13 @@ function ServiceSection() {
 
     return (
         <div className="bg-white min-h-screen">
+            <div className="w-full md:h-3 lg:h-15 bg-gray-200">.</div>
             {/* Banner */}
-            <div className="w-full md:h-[150px] lg:h-[290px] bg-gray-300 overflow-hidden">
+            <div className="w-full md:h-[200px] lg:h-[290px] bg-gray-300 overflow-hidden">
                 <img
                     src={subscribedServices?.[0]?.bannerImages?.[0] || "/default-banner.jpg"}
                     alt="banner"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-fit"
                 />
             </div>
 

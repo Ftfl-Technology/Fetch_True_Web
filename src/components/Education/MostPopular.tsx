@@ -568,10 +568,10 @@ export default function MostPopular({ moduleId }: SectionProps) {
                 className="flex gap-4 md:gap-6 overflow-x-auto  snap-x snap-mandatory no-scrollbar"
             >
                 {mappedServices.length > 0 ? (
-                    mappedServices.map((item) => (
+                    mappedServices.map((item,index) => (
                         <>
                             <div
-                                key={item.id}
+                                key={index}
                                 onClick={() =>
                                     router.push(`/MainModules/Education/ServiceDetails/${item.id}?service=${encodeURIComponent(item.title)}`)
                                 }

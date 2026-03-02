@@ -482,8 +482,8 @@ export default function MostPopularHome() {
 
 
   return (
-    <div className="p-4 lg:p-18">
-      <h2 className="text-xl font-semibold mb-6">Most Popular</h2>
+    <div className="p-4 lg:p-8 lg:ml-2">
+      <h2 className="text-xl font-semibold mb-6 lg:ml-2">Most Popular</h2>
 
       <div className="relative w-full">
         <div

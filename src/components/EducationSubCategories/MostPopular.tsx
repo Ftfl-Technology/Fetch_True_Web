@@ -687,12 +687,7 @@ export default function MostPopular({ categoryId, moduleId, sortBy }: Props) {
                                             Trusted
                                         </span>
 
-                                        {/* Discount */}
-                                        <span className="absolute top-5 right-15 bg-white text-black text-[10px] font-semibold px-1 py-1 rounded-lg">
-                                            {/* Discount {item.discount} */}
-                                            Discount 5%
-                                        </span>
-
+                                       
                                         {/* Bookmark */}
                                         <button className="absolute top-5 right-5 bg-black/70 p-2 rounded-full">
                                             <Bookmark size={16} className="text-white" />
