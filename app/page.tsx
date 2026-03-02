@@ -1,3 +1,4 @@
+"use client";
 
 import HeaderSection from "@/src/components/Header/Header";
 import Modules from "@/src/components/Modules/Modules";
@@ -11,21 +12,27 @@ import PartnersReview from "@/src/components/Modules/PartnersReview";
 import TopTrendingCard from "@/src/components/Modules/TopTrendingCard";
 import TeamBuild from "@/src/components/Modules/TeamBuild";
 import TopRatedProvider from "@/src/components/Modules/TopRatedProvider";
+import { useState } from "react";
 
 
 
 
 export default function Home() {
+    const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <>
-      <Navbar />
+      <Navbar 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        />
       <HeaderSection />
-      <Modules />
+      <Modules/>
       <BestOffers />
-      <Recommendation />
-      <TopTrendingCard />
+      <Recommendation searchQuery={searchQuery}/>
+      <TopTrendingCard searchQuery={searchQuery}/>
       <ReferandEarn />
-      <MostlyUsed />
+      <MostlyUsed searchQuery={searchQuery}/>
       <TeamBuild />
       <TopRatedProvider />
       <LuckyDraw />

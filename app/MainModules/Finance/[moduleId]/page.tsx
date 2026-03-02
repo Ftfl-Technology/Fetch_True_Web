@@ -1,5 +1,14 @@
+"use client"
+
+import { useState } from "react";
 import FinancePageClient from "./FinancePageClient";
 
 export default function FinancePage() {
-  return <FinancePageClient />;
+    const [searchQuery, setSearchQuery] = useState("");
+  
+
+  return <FinancePageClient 
+  searchQuery={searchQuery}
+  setSearchQuery={setSearchQuery}
+  />;
 }

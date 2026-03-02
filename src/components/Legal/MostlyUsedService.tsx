@@ -11,7 +11,7 @@ import HorizontalScroll from "../ui/HorizontalScroll";
 
 
 
-export default function MostlyUsedService({moduleId}:{moduleId:string}) {
+export default function MostlyUsedService({moduleId,searchQuery}:{moduleId:string,searchQuery:string}) {
 
     const { services, loading, error, fetchMostPopular } = useMostPopular();
 
@@ -26,6 +26,17 @@ export default function MostlyUsedService({moduleId}:{moduleId:string}) {
                 categoryId: string;
               }>();
 
+         const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];            
     
   if (loading) return null;
   if (error) return null;
@@ -58,7 +69,7 @@ export default function MostlyUsedService({moduleId}:{moduleId:string}) {
             "
           >
             <HorizontalScroll>
-            {services.map((service) => (
+            {filteredServices.map((service) => (
               <Link  href={`/MainModules/Legal-Services/${moduleId}/${categoryId}/${service.serviceId}`}
               key={service.serviceId} className="snap-start shrink-0">
                <ServiceCard

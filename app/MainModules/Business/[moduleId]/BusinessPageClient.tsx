@@ -1034,6 +1034,7 @@ import Category from "@/src/components/Business/Category";
 import HighDemand from "@/src/components/Business/HighDemand";
 import Recommended from "@/src/components/Business/Recommended";
 import TopRated from "@/src/components/Business/TopRated";
+import SearchBar from "@/src/components/SearchBar/Search";
 import BusinessCard from "@/src/components/ui/BusinessCard";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { useWhyChooseService } from "@/src/context/WhyJustOurServiceContext";
@@ -1041,105 +1042,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
-// const categories = [
-//   { title: "Industrial Business", slug: "industrial-business", image: "/image/Busi1.png" },
-//   { title: "Transportation Business", slug: "transportation-business", image: "/image/Busi1.png" },
-//   { title: "Service Sector Business", slug: "service-sector-business", image: "/image/Busi1.png" },
-//   { title: "E-Commerce Business", slug: "e-commerce-business", image: "/image/Busi1.png" },
-//   { title: "Event Business", slug: "event-business", image: "/image/Busi1.png" },
-//   { title: "Industrial Business", slug: "industrial-business", image: "/image/Busi1.png" },
-//   { title: "Transportation Business", slug: "transportation-business", image: "/image/Busi1.png" },
-//   { title: "Service Sector Business", slug: "service-sector-business", image: "/image/Busi1.png" },
-// ];
 
-// const recommendedData = [
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 4.5,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//  {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 5.1,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 4.5,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 3.5,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 4.5,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 4.5,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-//   {
-//     image: "/image/image 111.png",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     earnPercent: 15,
-//     investment: "₹10L – 25L",
-//     earnings: "1.5–3L/month",
-//     rating: 5.1,
-//     roi: "25–30%",
-//     slug:"agricultural-business",
-//     detailslug:"property-buying-selling"
-//   },
-// ];
 
-export default function BusinessPageClient() {
+export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
 
     const { moduleId,categoryId } = useParams<{ categoryId:string ,moduleId: string }>();
         const { services, loading, fetchWhyServices } = useWhyChooseService();
@@ -1204,7 +1109,7 @@ export default function BusinessPageClient() {
           
           {/* Search Box */}
          <div className="relative hidden sm:block">
-  <input
+  {/* <input
     type="text"
     placeholder="Search"
     className="
@@ -1220,13 +1125,18 @@ export default function BusinessPageClient() {
       shadow-[0px_4px_4px_rgba(208,208,208,1)]
       focus:outline-none
     "
-  />
+  /> */}
 
-  <img
+  {/* <img
     src="/image/Vector (27).png"
     alt="Search"
     className="absolute left-3 top-1/2 -translate-y-1/2 w-[16px] h-[16px]"
-  />
+  /> */}
+   <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Search" 
+                  />
 </div>
 
 
@@ -1297,13 +1207,13 @@ export default function BusinessPageClient() {
 
 {/* <AllServices moduleId={moduleId} categoryId={categoryId}/> */}
 
-<Recommended moduleId={moduleId}/>
+<Recommended moduleId={moduleId} searchQuery={searchQuery}/>
 
 
 
-<HighDemand moduleId={moduleId}/>
+<HighDemand moduleId={moduleId} searchQuery={searchQuery}/>
 
-<TopRated moduleId={moduleId}/>
+<TopRated moduleId={moduleId} searchQuery={searchQuery}/>
 
 <section className="w-full py-20 bg-white">
   <div className="max-w-[1200px] mx-auto px-4">

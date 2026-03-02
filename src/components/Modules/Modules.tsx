@@ -117,7 +117,11 @@ import Link from "next/link";
 import Recommendation from "./Recommendation";
 import { useModule } from "@/src/context/ModuleContext"
 
-export default function ServiceCategory() {
+interface Props {
+  searchQuery?: string;
+}
+
+export default function ServiceCategory({ searchQuery }: Props) {
   const { modules, loading, error } = useModule();
 
    if (loading) {
@@ -130,6 +134,12 @@ export default function ServiceCategory() {
 
   const toFolderName = (name: string) =>
   name.trim().replace(/\s+/g, "-");
+
+  const filteredModules = searchQuery
+    ? modules.filter((module) =>
+        module.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : modules;
 
   return (
     <>
@@ -148,7 +158,7 @@ export default function ServiceCategory() {
         {/* Category Row */}
         <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-6">
 
-          {modules.map((module,) => (
+          {filteredModules.map((module) => (
             <Link
             key={module._id}
               href={`/MainModules/${toFolderName(module.name)}/${module._id}`}

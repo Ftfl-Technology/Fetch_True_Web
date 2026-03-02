@@ -236,7 +236,7 @@ type NormalizedService = {
   };
 };
 
-export default function RecommendedHome() {
+export default function RecommendedHome({ searchQuery }: any) {
   const { services, loading, error } = useHomeRecommended();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -247,7 +247,7 @@ export default function RecommendedHome() {
   // Normalize the data for the card component
   const normalizedServices: NormalizedService[] = services.map((item) => {
     const service = item.service;
-    const pkg = service.packages?.[0]; // Take the first package
+    const pkg = service.packages?.[0]; 
 
     return {
       id: service._id,
@@ -271,6 +271,18 @@ export default function RecommendedHome() {
       })) || [],
     };
   });
+
+  const filteredServices = normalizedServices.filter((service) => {
+  if (!searchQuery?.trim()) return true;
+
+  const q = searchQuery.toLowerCase();
+
+  return (
+    service.title.toLowerCase().includes(q) ||
+    service.type.toLowerCase().includes(q) ||
+    service.moduleName.toLowerCase().includes(q)
+  );
+});
 
   // Calculate max scroll
   const getMaxScroll = useCallback(() => {
@@ -406,6 +418,12 @@ export default function RecommendedHome() {
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+  if (containerRef.current) {
+    containerRef.current.scrollTo({ left: 0 });
+  }
+}, [searchQuery]);
+
   if (loading) {
     return (
       <div className="p-18 flex items-center justify-center gap-4">
@@ -424,7 +442,7 @@ export default function RecommendedHome() {
     );
   }
 
-  if (!normalizedServices.length) {
+  if (!filteredServices.length) {
     return (
       <div className="p-18 text-center text-gray-500">
         No recommended services found
@@ -456,7 +474,7 @@ export default function RecommendedHome() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleMouseUp}
         >
-          {normalizedServices.map((item) => (
+          {filteredServices.map((item) => (
             <div
               key={item.id}
               className="flex-shrink-0 snap-center min-w-[345px] lg:min-w-[424px]"

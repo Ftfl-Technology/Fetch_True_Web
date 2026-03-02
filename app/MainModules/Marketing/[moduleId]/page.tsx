@@ -5,7 +5,7 @@ import CategoryModule from "@/src/components/Marketing/Category";
 import { Home, Bookmark, Search } from "lucide-react";
 import Link from "next/link";
 import RecommendedForYou from "@/src/components/Marketing/Recommend";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MostlyUsed from "@/src/components/Marketing/MostlyUsed";
 import TopTrending from "@/src/components/Marketing/TopTrending";
 import WhyJustOurServices from "@/src/components/Marketing/WhyOurServices";
@@ -13,11 +13,14 @@ import SuggestedProviders from "@/src/components/Marketing/Providers";
 import { useParams, useRouter } from "next/navigation";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { Banner, useBanner } from "@/src/context/CarouselBannerContext";
+import SearchBar from "@/src/components/SearchBar/Search";
 
 export default function MarketingHero() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { banners, loading, error, fetchBanners } = useCategoryBanner();
   const { getBannersByPage} = useBanner();
+    const [searchQuery, setSearchQuery] = useState("");
+
   const router = useRouter();
   
      const { moduleId } = useParams<{ moduleId: string }>();
@@ -110,19 +113,20 @@ if (loading) return null;
 
           <div className="flex items-center gap-8">
             {/* SEARCH */}
-            <div className="flex items-center gap-2
-                            bg-[#FFFFFF38] backdrop-blur-md
-                            px-4 py-2 rounded-full
-                            border border-[#E1E1E1]
-                            w-full max-w-[320px]">
-              <Search className="w-4 h-4 opacity-80" />
+            <div className=" ">
+              {/* <Search className="w-4 h-4 opacity-80" />
               <input
                 type="text"
                 placeholder="Search"
                 className="bg-transparent outline-none
                            placeholder:text-white/70
                            text-sm w-full"
-              />
+              /> */}
+               <SearchBar
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Search" 
+                              />
             </div>
             
             <Link href="../../Account/favorite">
@@ -170,9 +174,9 @@ if (loading) return null;
         </section>
       </section>
           <CategoryModule/>
-      <RecommendedForYou moduleId={moduleId}/>
-      <MostlyUsed moduleId={moduleId}/>
-    <TopTrending moduleId={moduleId}/>
+      <RecommendedForYou moduleId={moduleId} searchQuery={searchQuery}/>
+      <MostlyUsed moduleId={moduleId} searchQuery={searchQuery}/>
+    <TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
     <WhyJustOurServices />
     <SuggestedProviders moduleId={moduleId}/>
     </div>

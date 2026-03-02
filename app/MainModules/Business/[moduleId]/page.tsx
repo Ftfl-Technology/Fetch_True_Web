@@ -1,5 +1,14 @@
+"use client"
+
+import { useState } from "react";
+
 import BusinessPageClient from "./BusinessPageClient";
 
 export default function BusinessPage() {
-  return <BusinessPageClient />;
+    const [searchQuery, setSearchQuery] = useState("");
+  
+  return <BusinessPageClient
+  searchQuery={searchQuery}
+  setSearchQuery={setSearchQuery}
+  />;
 }

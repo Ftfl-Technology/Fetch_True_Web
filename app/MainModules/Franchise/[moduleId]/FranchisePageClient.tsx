@@ -12,9 +12,10 @@ import { useParams } from "next/navigation";
 import AllServices from "@/src/components/Franchise/AllServices";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { useEffect } from "react";
+import SearchBar from "@/src/components/SearchBar/Search";
 
 
-export default function FranchisePageClient()  {
+export default function FranchisePageClient({ searchQuery,setSearchQuery }:any)  {
 
   const { moduleId } = useParams<{ moduleId: string }>();
   const { banners, loading, error, fetchBanners } = useCategoryBanner();
@@ -74,19 +75,19 @@ export default function FranchisePageClient()  {
             {/* Desktop Search Bar */}
             <div
               className="
-                hidden lg:flex 
-                w-[480px] h-[48px] 
-                bg-white border border-[#DCDCDC] 
-                rounded-[15px]
-                shadow
-                items-center px-4
+                 hidden lg:flex 
               "
             >
-              <CiSearch className="w-[18px] h-[18px] text-black" />
+              {/* <CiSearch className="w-[18px] h-[18px] text-black" />
               <input
                 type="text"
                 placeholder="Search"
                 className="w-full outline-none text-[16px] ml-4"
+              /> */}
+              <SearchBar
+               value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search" 
               />
             </div>
 
@@ -190,17 +191,20 @@ export default function FranchisePageClient()  {
           <div
             className="
               w-full h-[50px]
-              bg-white border border-[#DCDCDC] 
-              rounded-[15px]
-              shadow flex items-center px-4
+             
             "
           >
-            <CiSearch className="w-[18px] h-[18px] text-black" />
+            {/* <CiSearch className="w-[18px] h-[18px] text-black" />
             <input
               type="text"
               placeholder="Search"
               className="w-full outline-none text-[16px] ml-4"
-            />
+            /> */}
+            <SearchBar
+               value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search" 
+              />
           </div>
         </div>
       </section>
@@ -210,12 +214,12 @@ export default function FranchisePageClient()  {
 
 <Categories/>
 {/* <AllServices moduleId={moduleId}/> */}
-<Recommended  moduleId={moduleId} />
-<HighDemands moduleId={moduleId}/>
+<Recommended  moduleId={moduleId} searchQuery={searchQuery}/>
+<HighDemands moduleId={moduleId} searchQuery={searchQuery}/>
 {/* <TopGrowingFranchises /> */}
 {/* <BenefitsSection /> */}
 {/* <InvestmentOfferSection /> */}
-<LowInvestmentFranchises moduleId={moduleId}/>
+<LowInvestmentFranchises moduleId={moduleId} searchQuery={searchQuery}/>
 <WhyOurFranchise />
 
 

@@ -175,7 +175,7 @@ import { useParams } from "next/navigation";
 
 
 
-const MostPopularSection = ({ moduleId }:{ moduleId:string}) => {
+const MostPopularSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQuery:string}) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     
       const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -193,6 +193,18 @@ const MostPopularSection = ({ moduleId }:{ moduleId:string}) => {
       };
 
        const { services,loading,error,fetchMostPopular } = useMostPopular();
+
+       const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
         
         useEffect(()=>{
           if(moduleId) {
@@ -209,6 +221,14 @@ const MostPopularSection = ({ moduleId }:{ moduleId:string}) => {
       
         if(loading) return null;
         if (error) return null;
+
+           if (!filteredServices.length) {
+  return (
+    <p className="text-center py-10 text-gray-500">
+      No matching most popular services
+    </p>
+  );
+}
 
   return (
     <section className="w-full  bg-[#F6FBF7]">
@@ -233,7 +253,7 @@ const MostPopularSection = ({ moduleId }:{ moduleId:string}) => {
             pb-4
           "
         >
-          {services.map((service) => (
+          {filteredServices.map((service) => (
             <Link href={`/MainModules/Finance/${moduleId}/${categoryId}/${service.serviceId}`}
              key={service.serviceId} className="snap-start shrink-0">
                             <FinanceCard  

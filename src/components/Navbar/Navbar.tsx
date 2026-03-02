@@ -124,13 +124,17 @@ import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 import { useUser } from "@/src/context/UserContext";
 import { useAuth } from "@/src/context/AuthContext";
+import { ServiceCustomerProvider } from "@/src/context/ServiceCustomerContext";
+import SearchBar from "../SearchBar/Search";
 
-export default function Navbar() {
+export default function Navbar({ searchQuery,setSearchQuery }:any) {
   // const { userId } = useParams<{ userId: string }>();
 const { user, logout} = useAuth();
 
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+ 
+
 
   // useEffect(() => {
   //   if (userId && user?.userId !== userId) {
@@ -164,11 +168,16 @@ const { user, logout} = useAuth();
 
           {/* Search */}
           <div className="relative hidden md:block">
-            <input
+            {/* <input
               type="text"
               placeholder="Service name"
               className="w-[200px] lg:w-[230px] h-[38px] pl-10 pr-4 rounded-full border border-gray-200 text-sm outline-none"
-            />
+            /> */}
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search services" 
+              />
           </div>
         </div>
 

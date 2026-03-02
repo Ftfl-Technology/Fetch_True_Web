@@ -143,15 +143,28 @@ const bgColors = [
 
 interface Props {
   moduleId: string;
+  searchQuery:string
 }
 
-export default function MostPopular({ moduleId }: Props) {
+export default function MostPopular({ moduleId,searchQuery }: Props) {
   const { services, fetchMostPopular, loading, error } = useMostPopular();
 
     const { categoryId } = useParams<{
     moduleId: string;
     categoryId: string;
   }>();
+
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
 
   useEffect(() => {
     if (moduleId) {
@@ -162,7 +175,7 @@ export default function MostPopular({ moduleId }: Props) {
   if (loading)
     return <p className="text-center py-10">Loading recommended services...</p>;
   if (error) return <p className="text-center py-10 text-red-500">{error}</p>;
-  if (services.length === 0)
+  if (filteredServices.length === 0)
     return <p className="text-center py-10">No recommended services found.</p>;
 
   return (
@@ -176,7 +189,7 @@ export default function MostPopular({ moduleId }: Props) {
       <div className="max-w-[1440px] mx-auto px-4 overflow-x-auto no-scrollbar">
         <div className="flex gap-4">
           <HorizontalScroll>
-          {services.map((service, index) => {
+          {filteredServices.map((service, index) => {
             const investment =
               service.franchiseDetails.investmentRange?.[0];
             const monthly =

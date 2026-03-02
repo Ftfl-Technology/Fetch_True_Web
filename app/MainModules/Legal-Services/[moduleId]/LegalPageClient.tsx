@@ -15,8 +15,9 @@ import { useParams, useRouter } from "next/navigation";
 import AllServices from "@/src/components/Legal/AllServices";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { Banner, useBanner } from "@/src/context/CarouselBannerContext";
+import SearchBar from "@/src/components/SearchBar/Search";
 
-export default function LegalPageClient() {
+export default function LegalPageClient({ searchQuery,setSearchQuery }:any) {
 const { banners, loading, error, fetchBanners } = useCategoryBanner();
 const { getBannersByPage} = useBanner();
 const router = useRouter();
@@ -118,19 +119,20 @@ if (loading) return null;
          
         <div className="flex items-center gap-8">
             {/* SEARCH */}
-            <div className="flex items-center gap-2
-                            bg-white backdrop-blur-md
-                            px-4 py-2 rounded-full
-                            border border-[#E1E1E1]
-                            w-full max-w-[320px]">
-              <Search className="w-4 h-4 opacity-80" />
+            <div className="">
+              {/* <Search className="w-4 h-4 opacity-80" />
               <input
                 type="text"
                 placeholder="Search"
                 className="bg-transparent outline-none
                            placeholder:text-[#00000078]
                            text-sm w-full"
-              />
+              /> */}
+              <SearchBar
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Search" 
+                              />
             </div>
             <Link href="../../Account/favorite">
             <Bookmark  className="w-8 h-8" color="#A3623A"/>
@@ -256,9 +258,9 @@ if (loading) return null;
       
 <CategorySection />
 {/* <AllServices moduleId={moduleId}/> */}
-<RecommendedForYou moduleId={moduleId}/>
-<MostlyUsedService moduleId={moduleId}/>
-<TopTrending moduleId={moduleId}/>
+<RecommendedForYou moduleId={moduleId} searchQuery={searchQuery}/>
+<MostlyUsedService moduleId={moduleId} searchQuery={searchQuery}/>
+<TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
 <LegalServiceSpotlight />
 
     </div>

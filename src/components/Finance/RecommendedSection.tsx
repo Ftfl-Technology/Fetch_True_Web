@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 
 
 
-const RecommendedSection = ({ moduleId }:{ moduleId:string}) => {
+const RecommendedSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQuery:string}) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     
       const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -26,6 +26,18 @@ const RecommendedSection = ({ moduleId }:{ moduleId:string}) => {
       };
 
        const { services,loading,error,fetchRecommendedServices } = useRecommendedServices();
+
+       const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
         
         useEffect(()=>{
           if(moduleId) {
@@ -44,6 +56,14 @@ const RecommendedSection = ({ moduleId }:{ moduleId:string}) => {
       
         if(loading) return null;
         if (error) return null;
+
+            if (!filteredServices.length) {
+  return (
+    <p className="text-center py-10 text-gray-500">
+      No matching recommended services
+    </p>
+  );
+}
 
   return (
     <section className="w-full py-14 bg-[#F6FBF7]">
@@ -68,7 +88,7 @@ const RecommendedSection = ({ moduleId }:{ moduleId:string}) => {
             pb-4
           "
         >
-          {services.map((service) => (
+          {filteredServices.map((service) => (
             <Link href={`/MainModules/Finance/${moduleId}/${categoryId}/${service._id}`}
             key={service._id} className="snap-start shrink-0">
                             <FinanceCard  

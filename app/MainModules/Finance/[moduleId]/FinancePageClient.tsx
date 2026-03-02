@@ -8,12 +8,13 @@ import HeaderScroll from "@/src/components/Finance/HeaderScroller";
 import RecentlyAddedSection from "@/src/components/Finance/RecentlyAdded";
 import RecommendedSection from "@/src/components/Finance/RecommendedSection";
 import WhatYouWillArchive from "@/src/components/Finance/WhatYouWillArchive";
+import SearchBar from "@/src/components/SearchBar/Search";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
-export default function FinancePageClient() {
+export default function FinancePageClient({ searchQuery,setSearchQuery }:any) {
   const { banners, loading, error, fetchBanners } = useCategoryBanner();
 
     const { moduleId } = useParams<{ moduleId: string }>();
@@ -76,7 +77,7 @@ export default function FinancePageClient() {
 
               {/* Search */}
               <div className="relative hidden sm:block">
-                <input
+                {/* <input
                   type="text"
                   placeholder="Search"
                   className="
@@ -90,12 +91,17 @@ export default function FinancePageClient() {
                     shadow
                     focus:outline-none
                   "
-                />
+                /> */}
 
-                <img
+                {/* <img
                   src="/image/Vector (27).png"
                   alt="Search"
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                /> */}
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Search" 
                 />
               </div>
 
@@ -146,9 +152,9 @@ export default function FinancePageClient() {
 
            <CategorySection />
            {/* <AllServices moduleId={moduleId} /> */}
-           <RecommendedSection moduleId={moduleId} />
-           <BestSellingSection moduleId={moduleId}/>
-           <RecentlyAddedSection  moduleId={moduleId}/>
+           <RecommendedSection moduleId={moduleId} searchQuery={searchQuery} />
+           <BestSellingSection moduleId={moduleId} searchQuery={searchQuery}/>
+           <RecentlyAddedSection  moduleId={moduleId} searchQuery={searchQuery}/>
            <WhatYouWillArchive moduleId={moduleId}/>
            {/* <CostEfficientSection /> */}
       </div>

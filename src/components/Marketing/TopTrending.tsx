@@ -71,9 +71,11 @@ import { useTopTrending } from "@/src/context/TopTrendingContext";
 
 interface Props {
   moduleId: string;
+    searchQuery:string
+
 }
 
-export default function TopTrending({ moduleId }: Props) {
+export default function TopTrending({ moduleId,searchQuery }: Props) {
   const {
     services,
     loading,
@@ -86,6 +88,18 @@ export default function TopTrending({ moduleId }: Props) {
       fetchTopTrending(moduleId);
     }
   }, [moduleId]);
+
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
 
   if (loading) {
     return (
@@ -105,7 +119,7 @@ export default function TopTrending({ moduleId }: Props) {
     );
   }
 
-  if (!services.length) return null;
+  if (!filteredServices.length) return null;
 
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4 pt-8 lg:pt-15">
@@ -116,7 +130,7 @@ export default function TopTrending({ moduleId }: Props) {
       </div>
 
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-        {services.map((service) => {
+        {filteredServices.map((service) => {
           const firstPackage = service.serviceDetails?.packages?.[0];
 
           return (

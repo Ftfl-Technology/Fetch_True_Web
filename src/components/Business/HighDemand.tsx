@@ -10,9 +10,11 @@ import HorizontalScroll from "../ui/HorizontalScroll";
 
 interface Props {
   moduleId: string;
+    searchQuery:string
+
 }
 
-export default function HighDemand({ moduleId }: Props) {
+export default function HighDemand({ moduleId,searchQuery }: Props) {
   const { services, loading, fetchMostPopular } = useMostPopular();
   const { fetchServiceDetails,service } = useServiceDetails();
   
@@ -57,6 +59,17 @@ export default function HighDemand({ moduleId }: Props) {
 
   const createSlug = (text: string) =>
     text.toLowerCase().replace(/\s+/g, "-");
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
 
   if (loading) return null;
 
@@ -109,7 +122,7 @@ export default function HighDemand({ moduleId }: Props) {
 
           <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth">
             <HorizontalScroll>
-            {services.map((service) => {
+            {filteredServices.map((service) => {
               const investment =
                 service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 

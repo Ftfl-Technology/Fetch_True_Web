@@ -73,9 +73,11 @@ import { useRecommendedServices } from "@/src/context/RecommendedContext";
 
 interface Props {
   moduleId: string;
+    searchQuery:string
+
 }
 
-export default function RecommendedForYou({ moduleId }: Props) {
+export default function RecommendedForYou({ moduleId,searchQuery }: Props) {
   const {
     services,
     loading,
@@ -104,8 +106,19 @@ export default function RecommendedForYou({ moduleId }: Props) {
       </section>
     );
   }
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
 
-  if (!services.length) return null;
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
+
+  if (!filteredServices.length) return null;
 
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4 py-8 lg:py-15">
@@ -116,7 +129,7 @@ export default function RecommendedForYou({ moduleId }: Props) {
       </div>
 
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-        {services.map((service) => {
+        {filteredServices.map((service) => {
           const firstPackage = service.serviceDetails?.packages?.[0];
 
           return (

@@ -8,11 +8,21 @@ import { FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import HorizontalScroll from "../ui/HorizontalScroll";
 
-export default function LowInvestmentFranchises({moduleId}:{moduleId:string}) {
+export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId:string,searchQuery:string}) {
 
   const { services,loading,fetchTopTrending } = useTopTrending();
 
- 
+ const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
  
 
   useEffect(()=>{
@@ -29,6 +39,13 @@ export default function LowInvestmentFranchises({moduleId}:{moduleId:string}) {
                 }>();
     
       if(loading) return null;
+         if (!filteredServices.length) {
+  return (
+    <p className="text-center py-10 text-gray-500">
+      No matching recommended services
+    </p>
+  );
+}
 
   return (
     <section className="max-w-[1440px] mx-auto py-6 md:py-14 bg-white">
@@ -46,7 +63,7 @@ export default function LowInvestmentFranchises({moduleId}:{moduleId:string}) {
       <div className=" mx-auto gap-8 px-4 ">
           <div className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth  px-1">
 <HorizontalScroll>
-       {services.map((service) => {
+       {filteredServices.map((service) => {
 
   // ✅ keyValues se Profit Margin
   const profitMargin = service.keyValues?.find(

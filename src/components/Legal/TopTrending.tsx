@@ -11,7 +11,7 @@ import HorizontalScroll from "../ui/HorizontalScroll";
 
 
 
-export default function TopTrending({moduleId}:{moduleId:string}) {
+export default function TopTrending({moduleId,searchQuery}:{moduleId:string,searchQuery:string}) {
    const { services,loading,error,fetchTopTrending } = useTopTrending();
     
     useEffect(()=>{
@@ -24,6 +24,18 @@ export default function TopTrending({moduleId}:{moduleId:string}) {
                 moduleId: string;
                 categoryId: string;
               }>();
+
+           const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];          
   
     if(loading) return null;
     if (error) return null;
@@ -55,7 +67,7 @@ export default function TopTrending({moduleId}:{moduleId:string}) {
             "
           >
             <HorizontalScroll>
-            {services.map((service) => (
+            {filteredServices.map((service) => (
                <Link href={`/MainModules/Legal-Services/${moduleId}/${categoryId}/${service._id}`}
                 key={service._id} className="snap-start shrink-0">
                               <ServiceCard  

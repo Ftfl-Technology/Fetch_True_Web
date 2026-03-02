@@ -68,9 +68,11 @@ import { useMostPopular } from "@/src/context/MostPopularContext";
 
 interface Props {
   moduleId: string;
+    searchQuery:string
+
 }
 
-export default function MostlyUsed({ moduleId }: Props) {
+export default function MostlyUsed({ moduleId,searchQuery }: Props) {
   const {
     services,
     loading,
@@ -83,6 +85,18 @@ export default function MostlyUsed({ moduleId }: Props) {
       fetchMostPopular(moduleId);
     }
   }, [moduleId]);
+
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];
 
   if (loading) {
     return (
@@ -102,7 +116,7 @@ export default function MostlyUsed({ moduleId }: Props) {
     );
   }
 
-  if (!services.length) return null;
+  if (!filteredServices.length) return null;
 
   return (
     <section className="w-full max-w-[1440px] mx-auto px-4">
@@ -113,7 +127,7 @@ export default function MostlyUsed({ moduleId }: Props) {
       </div>
 
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-        {services.map((service) => {
+        {filteredServices.map((service) => {
           const firstPackage =
             service.serviceDetails?.packages?.[0] ||
             service.packages?.[0];
