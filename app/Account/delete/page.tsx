@@ -10,7 +10,7 @@ export default function DeleteAccountSection() {
       <div className="border border-blue-500 rounded-md p-4 flex items-center gap-3 mb-8">
         <div className="w-10 h-10 relative">
           <Image
-            src="/icons/warning.png" // replace with your icon
+            src="/image/warning.png" // replace with your icon
             alt="warning"
             fill
             className="object-contain"
@@ -47,7 +47,7 @@ export default function DeleteAccountSection() {
       <div className="flex justify-center mb-16">
         <div className="w-[220px] h-[220px] relative">
           <Image
-            src="/icons/security.png" // replace with your image
+            src="/image/delete.png" // replace with your image
             alt="security"
             fill
             className="object-contain"
