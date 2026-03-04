@@ -898,6 +898,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useModule } from '@/src/context/CategoriesContext';
+import SearchBar from '@/src/components/SearchBar/Search';
 
 export default function AIHubModulesPage() {
 
@@ -1044,7 +1045,7 @@ export default function AIHubModulesPage() {
                             {/* Search Box */}
                             <div className='gap-8 flex'>
                                 <div className="relative w-full md:w-[330px] lg:w-[520px]">
-                                    <input
+                                    {/* <input
                                         type="text"
                                         placeholder="Search"
                                         value={searchQuery}
@@ -1059,11 +1060,16 @@ export default function AIHubModulesPage() {
                                 outline-none
                                 focus:border-blue-500
                                 "
-                                    />
+                                    /> */}
+                                    <SearchBar
+                                                                    value={searchQuery}
+                                                                    onChange={setSearchQuery}
+                                                                    placeholder="Search"
+                                                                />
                                     {/* search icon */}
-                                    <span className="absolute left-3 top-1/2 -translate-y-3.5 text-gray-400">
+                                    {/* <span className="absolute left-3 top-1/2 -translate-y-3.5 text-gray-400">
                                         <img src="/image/itsearch.png" alt="searchicon" className='w-[20.66px] h-[18.66px] text-[#009ABF]' />
-                                    </span>
+                                    </span> */}
                                 </div>
 
                                 <div className='bg-white rounded-full justify-center md:p-2  flex'>
@@ -1312,14 +1318,14 @@ export default function AIHubModulesPage() {
                 </section>
 
 
-                <Recommendation moduleId={moduleId} />
-                <MostPopular moduleId={moduleId}/>
+                <Recommendation moduleId={moduleId} searchQuery={searchQuery}/>
+                <MostPopular moduleId={moduleId} searchQuery={searchQuery}/>
                 {/* <section className="bg-[#C9DEE9] w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mt-10">
                     <div className="max-w-8xl mx-auto px-6 md:px-12 mb-6 lg:mb-12 py-8 md:py-12">
                         <LiveSection />
                     </div>
                 </section> */}
-                <TopTrending moduleId={moduleId}/>
+                <TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
 
                 <section className="bg-[#C9DEE9] w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mt-10">
                     <div className="max-w-8xl mx-auto px-6 md:px-12 mb-6 lg:mb-12 py-8 md:py-12">

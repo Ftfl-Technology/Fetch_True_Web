@@ -1,6 +1,7 @@
 "use client";
 
 import { useCheckout } from "@/src/context/CheckoutContext";
+import { useParams } from "next/navigation";
 
 
 /* ================= TYPES ================= */
@@ -71,6 +72,8 @@ export default function Packages({ packages = [] }: PackagesProps) {
 
 /* ================= CARD ================= */
 function PackageCard({ pkg }: { pkg: PackageItem }) {
+const params = useParams();
+  const serviceId = params.id as string;
 
 
   const { selectedPackage, setSelectedPackage } = useCheckout();
@@ -79,16 +82,28 @@ function PackageCard({ pkg }: { pkg: PackageItem }) {
 
 
 
-  const handleSelect = () => {
-    setSelectedPackage({
-      _id: pkg._id,
-      name: pkg.name,
-      price: pkg.price,
-      discount: pkg.discount,
-      discountedPrice: pkg.discountedPrice,
-    });
-  };
+  // const handleSelect = () => {
+  //   setSelectedPackage({
+  //     _id: pkg._id,
+  //     name: pkg.name,
+  //     price: pkg.price,
+  //     discount: pkg.discount,
+  //     discountedPrice: pkg.discountedPrice,
+  //   });
+  // };
 
+   const handleSelect = () => {
+    setSelectedPackage(
+      {
+        _id: pkg._id,
+        name: pkg.name,
+        price: pkg.price,
+        discount: pkg.discount,
+        discountedPrice: pkg.discountedPrice,
+      },
+      serviceId   // ← required by new context signature
+    );
+  };
 
   return (
     <div className="relative bg-white rounded-2xl w-full min-h-[350px] md:w-[190px] md:min-h-[350px] lg:w-[322px] lg:min-h-[449px] shadow-md md:p-6 p-3 flex flex-col">

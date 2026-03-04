@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import axios from "axios";
 
 /* =====================================================
@@ -256,25 +256,44 @@ export const ServiceDetailsProvider = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchServiceDetails = async (serviceId: string) => {
+  // const fetchServiceDetails = async (serviceId: string) => {
+  //   try {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     const res = await axios.get(
+  //       `https://api.fetchtrue.com/api/service/${serviceId}`
+  //     );
+
+  //     setService(res.data.data);
+  //   } catch (err: unknown) {
+  //     if(err instanceof Error)
+  //     setError(err.message || "Failed to fetch service details");
+  //   else 
+  //     setError("Failed to fetch service details");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchServiceDetails = useCallback(async (serviceId: string) => {
     try {
-      setLoading(true);
-      setError(null);
-
-      const res = await axios.get(
-        `https://api.fetchtrue.com/api/service/${serviceId}`
-      );
-
-      setService(res.data.data);
+        setLoading(true);
+        setError(null);
+        const res = await axios.get(
+            `https://api.fetchtrue.com/api/service/${serviceId}`
+        );
+        setService(res.data.data);
     } catch (err: unknown) {
-      if(err instanceof Error)
-      setError(err.message || "Failed to fetch service details");
-    else 
-      setError("Failed to fetch service details");
+        if (err instanceof Error)
+            setError(err.message || "Failed to fetch service details");
+        else
+            setError("Failed to fetch service details");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+}, []);
+
 
   return (
     <ServiceDetailsContext.Provider

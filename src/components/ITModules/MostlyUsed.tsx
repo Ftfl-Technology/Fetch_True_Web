@@ -547,7 +547,7 @@ interface Package {
     whatYouGet: string[];
 }
 
-export default function MostlyUsed({ moduleId }: SectionProps) {
+export default function MostlyUsed({ moduleId, searchQuery }: SectionProps) {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
@@ -563,52 +563,6 @@ export default function MostlyUsed({ moduleId }: SectionProps) {
 
         fetchMostPopular(moduleId);
     }, [moduleId]);
-
-
-
-    const CARD_CLASSES = `
-    snap-center flex-shrink-0
-    w-[88vw] sm:w-[70vw] md:w-[390px] md:h-[362.04px]
-    rounded-3xl p-3
-    shadow-lg
-    `;
-
-
-
-    // const filteredServices = SERVICES.filter((item) => {
-    //     // PRICE FILTER
-    //     const rangeMatch =
-    //         selectedRange === "all" ||
-    //         (selectedRange === "0-300" && item.price < 300) ||
-    //         (selectedRange === "300-400" && item.price >= 300 && item.price < 400) ||
-    //         (selectedRange === "400-600" && item.price >= 400 && item.price <= 600) ||
-    //         (selectedRange === "600-800" && item.price >= 600 && item.price <= 800) ||
-    //         (selectedRange === "800-1000" && item.price > 800);
-
-    //     // CATEGORY FILTER
-    //     const categoryMatch =
-    //         selectedCategory === "all" ||
-    //         item.title === selectedCategory;
-
-    //     // CONTEXT (from slug)
-    //     // const contextMatch =
-    //     //     !contextTitle ||
-    //     //     item.title.toLowerCase() === contextTitle.toLowerCase();
-    //     const normalizedTitle = item.title.toLowerCase();
-    //     const normalizedContext = contextTitle?.toLowerCase();
-
-    //     const contextMatch =
-    //         !contextTitle ||
-    //         normalizedTitle === normalizedContext;
-
-    //     // SEARCH
-    //     const searchMatch =
-    //         searchQuery === "" ||
-    //         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //         item.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-    //     return rangeMatch && categoryMatch && searchMatch && contextMatch;
-    // });
 
 
     type CardBgProps = {
@@ -646,8 +600,20 @@ export default function MostlyUsed({ moduleId }: SectionProps) {
         );
     };
 
+    const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
 
-    const mappedServices = services.map((service) => {
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];     
+
+
+    const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
         return ({
@@ -722,7 +688,7 @@ export default function MostlyUsed({ moduleId }: SectionProps) {
                                         <img src="/image/security.png" width={14} height={14} />
                                         Trusted
                                     </span>
-                                    
+
                                         {/* Bookmark */}
                                         <button className="absolute top-5 right-6 bg-black/70 p-2 rounded-full">
                                             <Bookmark size={16} className="text-white" />

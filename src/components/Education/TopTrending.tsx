@@ -33,7 +33,7 @@ interface Package {
 }
 
 
-export default function TopTrending({ moduleId }: SectionProps) {
+export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
 
 
 
@@ -62,8 +62,19 @@ export default function TopTrending({ moduleId }: SectionProps) {
     };
 
 
+     const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
 
-    const mappedServices = services.map((service) => {
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];  
+
+    const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
         return ({

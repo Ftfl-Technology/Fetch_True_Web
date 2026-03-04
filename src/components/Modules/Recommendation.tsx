@@ -451,7 +451,7 @@ export default function RecommendedHome({ searchQuery }: any) {
   }
 
   return (
-    <div className="p-4 lg:p-18">
+    <div className="p-4 lg:p-4 lg:ml-12">
       <h2 className="text-xl font-semibold mb-6">Recommended</h2>
 
       <div className="relative w-full">

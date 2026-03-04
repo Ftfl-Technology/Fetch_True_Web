@@ -43,7 +43,7 @@
 
 //   return (
 //     <section className="w-full flex flex-wrap lg:flex-nowrap gap-10 mt-16 px-4 lg:px-20 relative mb-20">
-      
+
 //       {/* LEFT BIG CARD - DESKTOP */}
 //       <div
 //         className={`hidden lg:block w-[450px] h-[550px] rounded-[31px] bg-gradient-to-b ${cards[active].gradient} relative overflow-hidden flex items-center justify-center`}
@@ -248,10 +248,13 @@
 "use client";
 
 import { useOffers } from "@/src/context/OfferContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function TodaysBestOffer() {
   const { offers, loading } = useOffers();
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -299,16 +302,19 @@ export default function TodaysBestOffer() {
           onScroll={handleScroll}
           className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar"
         >
-          {offers.map((offer) => (
+          {offers.map((offer,index) => (
             <div
-              key={offer._id}
+              key={index}
               className="shrink-0 w-[360px] lg:w-[400px] bg-[#F6F0FF] rounded-[18px]"
+              onClick={()=> router.push(`/Offers/${offer._id}`)}
             >
-              <img
-                src={offer.thumbnailImage}
-                alt="Offer Thumbnail"
-                className="w-full h-[240px] rounded-[18px] object-cover"
-              />
+              
+                <img
+                  src={offer.thumbnailImage}
+                  alt="Offer Thumbnail"
+                  className="w-full h-[240px] rounded-[18px] object-cover"
+                />
+              
             </div>
           ))}
         </div>
@@ -319,11 +325,10 @@ export default function TodaysBestOffer() {
             <button
               key={index}
               onClick={() => scrollToIndex(index)}
-              className={`h-[4px] rounded-full transition-all duration-300 ${
-                activeIndex === index
+              className={`h-[4px] rounded-full transition-all duration-300 ${activeIndex === index
                   ? "w-10 bg-black"
                   : "w-6 bg-gray-300"
-              }`}
+                }`}
             />
           ))}
         </div>

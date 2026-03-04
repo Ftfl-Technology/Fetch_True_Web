@@ -365,22 +365,23 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useModule } from '@/src/context/CategoriesContext';
 import { useBannerCategorySelection } from "@/src/context/BannerContext"
+import SearchBar from '@/src/components/SearchBar/Search';
 
 
 type BannerCategorySelection = {
-  _id: string;
-  file: string;
-  page: string;
-  selectionType: string;
-  screenCategory: string;
-  module: {
     _id: string;
-    name: string;
-  };
-  subcategory?: {
-    _id: string;
-    name: string;
-  };
+    file: string;
+    page: string;
+    selectionType: string;
+    screenCategory: string;
+    module: {
+        _id: string;
+        name: string;
+    };
+    subcategory?: {
+        _id: string;
+        name: string;
+    };
 };
 
 
@@ -389,10 +390,10 @@ export default function ITModulesPage() {
     const { categories, loading, error, fetchCategoriesByModule } = useModule();
     const { data, fetchBannerCategorySelections } = useBannerCategorySelection();
 
-     const BannerData =
+    const BannerData =
         data?.map((item: BannerCategorySelection, index: number) => ({
             label: `Image ${index + 1}`,
-            bgpath: item.file, 
+            bgpath: item.file,
             // path: '/image/ITModulebg.png'
         })) || [];
 
@@ -412,7 +413,7 @@ export default function ITModulesPage() {
 
 
     const params = useParams();
-  
+
 
     const moduleId = params.moduleId as string;
 
@@ -546,12 +547,17 @@ export default function ITModulesPage() {
 
                         {/* ===== ROW 2: SEARCH ===== */}
                         <div className="relative w-[90%] md:w-[95%] mx-auto ml-6">
-                            <input
+                            {/* <input
                                 type="text"
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
+                            /> */}
+                            <SearchBar
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Search"
                             />
                             <span className="absolute left-4 top-1/2 -translate-y-1/2">
                                 <img
@@ -667,10 +673,10 @@ export default function ITModulesPage() {
 
             {/* ===== LIST SECTIONS ===== */}
             <section className="w-full mt-6 md:mt-10">
-                <Recommendation moduleId={moduleId} />
-                <MostlyUsed moduleId={moduleId} />
-                <HighInDemand moduleId={moduleId} />
-                <WhyChooseUs moduleId={moduleId}/>
+                <Recommendation moduleId={moduleId}  searchQuery={searchQuery}/>
+                <MostlyUsed moduleId={moduleId}  searchQuery={searchQuery}/>
+                <HighInDemand moduleId={moduleId}  searchQuery={searchQuery}/>
+                <WhyChooseUs moduleId={moduleId} />
             </section>
         </>
     );

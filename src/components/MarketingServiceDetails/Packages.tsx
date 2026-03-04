@@ -302,6 +302,7 @@
 "use client";
 
 import { useCheckout } from "@/src/context/CheckoutContext";
+import { useParams } from "next/navigation";
 
 
 /* ================= TYPES ================= */
@@ -369,6 +370,8 @@ export default function Packages({ packages = [] }: PackagesProps) {
 
 /* ================= CARD ================= */
 function PackageCard({ pkg }: { pkg: PackageItem }) {
+const params = useParams();
+  const serviceId = params.id as string;
 
 
   const { selectedPackage, setSelectedPackage } = useCheckout();
@@ -384,8 +387,12 @@ function PackageCard({ pkg }: { pkg: PackageItem }) {
       price: pkg.price,
       discount: pkg.discount,
       discountedPrice: pkg.discountedPrice,
-    });
+    },
+     serviceId 
+  );
   };
+
+
 
 
   return (

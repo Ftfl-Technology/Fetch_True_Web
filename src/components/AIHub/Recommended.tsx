@@ -9,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 
 type RecommendedProps = {
     moduleId: string;
+    searchQuery: string;
 };
 
 interface Package {
@@ -21,7 +22,7 @@ interface Package {
 }
 
 
-export default function Recommended({ moduleId }: RecommendedProps) {
+export default function Recommended({ moduleId, searchQuery }: RecommendedProps) {
 
 
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -107,8 +108,20 @@ export default function Recommended({ moduleId }: RecommendedProps) {
     };
 
     const FIXED_ICONS = ['⚡', '🧠', '🛠 '];
+
+    const filteredServices =
+        services?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
+
+            const q = searchQuery.toLowerCase();
+
+            return (
+                service.serviceName?.toLowerCase().includes(q) ||
+                service.category?.name?.toLowerCase().includes(q)
+            );
+        }) || [];
   
-    const mappedServices = services.map((service) => {
+    const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
 
@@ -143,153 +156,148 @@ export default function Recommended({ moduleId }: RecommendedProps) {
 
 
     return (
-        <div className="w-full mb-6">
-            <h1 className="text-[16px] md:text-[24px] font-semibold mb-4 ml-4">
-                Recommended Service
-            </h1>
+      <div className="w-full mb-6">
+    <h1 className="text-[16px] md:text-[24px] font-semibold mb-4 ml-4">
+        Recommended Service
+    </h1>
 
-            <div
-                ref={containerRef}
-                className="flex gap-6 w-full p-4 overflow-x-auto snap-x snap-mandatory no-scrollbar cursor-grab"
-            >
-                {mappedServices.map((p) => (
-                    <div
-                        key={p.id}
-                        className="
-                            snap-center
-                            w-[290px] md:w-[308px] lg:w-[408px] lg:h-[373.99px]
-                            bg-[#F4F4F4] 
-                            rounded-2xl
-                            p-4
-                            flex-shrink-0
-                            overflow-hidden
-                            relative"
-                        onClick={() => {
-                            router.push(`/MainModules/AI-Hub/${moduleId}/${categoryId}/${p.id}`);
-                        }}
-                    >
-                        {/* IMAGE */}
-                        <div className="relative w-full h-40 rounded-xl overflow-hidden">
-                            <Image
-                                src={p.image}
-                                alt={p.title}
-                                fill
-                                className="object-fit rounded-xl pointer-events-none w-[286px] h-[132px] lg:w-[398px] lg:h-[183px]"
-                            />
-                            <button className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full">
-                                <Bookmark size={18} className="text-white" />
-                            </button>
-
-
-                        </div>
-
-
-
-                        {/* CONTENT */}
-                        <div className="mt-3 space-y-1">
-
-                            {/* <h2 className="text-[14px] lg:text-[20px] -mt-6 lg:-mt-2 font-semibold text-black leading-snug whitespace-normal max-w-[65%] break-words">
-                                {p.title}
-                            </h2> */}
-                            <h2
-                                className="
-                        text-[14px] lg:text-[20px]
-                        font-semibold
-                        text-black -mt-1 lg:-mt-2
-                        leading-snug
-                        line-clamp-2 max-w-[65%]
-                        min-h-[40px] lg:min-h-[56px]
-                    "
-                            >
-                                {p.title}
-                            </h2>
-
-
-                            <span className="inline-block text-[10px] lg:text-[12px] bg-white px-2 py-1 rounded-lg">
-                                {p.category}
-                            </span>
-
-
-                            <div className="flex -mt-12 md:-mt-18">
-                                <div className=" items-end ml-auto gap-1 text-yellow-400 text-[22px] mb-4">
-                                    {"★".repeat(p.rating)}
-                                </div>
-                            </div>
-
-
-                            <div className="flex justify-end gap-2 -mt-4">
-                                {/* <span className="bg-[#548AFE] text-[10px] lg:text-[14px] px-2 py-1 rounded-lg font-semibold">
-                                    Discount {p.discount} %
-                                </span> */}
-                                <span className="bg-green-600 text-white  text-[8px] lg:text-[10px] px-1 py-1 rounded-lg font-semibold">
-                                    Earn Up to {p.commission}
-                                </span>
-                            </div>
-
-                            <div className="space-y-1 text-black mt-8">
-                                {/* <p className="font-semibold text-[10px] lg:text-[14px]">
-                                    Setup & Time
-                                </p>
-                                <p className="flex gap-2 text-[10px] lg:text-[14px]">
-                                    <Zap size={14} className="text-yellow-500" />
-                                    Set up: {p.monthlyEarning}
-                                </p>
-                                <p className="flex gap-2 text-[10px] lg:text-[14px]">
-                                    <Brain size={14} className="text-red-500" />
-                                    AI Training: {p.outlets}
-                                </p>
-                                <p className="flex gap-2 text-[10px] lg:text-[14px]">
-                                    <Settings size={14} />
-                                    Maintenance: {p.maintenance}
-                                </p> */}
-                                <p className="font-semibold text-[10px] lg:text-[14px] lg:-mt-5">
-                                    Setup & Time
-                                </p>
-                                {p.keyValues.map((kv,index) => (
-                                    <div
-                                        key={kv.id}
-                                        className="flex flex-col text-[10px] lg:text-[14px] text-gray-700 leading-snug"
-                                    >
-                                        <div className="flex flex-row space-x-1">
-                                            <span className="text-base w-5 text-center -mt-1">
-                                                {FIXED_ICONS[index] || '•'}  
-                                            </span>
-                                            <span className="font-medium">{kv.key}:</span>
-                                            <span className="text-gray-500">{kv.label}</span>
-                                        </div>
-                                    </div>
-                                ))}
-
-                            </div>
-                        </div>
-
-
-
-                        {/* PRICE */}
-                        <div className="absolute bottom-4 right-3 bg-white rounded-2xl px-3 lg:px-2 py-2 lg:py-1 text-center">
-                            <p className="text-[10px] lg:text-[10px]">
-                                Starting from
-                            </p>
-
-                            <div className="font-semibold text-[16px] lg:text-[20px] flex flex-col items-center">
-                                <span>₹{p.price}</span>
-
-                                {p.discount > 0 && (
-                                    <div className="flex flex-row gap-2 text-center">
-                                        <span className="line-through text-gray-400 text-[8px] md:text-[10px] lg:text-[12px]">
-                                            ₹{p.originalPrice}
-                                        </span>
-                                        <span className="text-blue-400 text-[8px] md:text-[10px] lg:text-[12px]">
-                                            ({p.discount}% off)
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
+    <div
+        ref={containerRef}
+        className="flex gap-6 w-full p-4 overflow-x-auto snap-x snap-mandatory no-scrollbar cursor-grab"
+    >
+        {mappedServices.length > 0 ? (
+            mappedServices.map((p) => (
+                <div
+                    key={p.id}
+                    className="
+                        snap-center
+                        w-[290px] md:w-[308px] lg:w-[408px] lg:h-[373.99px]
+                        bg-[#F4F4F4] 
+                        rounded-2xl
+                        p-4
+                        flex-shrink-0
+                        overflow-hidden
+                        relative"
+                    onClick={() => {
+                        router.push(`/MainModules/AI-Hub/${moduleId}/${categoryId}/${p.id}`);
+                    }}
+                >
+                    {/* IMAGE */}
+                    <div className="relative w-full h-40 rounded-xl overflow-hidden">
+                        <Image
+                            src={p.image}
+                            alt={p.title}
+                            fill
+                            className="object-fit rounded-xl pointer-events-none w-[286px] h-[132px] lg:w-[398px] lg:h-[183px]"
+                        />
+                        <button className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full">
+                            <Bookmark size={18} className="text-white" />
+                        </button>
                     </div>
-                ))}
+
+                    {/* CONTENT */}
+                    <div className="mt-3 space-y-1">
+                        <h2
+                            className="
+                                text-[14px] lg:text-[20px]
+                                font-semibold
+                                text-black -mt-1 lg:-mt-2
+                                leading-snug
+                                line-clamp-2 max-w-[65%]
+                                min-h-[40px] lg:min-h-[56px]
+                            "
+                        >
+                            {p.title}
+                        </h2>
+
+                        <span className="inline-block text-[10px] lg:text-[12px] bg-white px-2 py-1 rounded-lg">
+                            {p.category}
+                        </span>
+
+                        <div className="flex -mt-12 md:-mt-18">
+                            <div className="items-end ml-auto gap-1 text-yellow-400 text-[22px] mb-4">
+                                {"★".repeat(p.rating)}
+                            </div>
+                        </div>
+
+                        <div className="flex justify-end gap-2 -mt-4">
+                            <span className="bg-green-600 text-white text-[8px] lg:text-[10px] px-1 py-1 rounded-lg font-semibold">
+                                Earn Up to {p.commission}
+                            </span>
+                        </div>
+
+                        <div className="space-y-1 text-black mt-8">
+                            <p className="font-semibold text-[10px] lg:text-[14px] lg:-mt-5">
+                                Setup & Time
+                            </p>
+                            {p.keyValues.map((kv, index) => (
+                                <div
+                                    key={kv.id}
+                                    className="flex flex-col text-[10px] lg:text-[14px] text-gray-700 leading-snug"
+                                >
+                                    <div className="flex flex-row space-x-1">
+                                        <span className="text-base w-5 text-center -mt-1">
+                                            {FIXED_ICONS[index] || '•'}  
+                                        </span>
+                                        <span className="font-medium">{kv.key}:</span>
+                                        <span className="text-gray-500">{kv.label}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* PRICE */}
+                    <div className="absolute bottom-4 right-3 bg-white rounded-2xl px-3 lg:px-2 py-2 lg:py-1 text-center">
+                        <p className="text-[10px] lg:text-[10px]">
+                            Starting from
+                        </p>
+                        <div className="font-semibold text-[16px] lg:text-[20px] flex flex-col items-center">
+                            <span>₹{p.price}</span>
+                            {p.discount > 0 && (
+                                <div className="flex flex-row gap-2 text-center">
+                                    <span className="line-through text-gray-400 text-[8px] md:text-[10px] lg:text-[12px]">
+                                        ₹{p.originalPrice}
+                                    </span>
+                                    <span className="text-blue-400 text-[8px] md:text-[10px] lg:text-[12px]">
+                                        ({p.discount}% off)
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            ))
+        ) : (
+            // ✅ NO SERVICES FOUND CARD
+            <div className="
+                snap-center
+                w-[290px] md:w-[308px] lg:w-[408px] lg:h-[373.99px]
+                bg-[#F4F4F4] 
+                rounded-2xl
+                p-8
+                flex-shrink-0
+                overflow-hidden
+                flex flex-col items-center justify-center
+                text-center
+            ">
+                <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    No Services Found
+                </h3>
+                <p className="text-sm text-gray-500">
+                    There are no recommended services available at the moment.
+                </p>
+                <p className="text-xs text-gray-400 mt-4">
+                    Please check back later
+                </p>
             </div>
-        </div>
+        )}
+    </div>
+</div>
     );
 }

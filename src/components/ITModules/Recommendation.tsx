@@ -36,7 +36,7 @@ interface Package {
 }
 
 
-export default function Recommendation({ moduleId }: SectionProps) {
+export default function Recommendation({ moduleId,searchQuery }: SectionProps) {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
@@ -56,42 +56,19 @@ export default function Recommendation({ moduleId }: SectionProps) {
     }, [moduleId]);
 
 
+  const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
 
-    // const filteredServices = SERVICES.filter((item) => {
-    //     // PRICE FILTER
-    //     const rangeMatch =
-    //         selectedRange === "all" ||
-    //         (selectedRange === "0-300" && item.price < 300) ||
-    //         (selectedRange === "300-400" && item.price >= 300 && item.price < 400) ||
-    //         (selectedRange === "400-600" && item.price >= 400 && item.price <= 600) ||
-    //         (selectedRange === "600-800" && item.price >= 600 && item.price <= 800) ||
-    //         (selectedRange === "800-1000" && item.price > 800);
+    const q = searchQuery.toLowerCase();
 
-    //     // CATEGORY FILTER
-    //     const categoryMatch =
-    //         selectedCategory === "all" ||
-    //         item.title === selectedCategory;
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];       
 
-    //     // CONTEXT (from slug)
-    //     // const contextMatch =
-    //     //     !contextTitle ||
-    //     //     item.title.toLowerCase() === contextTitle.toLowerCase();
-    //     const normalizedTitle = item.title.toLowerCase();
-    //     const normalizedContext = contextTitle?.toLowerCase();
-
-    //     const contextMatch =
-    //         !contextTitle ||
-    //         normalizedTitle === normalizedContext;
-
-    //     // SEARCH
-    //     const searchMatch =
-    //         searchQuery === "" ||
-    //         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //         item.category.toLowerCase().includes(searchQuery.toLowerCase());
-
-    //     return rangeMatch && categoryMatch && searchMatch && contextMatch;
-    // });
-
+  
 
     type CardBgProps = {
         active?: boolean;
@@ -130,7 +107,7 @@ export default function Recommendation({ moduleId }: SectionProps) {
 
 
 
-    const mappedServices = services.map((service) => {
+    const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
         return ({

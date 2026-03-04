@@ -441,7 +441,7 @@ const ServiceDetails = () => {
     useEffect(() => {
         // If service ID changed (and it's not the first load)
         if (prevServiceIdRef.current && prevServiceIdRef.current !== serviceId) {
-            setSelectedPackage(null);
+           setSelectedPackage(null, serviceId);
         }
         
         // Update the ref

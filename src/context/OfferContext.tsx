@@ -19,7 +19,7 @@ interface OfferFAQ {
 
 export interface Offer {
   _id: string;
-  id: string;
+  id?: string;
 
   bannerImage: string;
   thumbnailImage: string;
@@ -35,7 +35,10 @@ export interface Offer {
 
   faq: OfferFAQ[];
 
-  service: string | null;
+  service: {
+    _id: string;
+    serviceName: string;
+  } | null;  
   isActive: boolean;
 
   createdAt: string;

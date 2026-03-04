@@ -25,7 +25,7 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
                                 overflow-hidden 
                                 "
         >
-          {/* ================= IMAGE SECTION ================= */}
+          {/*  IMAGE SECTION  */}
           <div className="relative h-[160px] p-3">
             <img
               src={service.image || "/image/placeholder.png"}
@@ -40,12 +40,12 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
             </span>
 
             {/* Discount */}
-            {service.discount > 0 && (
+            {/* {service.discount > 0 && (
               <span className="absolute top-5 right-14 bg-white text-black text-[10px] font-semibold px-2 py-1 rounded-lg">
                 Discount {service.discount}%
 
               </span>
-            )}
+            )} */}
 
             {/* Bookmark */}
             <button

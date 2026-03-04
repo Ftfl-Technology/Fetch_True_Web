@@ -12,21 +12,22 @@ import { ChevronLeft } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useModule } from '@/src/context/CategoriesContext';
 import { useBannerCategorySelection } from "@/src/context/BannerContext"
+import SearchBar from '@/src/components/SearchBar/Search';
 
 type BannerCategorySelection = {
-  _id: string;
-  file: string;
-  page: string;
-  selectionType: string;
-  screenCategory: string;
-  module: {
     _id: string;
-    name: string;
-  };
-  subcategory?: {
-    _id: string;
-    name: string;
-  };
+    file: string;
+    page: string;
+    selectionType: string;
+    screenCategory: string;
+    module: {
+        _id: string;
+        name: string;
+    };
+    subcategory?: {
+        _id: string;
+        name: string;
+    };
 };
 
 
@@ -39,17 +40,17 @@ export default function EducationModulePage() {
     const { categories, loading, error, fetchCategoriesByModule } = useModule();
     const { data, fetchBannerCategorySelections } = useBannerCategorySelection();
 
-      const BannerData =
+    const BannerData =
         data?.map((item: BannerCategorySelection, index: number) => ({
             label: `Image ${index + 1}`,
-            path: item.file, 
+            path: item.file,
         })) || [];
 
 
 
     const router = useRouter();
     const params = useParams();
-   
+
 
     const moduleId = params.moduleId as string;
 
@@ -133,35 +134,35 @@ export default function EducationModulePage() {
 
 
     if (loading) {
-  return (
-    <div className="lg:w-[1400px] mx-auto p-6 animate-pulse">
-      
-      {/* Title Skeleton */}
-      <div className="h-8 w-64 bg-gray-200 rounded-md mb-6" />
+        return (
+            <div className="lg:w-[1400px] mx-auto p-6 animate-pulse">
 
-      {/* Tabs Skeleton */}
-      <div className="flex gap-3 mb-8">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="h-10 w-28 bg-gray-200 rounded-full"
-          />
-        ))}
-      </div>
+                {/* Title Skeleton */}
+                <div className="h-8 w-64 bg-gray-200 rounded-md mb-6" />
 
-      {/* Content Cards Skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div
-            key={i}
-            className="h-48 bg-gray-200 rounded-xl"
-          />
-        ))}
-      </div>
+                {/* Tabs Skeleton */}
+                <div className="flex gap-3 mb-8">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                            key={i}
+                            className="h-10 w-28 bg-gray-200 rounded-full"
+                        />
+                    ))}
+                </div>
 
-    </div>
-  );
-}
+                {/* Content Cards Skeleton */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div
+                            key={i}
+                            className="h-48 bg-gray-200 rounded-xl"
+                        />
+                    ))}
+                </div>
+
+            </div>
+        );
+    }
 
     if (error) return <p>{error}</p>;
 
@@ -182,7 +183,7 @@ export default function EducationModulePage() {
                         <div className="flex items-center gap-4 mr-10">
                             {/* SEARCH */}
                             <div className="hidden md:block relative w-[260px] lg:w-[307px]">
-                                <input
+                                {/* <input
                                     type="text"
                                     placeholder="Search"
                                     value={searchQuery}
@@ -196,6 +197,11 @@ export default function EducationModulePage() {
                                                       outline-none
                                                       focus:border-blue-500
                                                   "
+                                /> */}
+                                <SearchBar
+                                    value={searchQuery}
+                                    onChange={setSearchQuery}
+                                    placeholder="Search"
                                 />
 
                                 {/* search icon */}
@@ -429,10 +435,10 @@ export default function EducationModulePage() {
             </section>
 
             <section className='relative w-full bg-[#F8F9FA]'>
-                <Recommendation moduleId={moduleId} />
-                <MostPopular moduleId={moduleId} />
-                <TopPicks moduleId={moduleId} />
-                <WhyChooseUs  moduleId={moduleId} />
+                <Recommendation moduleId={moduleId} searchQuery={searchQuery}/>
+                <MostPopular moduleId={moduleId} searchQuery={searchQuery}/>
+                <TopPicks moduleId={moduleId} searchQuery={searchQuery}/>
+                <WhyChooseUs moduleId={moduleId} />
             </section>
 
         </>

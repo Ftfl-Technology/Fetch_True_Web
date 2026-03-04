@@ -19,9 +19,10 @@ import Link from "next/link";
 import { Eye, Pencil } from "lucide-react";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useReview } from "@/src/context/ReviewContext";
 import { useCheckout } from "@/src/context/CheckoutContext";
+import { useModule } from "@/src/context/ModuleContext";
 
 
 type CourseInfo = {
@@ -57,6 +58,8 @@ export default function ServiceDetails() {
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
     const params = useParams();
+    const router = useRouter();
+    const { modules } = useModule();
     const serviceId = params.id as string;
 
 
@@ -70,6 +73,12 @@ export default function ServiceDetails() {
     const searchParams = useSearchParams();
 
     const serviceName = searchParams.get("service");
+
+    const educationModule = modules?.find(
+        (module: any) => module.name === "Education"
+    );
+
+    const educationId = educationModule?._id;
 
 
 
@@ -86,9 +95,10 @@ export default function ServiceDetails() {
                     <div className="w-screen fixed top-0 z-50 bg-white mx-auto flex items-center justify-between px-8 py-4">
                         {/* LEFT */}
                         <div className="flex items-center gap-3 ml-20">
-                            <Link href="/MainModules/ITService">
-                                <ChevronLeft size={24} className="cursor-pointer" />
-                            </Link>
+                             <button
+                                    onClick={() => router.push(`/MainModules/Education/${educationId}`)}>
+                                    <ChevronLeft size={28} className="cursor-pointer" />
+                                </button>
                             <h1 className="text-[24px] font-semibold">Service Details</h1>
                         </div>
 

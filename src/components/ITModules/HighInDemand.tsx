@@ -372,7 +372,7 @@ interface Package {
     whatYouGet: string[];
 }
 
-export default function HighInDemand({ moduleId }: SectionProps) {
+export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
@@ -388,16 +388,6 @@ export default function HighInDemand({ moduleId }: SectionProps) {
 
         fetchRecommendedServices(moduleId);
     }, [moduleId]);
-
-
-
-    const CARD_CLASSES = `
-    snap-center flex-shrink-0
-    w-[88vw] sm:w-[70vw] md:w-[390px] md:h-[362.04px]
-    rounded-3xl p-3
-    shadow-lg
-    `;
-
 
 
     type CardBgProps = {
@@ -436,7 +426,19 @@ export default function HighInDemand({ moduleId }: SectionProps) {
     };
 
 
-    const mappedServices = services.map((service) => {
+ const filteredServices =
+  services?.filter((service) => {
+    if (!searchQuery?.trim()) return true;
+
+    const q = searchQuery.toLowerCase();
+
+    return (
+      service.serviceName?.toLowerCase().includes(q) ||
+      service.category?.name?.toLowerCase().includes(q)
+    );
+  }) || [];   
+
+    const mappedServices = filteredServices.map((service) => {
          const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
         return ({
