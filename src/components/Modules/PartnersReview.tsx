@@ -175,7 +175,7 @@ export default function PartnersReview() {
     }
 
     return (
-        <section className="lg:w-[1400px] md:w-[700px] w-[300px] mx-auto">
+        <section className="lg:w-[1440px] md:w-[700px] w-[300px] mx-auto">
             <h2 className="mb-4 lg:text-[24px] font-semibold">Partners Review</h2>
 
             <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4">

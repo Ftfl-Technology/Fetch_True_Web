@@ -526,12 +526,12 @@ export default function ITModulesPage() {
                         <div className="flex items-center justify-between">
                             {/* LEFT */}
                             <div className="flex items-center gap-3 p-8 min-w-0">
-                                <Link href="/MainModules/OnDemand">
+                               <button onClick={() => router.back()}>
                                     <ChevronLeft className="w-[28px] h-[28px] text-black cursor-pointer bg-white rounded-full p-1 shrink-0" />
-                                </Link>
+                                </button>
 
                                 <h1 className="text-[16px] font-semibold truncate">
-                                    {/* {formatSlugToTitle(slug)} */} IT Service
+                                    IT Service
                                 </h1>
                             </div>
 
@@ -559,13 +559,13 @@ export default function ITModulesPage() {
                                 onChange={setSearchQuery}
                                 placeholder="Search"
                             />
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                            {/* <span className="absolute left-4 top-1/2 -translate-y-1/2">
                                 <img
                                     src="/image/itsearch.png"
                                     className="w-[18px] h-[16px]"
                                     alt="Search"
                                 />
-                            </span>
+                            </span> */}
                         </div>
                     </div>
                 </section>
@@ -631,12 +631,12 @@ export default function ITModulesPage() {
                 </div>
 
                 {/* ===== CATEGORY ===== */}
-                <div className="w-full px-4 md:px-8 mt-10">
-                    <h2 className="text-xl md:text-3xl font-semibold p-8">
+                <div className="w-full px-4 md:px-8 mt-2">
+                    <h2 className="text-xl md:text-3xl font-semibold p-2">
                         Category
                     </h2>
 
-                    <div className="flex gap-16 p-8 overflow-x-auto no-scrollbar ">
+                    <div className="flex gap-16 p-4 overflow-x-auto no-scrollbar ">
                         {categories.map((cat, index) => (
                             <button
                                 key={index}

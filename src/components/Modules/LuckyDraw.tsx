@@ -5,7 +5,7 @@ export default function LuckyDraw() {
 
     return (
         <>
-            <div className="lg:w-[1400px] md:w-[740px] mb-10 mx-auto">
+            <div className="lg:w-[1470px] md:w-[740px] mb-10 mx-auto">
                 <div className="lg:w-[1400px] relative">
                     <img src="/image/luckydrawrectangle.png" alt="cardbackground" className="w-full h-[234px] md:w-full md:h-full lg:w-full lg:h-full object-fit" />
                     <img src="/image/thargift.png" alt="carimage" className="absolute bottom-10 right-10 md:bottom-5 md:right-30 lg:bottom-5 lg:right-30 w-[120px] h-[120px] md:w-[180px] md:h-[180px] lg:w-[334px] lg:h-[353px] object-contain" />

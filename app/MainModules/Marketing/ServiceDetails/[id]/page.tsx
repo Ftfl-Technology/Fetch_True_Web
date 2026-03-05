@@ -90,9 +90,9 @@ export default function ServiceDetails() {
 
                                 {/* LEFT */}
                                 <div className="flex items-center gap-3 mt-4 ml-28">
-                                    <Link href="/MainModules/ITService">
+                                    <button onClick={() => window.history.back()}>
                                         <ChevronLeft size={24} className="cursor-pointer" />
-                                    </Link>
+                                    </button>
                                     <h1 className="md:text-[18px] lg:text-[24px] font-semibold">Service Details</h1>
                                 </div>
 
@@ -151,8 +151,8 @@ export default function ServiceDetails() {
 
                                         <div className="flex items-center gap-2 text-[20px]">
                                             <span className="text-yellow-500">★</span>
-                                            <span className="font-semibold">{reviewServices?.averageRating}</span>
-                                            <span className="text-gray-500">({reviewServices?.totalReviews})</span>
+                                            <span className="font-semibold">{service?.averageRating}</span>
+                                            <span className="text-gray-500">({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</span>
                                         </div>
 
                                         {/* <div className="gap-4 p-2 flex items-center">
@@ -163,12 +163,12 @@ export default function ServiceDetails() {
                                         <div className="p-4 mt-2 w-full">
                                             <div className="flex items-center gap-4">
                                                 <span className="text-gray-500 text-[24px]">Starting</span>
-                                                <span className="text-[36px] font-semibold">{service?.discountedPrice}</span>
+                                                <span className="text-[36px] font-semibold">{service?.serviceDetails?.packages?.[0]?.discountedPrice}</span>
                                                 <span className="line-through text-[20px] text-gray-400">
-                                                    {service?.price}
+                                                    {service?.serviceDetails?.packages?.[0]?.price}
                                                 </span>
                                                 <span className="text-[16px] text-blue-600 font-semibold px-3 py-1 rounded">
-                                                {service?.discount} OFF
+                                                {service?.serviceDetails?.packages?.[0]?.discount}% OFF
                                                 </span>
                                             </div>
                                         </div>
@@ -271,12 +271,12 @@ export default function ServiceDetails() {
                              <span className="text-gray-500 text-[12px] ">Starting from</span>
                             <div className="flex items-center gap-4">
                                
-                                <span className="text-[20px] font-semibold">₹ {service?.discountedPrice}</span>
+                                <span className="text-[20px] font-semibold">₹ {service?.serviceDetails?.packages?.[0]?.discountedPrice}</span>
                                 <span className="line-through text-[12px] text-gray-400">
-                                    ₹ {service?.price}
+                                    ₹ {service?.serviceDetails?.packages?.[0]?.price}
                                 </span>
                                 <span className="text-[10px] text-blue-600 font-semibold px-3 py-1 rounded whitespace-nowrap">
-                                    {service?.discount} OFF
+                                   {service?.serviceDetails?.packages?.[0]?.discount}% OFF
                                 </span>
                             </div>
                         </div>
