@@ -364,12 +364,10 @@ const heroBanners = getBannersByPage("home");
               className="
                 snap-start
                 shrink-0
-                w-full
-                sm:w-[90%]
-                lg:w-[1278px]
+                w-[90%]
                 h-[200px]
                 sm:h-[260px]
-                lg:h-[331px]
+                lg:h-[450px]
                 rounded-[16px]
                 overflow-hidden
                 relative

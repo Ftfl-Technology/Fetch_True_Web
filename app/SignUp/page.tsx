@@ -584,10 +584,10 @@ export default function SignUpPage() {
     if (!form.password)
       newErrors.password = "Password is required";
     else if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(form.password)
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(form.password)
     )
       newErrors.password =
-        "Password must be 8+ chars, include uppercase, lowercase & number";
+        "Password must be 4+ chars, include uppercase, lowercase,special character & number";
 
     if (form.password !== form.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
@@ -634,34 +634,41 @@ export default function SignUpPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
 
           {/* Full Name */}
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="w-full border rounded-lg px-4 py-2"
-            value={form.fullName}
-            onChange={(e) => {
-              setForm({ ...form, fullName: e.target.value });
-              setErrors({ ...errors, fullName: "" });
-            }}
-          />
-          {errors.fullName && (
-            <p className="text-red-500 text-xs">{errors.fullName}</p>
-          )}
+<input
+  type="text"
+  placeholder="Full Name"
+  className="w-full border rounded-lg px-4 py-2"
+  value={form.fullName}
+  onChange={(e) => {
+    const value = e.target.value.replace(/[^A-Za-z\s]/g, ""); // allow only letters & space
+    setForm({ ...form, fullName: value });
+    setErrors({ ...errors, fullName: "" });
+  }}
+/>
 
-          {/* Mobile */}
-          <input
-            type="text"
-            placeholder="Mobile Number"
-            className="w-full border rounded-lg px-4 py-2"
-            value={form.mobileNumber}
-            onChange={(e) => {
-              setForm({ ...form, mobileNumber: e.target.value });
-              setErrors({ ...errors, mobileNumber: "" });
-            }}
-          />
-          {errors.mobileNumber && (
-            <p className="text-red-500 text-xs">{errors.mobileNumber}</p>
-          )}
+{errors.fullName && (
+  <p className="text-red-500 text-xs">{errors.fullName}</p>
+)}
+
+         {/* Mobile */}
+<input
+  type="text"
+  placeholder="Mobile Number"
+  inputMode="numeric"
+  pattern="[0-9]*"
+  maxLength={10}
+  className="w-full border rounded-lg px-4 py-2"
+  value={form.mobileNumber}
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, ""); 
+    setForm({ ...form, mobileNumber: value });
+    setErrors({ ...errors, mobileNumber: "" });
+  }}
+/>
+
+{errors.mobileNumber && (
+  <p className="text-red-500 text-xs">{errors.mobileNumber}</p>
+)}
 
           {/* Email */}
           <input

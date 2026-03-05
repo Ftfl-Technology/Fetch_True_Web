@@ -692,6 +692,13 @@ export default function LoginPage() {
       {/* LEFT SIDE */}
       <div className="w-1/2 flex flex-col justify-center px-24">
         <div className="max-w-md">
+          <Image
+            src="/image/logo.png"
+            alt="Fetch True"
+            width={101}
+            height={69}
+            className="mb-6"
+          />
           <h1 className="text-3xl font-semibold mb-6">Welcome Back</h1>
 
           {errors.api && (
@@ -782,7 +789,7 @@ export default function LoginPage() {
                           height={351}
                           className="absolute bottom-6 right-6"
                         />
-                </div>
+      </div>
     </div>
   );
 }
