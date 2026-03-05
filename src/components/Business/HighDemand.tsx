@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface Props {
   moduleId: string;
@@ -30,6 +32,30 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
       fetchMostPopular(moduleId);
     }
   }, [moduleId]);
+
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+    useFavourites();
+  
+    const { user } = useAuth();
+  
+    const userId = user?._id;
+  
+    useEffect(() => {
+    if (userId) {
+      fetchFavourites(userId);
+    }
+  }, [userId]);
+  
+  const handleToggleFavourite = async (serviceId: string) => {
+    if (!userId) return;
+  
+    if (isFavourite(serviceId)) {
+      await removeFavourite(userId, serviceId);
+    } else {
+      await addFavourite(userId, serviceId);
+    }
+  };
+  
 
    useEffect(() => {
     const fetchAllROIs = async () => {
@@ -123,6 +149,8 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
           <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth">
             <HorizontalScroll>
             {filteredServices.map((service) => {
+                                const fav = isFavourite(service.serviceId);
+
               const investment =
                 service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 
@@ -148,6 +176,11 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
                   trusted={true}
                   slug={createSlug(service.category?.name || "")}
                   detailslug={createSlug(service.serviceName)}
+                  isFavourite={isFavourite(service.serviceId)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service.serviceId)
+                   }
                 />
                 </Link>
               );

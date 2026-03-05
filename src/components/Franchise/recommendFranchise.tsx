@@ -6,8 +6,8 @@ import { useEffect } from "react";
 import { useRecommendedServices } from "@/src/context/RecommendedContext";
 import { useParams } from "next/navigation";
 import HorizontalScroll from "../ui/HorizontalScroll";
-import { useFavourites } from "@/src/context/FavouriteContext";
 import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
 
 interface Props {
   moduleId: string;
@@ -19,33 +19,35 @@ export default function RecommendedSection({ moduleId,searchQuery }: Props) {
   const { services, loading, error, fetchRecommendedServices } =
     useRecommendedServices();
 
-  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
-  const { user } = useAuth();
 
-  const userId = user?._id;
 
   const { categoryId } = useParams<{
     moduleId: string;
     categoryId: string;
   }>();
 
-  /* ✅ SAFE toggle handler (NO event needed) */
-  const handleToggleFavourite = async (serviceId: string) => {
-    if (!user) {
-      alert("Please login first");
-      return;
-    }
+  const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+  useFavourites();
 
-    try {
-      if (isFavourite(serviceId)) {
-        await removeFavourite(serviceId, userId);
-      } else {
-        await addFavourite(serviceId, userId);
-      }
-    } catch (err) {
-      console.error("Favourite toggle failed", err);
-    }
-  };
+  const { user } = useAuth();
+
+  const userId = user?._id;
+
+  useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
 
 const filteredServices =
   services?.filter((service) => {
@@ -93,7 +95,8 @@ const filteredServices =
         <div className="flex gap-4 pb-4">
           <HorizontalScroll>
             {filteredServices.map((service) => {
-              // const fav = isFavourite(service._id);
+                  const fav = isFavourite(service._id);
+
 
               return (
                 <Link
@@ -125,10 +128,13 @@ const filteredServices =
                       service.keyValues?.find((kv) => kv.key === "Area")
                         ?.value || "N/A"
                     }
-                    // isFavourite={fav}
-                    // onToggleFavourite={() =>
-                    //   handleToggleFavourite(service._id)
-                    // }
+                   isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
+
+                    
                   />
                 </Link>
               );

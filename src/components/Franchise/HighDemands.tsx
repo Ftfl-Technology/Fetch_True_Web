@@ -134,6 +134,8 @@ import { useMostPopular } from "@/src/context/MostPopularContext";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 const bgColors = [
   "bg-[#E9B3A1]",
@@ -149,10 +151,33 @@ interface Props {
 export default function MostPopular({ moduleId,searchQuery }: Props) {
   const { services, fetchMostPopular, loading, error } = useMostPopular();
 
+  const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+    useFavourites();
+  
+    const { user } = useAuth();
+  
+    const userId = user?._id;
+
     const { categoryId } = useParams<{
     moduleId: string;
     categoryId: string;
   }>();
+
+    useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
 
   const filteredServices =
   services?.filter((service) => {
@@ -190,6 +215,8 @@ export default function MostPopular({ moduleId,searchQuery }: Props) {
         <div className="flex gap-4">
           <HorizontalScroll>
           {filteredServices.map((service, index) => {
+            const fav = isFavourite(service.serviceId);
+
             const investment =
               service.franchiseDetails.investmentRange?.[0];
             const monthly =
@@ -212,6 +239,11 @@ export default function MostPopular({ moduleId,searchQuery }: Props) {
                 investment={`${investment?.range} ${investment?.parameters}`}
                 area="500–1000 Sq"
                 bg={bgColors[index % bgColors.length]}
+                 isFavourite={isFavourite(service.serviceId)}
+
+    onToggleFavourite={() =>
+      handleToggleFavourite(service.serviceId)
+    }
               />
               </Link>
             );

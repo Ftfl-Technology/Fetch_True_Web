@@ -172,6 +172,8 @@ import { useEffect, useRef } from "react";
 import { useMostPopular } from "@/src/context/MostPopularContext";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 
@@ -193,6 +195,29 @@ const MostPopularSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
       };
 
        const { services,loading,error,fetchMostPopular } = useMostPopular();
+
+        const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+        useFavourites();
+      
+        const { user } = useAuth();
+      
+        const userId = user?._id;
+      
+        useEffect(() => {
+        if (userId) {
+          fetchFavourites(userId);
+        }
+      }, [userId]);
+      
+      const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+      
+        if (isFavourite(serviceId)) {
+          await removeFavourite(userId, serviceId);
+        } else {
+          await addFavourite(userId, serviceId);
+        }
+      };
 
        const filteredServices =
   services?.filter((service) => {
@@ -253,7 +278,10 @@ const MostPopularSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
             pb-4
           "
         >
-          {filteredServices.map((service) => (
+          {filteredServices.map((service) => {
+                              const fav = isFavourite(service.serviceId);
+
+            return(
             <Link href={`/MainModules/Finance/${moduleId}/${categoryId}/${service.serviceId}`}
              key={service.serviceId} className="snap-start shrink-0">
                             <FinanceCard  
@@ -273,10 +301,16 @@ const MostPopularSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
                             ?.toLowerCase()
                             .replace(/\s+/g, "-")}
                           detailslug={service.serviceId}
+                           isFavourite={isFavourite(service.serviceId)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service.serviceId)
+                   }
             
                             />
                           </Link>
-          ))}
+          )
+})}
         </div>
 
       </div>

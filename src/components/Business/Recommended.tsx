@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface Props {
   moduleId: string;
@@ -16,6 +18,13 @@ interface Props {
 export default function Recommended({ moduleId,searchQuery }: Props) {
   const { services, loading, fetchRecommendedServices } =
     useRecommendedServices();
+
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+      useFavourites();
+    
+      const { user } = useAuth();
+    
+      const userId = user?._id;
 
     const { fetchServiceDetails,service } = useServiceDetails();
 
@@ -31,6 +40,22 @@ export default function Recommended({ moduleId,searchQuery }: Props) {
       fetchRecommendedServices(moduleId);
     }
   }, [moduleId]);
+
+   useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
 
    useEffect(() => {
     const fetchAllROIs = async () => {
@@ -109,6 +134,8 @@ export default function Recommended({ moduleId,searchQuery }: Props) {
           <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth">
             <HorizontalScroll>
             {filteredServices.map((service) => {
+                                const fav = isFavourite(service._id);
+
               const investment =
                 service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 
@@ -142,6 +169,11 @@ export default function Recommended({ moduleId,searchQuery }: Props) {
                   trusted={true}
                   slug={createSlug(service.category?.name || "")}
                   detailslug={createSlug(service.serviceName)}
+                  isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
                 </Link>
               );

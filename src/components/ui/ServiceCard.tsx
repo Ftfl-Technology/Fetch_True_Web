@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { Bookmark, Strikethrough } from "lucide-react";
 import Link from "next/link";
+import { CiBookmark } from "react-icons/ci";
+
 
 export default function ServiceCard({
   title,
@@ -17,6 +19,8 @@ export default function ServiceCard({
   commission,
   slug,
   detailslug,
+  isFavourite,
+  onToggleFavourite,
 }:any ) {
   return (
     <div
@@ -36,9 +40,17 @@ export default function ServiceCard({
           </div>
 
           {/* Bookmark */}
-          <div className="absolute top-2 right-2 w-8 h-8 bg-black rounded-full flex items-center justify-center">
-            <Bookmark size={16} className="text-white" />
-          </div>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleFavourite();
+            }}
+            className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
+              ${isFavourite ? "bg-red-500" : "bg-black"}`}
+          >
+            <CiBookmark size={14} color="#fff" />
+          </button>
         </div>
 
         {/* CONTENT */}

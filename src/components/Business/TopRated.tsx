@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useTopTrending } from "@/src/context/TopTrendingContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
 
 interface Props {
   moduleId: string;
@@ -19,6 +21,13 @@ export default function TopRated({ moduleId,searchQuery }: Props) {
     useTopTrending();
 
     const { fetchServiceDetails,service } = useServiceDetails();
+    
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+      useFavourites();
+    
+      const { user } = useAuth();
+    
+      const userId = user?._id;
 
     const [roiMap, setRoiMap ] = useState<Record<string,string>>({});
 
@@ -63,6 +72,22 @@ export default function TopRated({ moduleId,searchQuery }: Props) {
 
   const createSlug = (text: string) =>
     text.toLowerCase().replace(/\s+/g, "-");
+
+    useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
 
   const filteredServices =
   services?.filter((service) => {
@@ -131,6 +156,8 @@ export default function TopRated({ moduleId,searchQuery }: Props) {
       <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth">
         <HorizontalScroll>
             {filteredServices.map((service) => {
+                                const fav = isFavourite(service._id);
+
               const investment =
                 service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 
@@ -165,6 +192,11 @@ export default function TopRated({ moduleId,searchQuery }: Props) {
                   trusted={true}
                   slug={createSlug(service.category?.name || "")}
                   detailslug={createSlug(service.serviceName)}
+                  isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
                 </Link>
               );

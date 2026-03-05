@@ -172,6 +172,8 @@ export default function FinanceCard({
   earnUpto,
   rating = 0,
   keyvalues = [],
+  isFavourite,
+  onToggleFavourite,
 }:any) {
   return (
     <div className="w-[340px] lg:w-[350px] h-[420px] bg-white rounded-[14px] border border-[#E7E7E7] shadow-[0px_4px_14px_rgba(0,0,0,0.06)] overflow-hidden">
@@ -194,9 +196,17 @@ export default function FinanceCard({
         )}
 
         {/* BOOKMARK */}
-        <div className="absolute top-3 right-3 w-[40px] h-[40px] bg-black rounded-full flex items-center justify-center shadow-md">
-          <CiBookmark size={20} color="white" />
-        </div>
+        <button
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleFavourite();
+  }}
+  className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
+    ${isFavourite ? "bg-red-500" : "bg-black"}`}
+>
+  <CiBookmark size={14} color="#fff" />
+</button>
       </div>
 
       {/* CONTENT */}

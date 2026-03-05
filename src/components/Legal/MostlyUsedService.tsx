@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 
@@ -25,6 +27,29 @@ export default function MostlyUsedService({moduleId,searchQuery}:{moduleId:strin
                 moduleId: string;
                 categoryId: string;
               }>();
+
+               const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+                useFavourites();
+              
+                const { user } = useAuth();
+              
+                const userId = user?._id;
+              
+                useEffect(() => {
+                if (userId) {
+                  fetchFavourites(userId);
+                }
+              }, [userId]);
+              
+              const handleToggleFavourite = async (serviceId: string) => {
+                if (!userId) return;
+              
+                if (isFavourite(serviceId)) {
+                  await removeFavourite(userId, serviceId);
+                } else {
+                  await addFavourite(userId, serviceId);
+                }
+              };
 
          const filteredServices =
   services?.filter((service) => {
@@ -69,7 +94,10 @@ export default function MostlyUsedService({moduleId,searchQuery}:{moduleId:strin
             "
           >
             <HorizontalScroll>
-            {filteredServices.map((service) => (
+            {filteredServices.map((service) => {
+                                const fav = isFavourite(service._id);
+
+              return(
               <Link  href={`/MainModules/Legal-Services/${moduleId}/${categoryId}/${service.serviceId}`}
               key={service.serviceId} className="snap-start shrink-0">
                <ServiceCard
@@ -91,7 +119,8 @@ export default function MostlyUsedService({moduleId,searchQuery}:{moduleId:strin
                              detailslug={service.serviceId}
                            />
               </Link>
-            ))}
+              );
+            })}
             </HorizontalScroll>
           </div>
         </section>

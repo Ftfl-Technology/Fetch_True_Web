@@ -144,7 +144,7 @@ const { user, logout} = useAuth();
 
   const navItems = [
     { label: "Home", href: "/", icon: Home },
-    // { label: "Offers", href: "/Offers", icon: Tag },
+    { label: "Offers", href: "/Offers", icon: Tag },
     { label: "Academy", href: "/Academy", icon: GraduationCap },
     { label: "Account", href: "/Account", icon: User },
     { label: "Packages", href: "/Packages/", icon: Package },

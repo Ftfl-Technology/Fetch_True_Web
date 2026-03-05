@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { CiBookmark } from "react-icons/ci";
+
 
 type BusinessCardProps = {
   image: string;
@@ -12,6 +14,8 @@ type BusinessCardProps = {
   trusted?: boolean;
   slug:string;
   detailslug?:string;
+   isFavourite: boolean;
+onToggleFavourite: () => void;
 };
 
 const BusinessCard: React.FC<BusinessCardProps> = ({
@@ -24,6 +28,8 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
   roi,
   rating,
   trusted = true,
+  isFavourite,
+  onToggleFavourite,
   
 }) => {
   return (
@@ -52,6 +58,18 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
             ✔ Trusted
           </span>
         )}
+
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleFavourite();
+          }}
+          className={`absolute top-3 right-3 w-[24px] h-[24px] rounded-full flex items-center justify-center
+            ${isFavourite ? "bg-red-500" : "bg-black"}`}
+        >
+          <CiBookmark size={14} color="#fff" />
+        </button>
 
         <span className="absolute bottom-3 right-4 bg-[#1D4699] text-white text-[14px] rounded flex items-center px-1  lg:px-2 py-1 ">
           <img src="/image/star.png" alt="star" className="w-4 h-4" />

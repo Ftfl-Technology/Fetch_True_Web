@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 
@@ -25,6 +27,29 @@ export default function RecommendedForYou({ moduleId,searchQuery }:{ moduleId:st
             moduleId: string;
             categoryId: string;
           }>();
+
+           const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+            useFavourites();
+          
+            const { user } = useAuth();
+          
+            const userId = user?._id;
+          
+            useEffect(() => {
+            if (userId) {
+              fetchFavourites(userId);
+            }
+          }, [userId]);
+          
+          const handleToggleFavourite = async (serviceId: string) => {
+            if (!userId) return;
+          
+            if (isFavourite(serviceId)) {
+              await removeFavourite(userId, serviceId);
+            } else {
+              await addFavourite(userId, serviceId);
+            }
+          };
 
          const filteredServices =
   services?.filter((service) => {
@@ -71,7 +96,10 @@ export default function RecommendedForYou({ moduleId,searchQuery }:{ moduleId:st
             "
           >
             <HorizontalScroll>
-            {filteredServices.map((service) => (
+            {filteredServices.map((service) => {
+                                const fav = isFavourite(service._id);
+
+              return(
 
               <Link  href={`/MainModules/Legal-Services/${moduleId}/${categoryId}/${service._id}`}
                key={service._id} className="snap-start shrink-0">
@@ -96,9 +124,16 @@ export default function RecommendedForYou({ moduleId,searchQuery }:{ moduleId:st
                 .replace(/\s+/g, "-")}
               detailslug={service._id}
 
+              isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
+
                 />
               </Link>
-            ))}
+              )
+            })}
             </HorizontalScroll>
           </div>
         </section>

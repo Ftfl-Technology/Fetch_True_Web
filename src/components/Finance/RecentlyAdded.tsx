@@ -6,6 +6,8 @@ import { useEffect, useRef } from "react";
 import { useTopTrending } from "@/src/context/TopTrendingContext";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 
@@ -51,6 +53,29 @@ const TopTrendingSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
                   categoryId: string;
                 }>();
 
+                 const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+                  useFavourites();
+                
+                  const { user } = useAuth();
+                
+                  const userId = user?._id;
+                
+                  useEffect(() => {
+                  if (userId) {
+                    fetchFavourites(userId);
+                  }
+                }, [userId]);
+                
+                const handleToggleFavourite = async (serviceId: string) => {
+                  if (!userId) return;
+                
+                  if (isFavourite(serviceId)) {
+                    await removeFavourite(userId, serviceId);
+                  } else {
+                    await addFavourite(userId, serviceId);
+                  }
+                };
+
         console.log("finance Module Id:",moduleId)
       
         if(loading) return null;
@@ -86,7 +111,10 @@ const TopTrendingSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
             pb-4
           "
         >
-          {filteredServices.map((service) => (
+          {filteredServices.map((service) => {
+                              const fav = isFavourite(service._id);
+
+            return (
             <Link href={`/MainModules/Finance/${moduleId}/${categoryId}/${service._id}`}
             key={service._id} className="snap-start shrink-0">
                             <FinanceCard  
@@ -108,10 +136,16 @@ const TopTrendingSection = ({ moduleId,searchQuery }:{ moduleId:string,searchQue
                             ?.toLowerCase()
                             .replace(/\s+/g, "-")}
                           detailslug={service._id}
+                           isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
             
                             />
                           </Link>
-          ))}
+          )
+})}
         </div>
 
       </div>

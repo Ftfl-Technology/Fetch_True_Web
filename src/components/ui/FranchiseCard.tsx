@@ -18,8 +18,8 @@ interface RecommendedCardProps {
   area: string;
   bgImage?: string; 
 
-  // isFavourite: boolean;
-  // onToggleFavourite: () => void;
+  isFavourite: boolean;
+onToggleFavourite: () => void;
 }
 
 export default function RecommendedCard({
@@ -35,8 +35,8 @@ export default function RecommendedCard({
   area,
   bgImage = "/image/recommendedrealestate.png",
 
-  // isFavourite,
-  // onToggleFavourite,
+  isFavourite,
+  onToggleFavourite,
 }: RecommendedCardProps) {
   return (
     <div
@@ -67,19 +67,18 @@ export default function RecommendedCard({
           </div>
 
           {/* BOOKMARK/Favourite */}
-          <div className="absolute top-2 right-2 w-[24px] h-[24px] bg-black rounded-full flex items-center justify-center">
-            <CiBookmark size={14} color="#fff" />
-          </div>
-          <button
-            // onClick={(e) => {
-            //   e.preventDefault(); // prevent Link navigation
-            //   onToggleFavourite();
-            // }}
-            // className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center transition
-            //   ${isFavourite ? "bg-red-500" : "bg-black"}`}
-          >
-            <CiBookmark size={14} color="#fff" />
-          </button>
+          
+         <button
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleFavourite();
+  }}
+  className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
+    ${isFavourite ? "bg-red-500" : "bg-black"}`}
+>
+  <CiBookmark size={14} color="#fff" />
+</button>
 
           {/* RATING */}
           <div className="absolute bottom-0 right-0 flex items-center gap-1 bg-white px-2 py-[2px] rounded-md">

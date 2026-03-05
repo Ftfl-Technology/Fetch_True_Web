@@ -16,6 +16,8 @@ interface MostPopularCardProps {
   investment: string;
   area: string;
   bg: string;
+  isFavourite: boolean;
+onToggleFavourite: () => void;
 }
 
 export default function FranchiseMostPopularCard({
@@ -29,6 +31,8 @@ export default function FranchiseMostPopularCard({
   investment,
   area,
   bg,
+  isFavourite,
+  onToggleFavourite,
 }: MostPopularCardProps) {
   return (
     <div className={`w-[338px] h-[340px] rounded-[16px] p-3 text-white ${bg}`}>
@@ -40,9 +44,17 @@ export default function FranchiseMostPopularCard({
           <VscWorkspaceTrusted size={11} color="#2164F4" />
         </div>
 
-        <div className="absolute top-2 right-2 w-[22px] h-[22px] bg-black/70 rounded-full flex items-center justify-center">
-          <CiBookmark size={13} />
-        </div>
+        <button
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleFavourite();
+  }}
+  className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
+    ${isFavourite ? "bg-red-500" : "bg-black"}`}
+>
+  <CiBookmark size={14} color="#fff" />
+</button>
       </div>
 
       {/* CONTENT */}
