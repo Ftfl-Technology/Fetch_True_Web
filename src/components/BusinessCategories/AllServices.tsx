@@ -8,6 +8,8 @@ import Link from "next/link";
 import BusinessCard from "../ui/BusinessCard";
 import { useCategorywiseServices } from "@/src/context/CategorywiseServiceContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface Props {
   categoryId: string;
@@ -64,6 +66,29 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
   return service.subcategory?._id === selectedSubCategory;
 });
 
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+    useFavourites();
+  
+    const { user } = useAuth();
+  
+    const userId = user?._id;
+  
+    useEffect(() => {
+    if (userId) {
+      fetchFavourites(userId);
+    }
+  }, [userId]);
+  
+  const handleToggleFavourite = async (serviceId: string) => {
+    if (!userId) return;
+  
+    if (isFavourite(serviceId)) {
+      await removeFavourite(userId, serviceId);
+    } else {
+      await addFavourite(userId, serviceId);
+    }
+  };
+
   const createSlug = (text: string) =>
     text?.toLowerCase().replace(/\s+/g, "-");
 
@@ -115,6 +140,8 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
   >
     {viewAll ? (
       filteredServices.map((service) => {
+                                            const fav = isFavourite(service._id);
+
         const investment =
           service.franchiseDetails?.investmentRange?.[0]?.range || "—";
         const earnings =
@@ -144,6 +171,11 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
               trusted
               slug={createSlug(service.category?.name)}
               detailslug={createSlug(service.serviceName)}
+               isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
             />
           </Link>
         );
@@ -151,6 +183,8 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
     ) : (
       <HorizontalScroll>
         {filteredServices.map((service) => {
+                                    const fav = isFavourite(service._id);
+
           const investment =
             service.franchiseDetails?.investmentRange?.[0]?.range || "—";
           const earnings =
@@ -180,6 +214,11 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
                 trusted
                 slug={createSlug(service.category?.name)}
                 detailslug={createSlug(service.serviceName)}
+                 isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
               />
             </Link>
           );
