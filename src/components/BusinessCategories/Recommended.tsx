@@ -9,6 +9,8 @@ import BusinessCard from "../ui/BusinessCard";
 import { useCategorywiseServices } from "@/src/context/CategorywiseServiceContext";
 import { useRecommendedServiceByCategoryIdContext } from "@/src/context/RecommendedServiceByCategoryIdContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface Props {
   categoryId: string;
@@ -28,6 +30,30 @@ export default function AllServices({ categoryId, moduleId }: Props) {
       fetchRecommendedServicesByCategoryId(categoryId);
     }
   }, [categoryId]);
+
+
+      const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+      useFavourites();
+    
+      const { user } = useAuth();
+    
+      const userId = user?._id;
+    
+      useEffect(() => {
+      if (userId) {
+        fetchFavourites(userId);
+      }
+    }, [userId]);
+    
+    const handleToggleFavourite = async (serviceId: string) => {
+      if (!userId) return;
+    
+      if (isFavourite(serviceId)) {
+        await removeFavourite(userId, serviceId);
+      } else {
+        await addFavourite(userId, serviceId);
+      }
+    };
 
   console.log("Recommended API categoryId:", categoryId);
 
@@ -83,6 +109,8 @@ export default function AllServices({ categoryId, moduleId }: Props) {
         <div className="flex gap-4">
           <HorizontalScroll>
           {services.map((service) => {
+                                                const fav = isFavourite(service._id);
+
             const investment =
               service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 
@@ -115,6 +143,11 @@ export default function AllServices({ categoryId, moduleId }: Props) {
                   trusted={true}
                   slug={createSlug(service.category?.name)}
                   detailslug={createSlug(service.serviceName)}
+                   isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
               </Link>
             );

@@ -10,6 +10,8 @@ import { useCategorywiseServices } from "@/src/context/CategorywiseServiceContex
 import { useRecommendedServiceByCategoryIdContext } from "@/src/context/RecommendedServiceByCategoryIdContext";
 import { useTopTrendingServiceByCategoryIdContext } from "@/src/context/TopTrendingServiceByCategoryIdContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 interface Props {
   categoryId: string;
@@ -29,6 +31,29 @@ export default function TopTrending({ categoryId, moduleId }: Props) {
       fetchTopTrendingServicesByCategoryId(categoryId);
     }
   }, [categoryId]);
+
+      const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+      useFavourites();
+    
+      const { user } = useAuth();
+    
+      const userId = user?._id;
+    
+      useEffect(() => {
+      if (userId) {
+        fetchFavourites(userId);
+      }
+    }, [userId]);
+    
+    const handleToggleFavourite = async (serviceId: string) => {
+      if (!userId) return;
+    
+      if (isFavourite(serviceId)) {
+        await removeFavourite(userId, serviceId);
+      } else {
+        await addFavourite(userId, serviceId);
+      }
+    };
 
   console.log("Top Trending API categoryId:", categoryId);
    useEffect(() => {
@@ -82,6 +107,8 @@ export default function TopTrending({ categoryId, moduleId }: Props) {
       <div className="lg:ms-10 lg:me-10 mx-auto px-4 overflow-x-auto no-scrollbar">
         <div className="flex gap-4">
           {services.map((service) => {
+                                      const fav = isFavourite(service._id);
+
             const investment =
               service.franchiseDetails?.investmentRange?.[0]?.range || "—";
 
@@ -115,6 +142,11 @@ export default function TopTrending({ categoryId, moduleId }: Props) {
                   trusted={true}
                   slug={createSlug(service.category?.name)}
                   detailslug={createSlug(service.serviceName)}
+                  isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
                 </HorizontalScroll>
               </Link>
