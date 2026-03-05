@@ -5,6 +5,8 @@ import FranchiseMostPopularCard from "../ui/FranchiseMostPopularCard";
 import Link from "next/link";
 import { useCategorywiseServices } from "@/src/context/CategorywiseServiceContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 const bgColors = [
   "bg-[#E9B3A1]",
@@ -36,6 +38,29 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
   console.log("SERVICES FROM API:", services);
 }, [services]);
 
+
+ const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+  useFavourites();
+
+  const { user } = useAuth();
+
+  const userId = user?._id;
+
+  useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
 
     console.log("Top Trending API categoryId:", categoryId);
 
@@ -111,7 +136,10 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
             ))
           ) : (
             <HorizontalScroll>
-              {filteredServices.map((service, index) => (
+              {filteredServices.map((service, index) => {
+                                  const fav = isFavourite(service._id);
+
+                return(
                 <Link
                   key={service._id}
                   href={`/MainModules/Franchise/${moduleId}/${categoryId}/${service._id}`}
@@ -130,9 +158,15 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory }
                     investment={`${service.franchiseDetails?.investmentRange?.[0]?.range ?? ""}`}
                     area="500–1000 Sq"
                     bg={bgColors[index % bgColors.length]}
+                     isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                   />
                 </Link>
-              ))}
+                )
+              })}
             </HorizontalScroll>
           )}
         </div>
