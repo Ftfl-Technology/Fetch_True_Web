@@ -933,8 +933,7 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
 
-    // ✅ CRITICAL FIX: Checkout page uses /MainModules/Checkout?id=XXX
-    // so serviceId is a QUERY PARAM — use useSearchParams, not useParams
+   
     const searchParams = useSearchParams();
     const serviceId = searchParams.get("id") ?? "";
 
