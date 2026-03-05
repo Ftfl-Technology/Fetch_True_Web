@@ -224,7 +224,7 @@ const COMPANY_INFO = {
   name: "Fetch True",
   address: [
     "FTFL Technology Pvt Ltd.",
-    "3rd Floor, C307, Amora Chamber,",
+    "4th Floor, C307, Amora Chamber,",
     "Amanora Mall, Hadapsar, Pune,",
     "Maharashtra 411028",
   ],

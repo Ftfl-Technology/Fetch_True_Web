@@ -41,9 +41,9 @@ export default function ServiceCard({
 
                             {/* Discount */}
 
-                            <span className="absolute top-2 left-2 bg-[#EDFBEF] text-xs px-2 py-1 rounded-full shadow">
+                            {/* <span className="absolute top-2 left-2 bg-[#EDFBEF] text-xs px-2 py-1 rounded-full shadow">
                                 Discount {item.discount}%
-                            </span>
+                            </span> */}
 
 
                             {/* Available */}
@@ -62,20 +62,26 @@ export default function ServiceCard({
                         <div className="mt-3 space-y-2">
                             <div className="flex justify-between items-start">
                                 <h3 className="text-lg font-semibold">{item.serviceName}</h3>
-                                {earnUpto && (
+                                {item.franchiseDetails.commission && (
                                     <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                                        {earnUpto}
+                                        Earn upto {item.franchiseDetails.commission}
                                     </span>
                                 )}
                             </div>
 
                             <div className="flex justify-between items-center">
-                                <span className="text-sm bg-gray-100 px-2 py-1 rounded-full">{item.tags.map((tag, index) => (
+                                {/* <span className="text-sm bg-gray-100 px-2 py-1 rounded-full">{item.tags.map((tag, index) => (
                                     <div key={index}>
                                         <p className="text-[10px] md:text-[12px] lg:text-[14px]">{tag}</p>
                                     </div>
 
-                                ))}</span>
+                                ))}</span> */}
+                                 <span className="text-sm bg-gray-100 px-2 py-1 rounded-full">
+                                    <div >
+                                        <p className="text-[10px] md:text-[12px] lg:text-[14px]">{item.category.name}</p>
+                                    </div>
+
+                                </span>
                                 <div className="flex">
                                     {(() => {
                                         const rating = Math.max(0, Math.min(5, item.averageRating));
@@ -119,13 +125,13 @@ export default function ServiceCard({
                             <div className="grid grid-cols-3 gap-2 lg:text-[16px] text-gray-600 mt-4">
                                 {/* Column 1 */}
                                 <div className="flex flex-col items-center">
-                                    {item.keyValues[0] ? (
+                                    {item?.keyValues?.[0] ? (
                                         <>
                                             <div className="flex flex-row gap-2 items-center">
                                                 <Wrench size={14} />
                                                 <span className="text-[12px] lg:text-[14px]">All Tools</span>
                                             </div>
-                                            <span className="font-medium text-[12px] text-black">{item.keyValues[0].value}</span>
+                                            <span className="font-medium text-[12px] text-black">{item?.keyValues?.[0]?.value}</span>
                                         </>
                                     ) : (
                                         <>
@@ -140,7 +146,7 @@ export default function ServiceCard({
 
                                 {/* Column 2 */}
                                 <div className="flex flex-col items-center">
-                                    {item.keyValues[1] ? (
+                                    {item?.keyValues?.[1] ? (
                                         <>
                                             <div className="flex flex-row gap-2 items-center">
                                                 <Clock size={14} />
@@ -161,7 +167,7 @@ export default function ServiceCard({
 
                                 {/* Column 3 */}
                                 <div className="flex flex-col items-center">
-                                    {item.keyValues[2] ? (
+                                    {item?.keyValues?.[2] ? (
                                         <>
                                             <div className="flex flex-row gap-2 items-center">
                                                 <Clock size={14} />
@@ -183,8 +189,10 @@ export default function ServiceCard({
 
                             {/* Price Button */}
                             <Link href={`/MainModules/On-Demand/servicedetails/${item._id}?service=${encodeURIComponent(item.serviceName)}`}>
-                            <button className="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition">
+                            <button className="mt-3 w-full bg-orange-400 hover:bg-orange-350 cursor-pointer text-white py-3 rounded-xl font-semibold transition">
                                 Starting From ₹{item.serviceDetails?.packages?.[0]?.discountedPrice || 'N/A'}
+                                <span className="ml-4 line-through">₹{item.serviceDetails?.packages?.[0]?.price || 'N/A'}</span>
+                                <span className="ml-2 text-red-500">{item.serviceDetails?.packages?.[0]?.discount || 'N/A'}% OFF</span>
                             </button>
                         </Link>
                     </div>

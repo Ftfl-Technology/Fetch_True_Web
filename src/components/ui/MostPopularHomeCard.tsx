@@ -1,3 +1,4 @@
+import { useModule } from "@/src/context/ModuleContext";
 import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CiBookmark } from "react-icons/ci";
@@ -54,6 +55,8 @@ export default function MostPopularHomeCard({
 }: Props) {
 
     const router = useRouter();
+    const {modules} = useModule();
+    console.log('Modules from contexthmh:', modules);
     const isFranchiseOrFinanceOrBusiness =
         moduleName.toLowerCase().includes("franchise") ||
         moduleName.toLowerCase().includes("finance") ||
@@ -68,6 +71,8 @@ export default function MostPopularHomeCard({
     // Get commission from franchiseDetails or use default
     const commission = franchiseDetails?.commission || "5%";
     const displayCommission = commission.includes("%") ? commission : `${commission}%`;
+
+
 
     // Helper function to get display text for feature keys
     const getDisplayKey = (key: string | undefined, title: string): string => {
@@ -124,17 +129,42 @@ export default function MostPopularHomeCard({
     const toFolderName = (name: string) =>
         name.trim().replace(/\s+/g, "-");
  
-    const handleClick = () => {
-        const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
-        const folderName = toFolderName(moduleName);
-        if (commentPathModules.includes(folderName)) {
-            // Comment path
-            router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+    // const handleClick = () => {
+    //     const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+    //     const folderName = toFolderName(moduleName);
+    //     if (commentPathModules.includes(folderName)) {
+    //         // Comment path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+    //     } else {
+    //         // Default path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+    //     }
+    // };
+
+const handleClick = () => {
+    const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+    const folderName = toFolderName(moduleName);
+    
+    if (commentPathModules.includes(folderName)) {
+       
+         const moduleData = modules?.find(
+        (module: any) => module.name === "Business"
+    );
+
+        const moduleId = moduleData?._id;
+       
+        
+        if (moduleId ) {
+            router.push(`/MainModules/${folderName}/${moduleId}/[categoryId]/${id}`);
         } else {
-            // Default path
-            router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+            router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
         }
-    };
+    } else {
+        router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+    }
+};
+    
+
     
     return (
         <div className="w-[345px] h-[360px] md:w-[400px] md:h-[380px] lg:w-[424px] lg:h-[400px] flex-shrink-0 bg-gradient-to-b 

@@ -91,9 +91,9 @@ export default function ServiceDetails() {
 
                         {/* LEFT */}
                         <div className="flex items-center gap-3 mt-4 ml-28">
-                            <Link href="/MainModules/ITService">
+                            <button onClick={() => window.history.back()}>
                                 <ChevronLeft size={24} className="cursor-pointer" />
-                            </Link>
+                            </button>
                             <h1 className="md:text-[18px] lg:text-[24px] font-semibold">Service Details</h1>
                         </div>
 
@@ -116,7 +116,7 @@ export default function ServiceDetails() {
                             </div>
 
 
-                          
+
                             <Link href={`/MainModules/Checkout?id=${serviceId}`}>
                                 <button className="flex items-center gap-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium">
                                     <ShoppingCart className="w-[29px] h-[29px]" />
@@ -151,24 +151,24 @@ export default function ServiceDetails() {
                             </h1>
 
                             <p className="text-gray-500 text-[24px]">
-                               {service?.serviceName}
+                                {service?.serviceName}
                             </p>
 
                             <div className="flex items-center gap-2 text-[20px]">
                                 <span className="text-yellow-500">★</span>
-                                <span className="font-semibold">{reviewServices?.averageRating}</span>
-                                <span className="text-gray-500">({reviewServices?.totalReviews})</span>
+                                <span className="font-medium text-black">{service?.averageRating}</span>
+                                <span> ({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</span>
                             </div>
 
                             <div className="p-4 -mt-6 w-full">
                                 <div className="flex items-center gap-4">
                                     <span className="text-gray-500 text-[24px]">Starting</span>
-                                    <span className="text-[36px] font-semibold">{service?.discountedPrice}</span>
+                                    <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
                                     <span className="line-through text-[20px] text-gray-400">
-                                     {service?.price}
+                                        ₹{service?.serviceDetails.packages[0]?.price}
                                     </span>
                                     <span className="text-[16px] text-white bg-black font-semibold px-3 py-1 rounded whitespace-nowrap">
-                                        {service?.discount} OFF
+                                        ₹{service?.serviceDetails.packages[0]?.discount} OFF
                                     </span>
                                 </div>
                             </div>
@@ -238,7 +238,7 @@ export default function ServiceDetails() {
                         {/* TITLE + RATING */}
                         <div className="flex justify-between items-start">
                             <h2 className="text-[16px] font-semibold leading-tight">
-                                 {service?.serviceName}
+                                {service?.serviceName}
                             </h2>
 
                             <div className="flex flex-col items-end text-xs">
@@ -267,7 +267,7 @@ export default function ServiceDetails() {
                                 ₹ {service?.price}
                             </span>
                             <span className="text-[#D56839] text-[12px] font-medium">
-                                 {service?.discount}
+                                {service?.discount}
                             </span>
                         </div>
 

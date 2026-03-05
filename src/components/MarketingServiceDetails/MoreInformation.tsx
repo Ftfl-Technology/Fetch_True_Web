@@ -180,7 +180,6 @@ export default function MoreInformation({ moreInfo }: moreInfoProps) {
     const [activeIndex, setActiveIndex] = useState(0);
 
 
-
     return (
         <section className="bg-[#F7F7F7] py-4 px-4">
             {/* TITLE */}
@@ -200,7 +199,7 @@ export default function MoreInformation({ moreInfo }: moreInfoProps) {
                         <div
                             key={item._id}
                             onClick={() => setActiveIndex(index)}
-                            className={`relative cursor-pointer md:h-[400px] lg:h-[47px] rounded-2xl overflow-hidden transition-all duration-500
+                            className={`relative cursor-pointer md:h-[400px] lg:h-[470px] rounded-2xl overflow-hidden transition-all duration-500
                             ${isActive ? "flex-[3]" : "flex-[1]"}
                         `}
                         >
