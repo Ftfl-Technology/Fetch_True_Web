@@ -1827,8 +1827,6 @@
 import { useRef, useState,useEffect } from "react";
 import Image from "next/image";
 import SearchBudget from "@/src/components/FranchiseCategories/SearchBudget";
-import Recommended from "@/src/components/FranchiseCategories/Recommended"
-import MostPopular from "@/src/components/FranchiseCategories/MostPopular";
 import WhyChooseUs from "@/src/components/FranchiseCategories/WhyChooseUs";
 import { FiArrowUpRight } from "react-icons/fi";
 import Link from "next/link";
@@ -1836,7 +1834,6 @@ import { ChevronLeft } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useSubCategory } from "@/src/context/SubCategoriesContext";
 import { useModule } from "@/src/context/CategoriesContext";
-import TopTrending from "@/src/components/FranchiseCategories/TopTrending";
 import AllServices from "@/src/components/FranchiseCategories/AllServices";
 
 /* ======================= DRAG HOOK (FIXED) ======================= */
@@ -2240,10 +2237,7 @@ useEffect(() => {
               
                 <AllServices categoryId={categoryId} moduleId={moduleId}
   selectedSubCategory={selectedSubCategory}/> 
-                {/* <SearchBudget categoryId={categoryId} moduleId={moduleId}/>
-                <Recommended categoryId={categoryId} moduleId={moduleId} />
-
-                <MostPopular categoryId={categoryId} /> */}
+          
             </div>
         </section>
     );

@@ -95,7 +95,7 @@ export default function MostlyUsedService({moduleId,searchQuery}:{moduleId:strin
           >
             <HorizontalScroll>
             {filteredServices.map((service) => {
-                                const fav = isFavourite(service._id);
+                                const fav = isFavourite(service.serviceId);
 
               return(
               <Link  href={`/MainModules/Legal-Services/${moduleId}/${categoryId}/${service.serviceId}`}

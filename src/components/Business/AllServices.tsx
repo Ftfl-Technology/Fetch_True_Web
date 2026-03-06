@@ -252,7 +252,7 @@ export default function AllServices({ categoryId, moduleId }: Props) {
   >
     {viewAll ? (
       services.map((service) => {
-                          const fav = isFavourite(service._id);
+      const fav = isFavourite(service._id);
 
         const investment =
           service.franchiseDetails?.investmentRange?.[0]?.range || "—";

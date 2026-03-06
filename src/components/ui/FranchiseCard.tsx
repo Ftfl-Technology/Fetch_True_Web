@@ -1,7 +1,7 @@
 "use client";
 
 import { FaStar } from "react-icons/fa";
-import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import Image from "next/image";
 
@@ -74,10 +74,17 @@ export default function RecommendedCard({
     e.stopPropagation();
     onToggleFavourite();
   }}
-  className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
-    ${isFavourite ? "bg-red-500" : "bg-black"}`}
+  className="absolute top-2 right-2 bg-white  rounded-full p-1 shadow"
+    
 >
-  <CiBookmark size={14} color="#fff" />
+  <FaBookmark 
+              size={16}
+              className={`transition ${
+                isFavourite
+                  ? "text-red-500 fill-red-500"
+                  : "text-gray-400"
+              }`}
+            />
 </button>
 
           {/* RATING */}

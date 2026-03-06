@@ -113,7 +113,10 @@ const handleToggleFavourite = async (serviceId: string) => {
           }
         >
           {viewAll ? (
-            filteredServices.map((service, index) => (
+            filteredServices.map((service, index) => {
+                    const fav = isFavourite(service._id);
+
+              return(
               <Link
                 key={service._id}
                 href={`/MainModules/Franchise/${moduleId}/${categoryId}/${service._id}`}
@@ -131,13 +134,19 @@ const handleToggleFavourite = async (serviceId: string) => {
                   investment={`${service.franchiseDetails?.investmentRange?.[0]?.range ?? ""}`}
                   area="500–1000 Sq"
                   bg={bgColors[index % bgColors.length]}
+                  isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
               </Link>
-            ))
+              )
+            })
           ) : (
             <HorizontalScroll>
               {filteredServices.map((service, index) => {
-                                  const fav = isFavourite(service._id);
+                    const fav = isFavourite(service._id);
 
                 return(
                 <Link

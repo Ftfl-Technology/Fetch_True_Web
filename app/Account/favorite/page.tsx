@@ -114,6 +114,62 @@
 //   );
 // }
 
+// "use client";
+
+// import { useEffect } from "react";
+// import { useFavourites } from "@/src/context/FavouriteContext";
+// import FavouriteCard from "@/src/components/ui/FavouriteCard";
+
+// export default function FavouriteServices({ userId }: { userId: string }) {
+//   const { favourites, loading, error, fetchFavourites } = useFavourites();
+
+//   useEffect(() => {
+//     if (userId) {
+//       fetchFavourites(userId);
+//     }
+//   }, [userId, fetchFavourites]);
+
+//   if (error) {
+//     return <p className="text-red-500">{error}</p>;
+//   }
+
+//   return (
+//     <div>
+//       {/* ✅ Soft loading (no UI replace) */}
+//       {/* {loading && (
+//         <p className="text-sm text-gray-500 mb-3">
+//           Updating favourites...
+//         </p>
+//       )} */}
+
+//       {/* ✅ Empty state only when NOT loading */}
+//       {!favourites.length && !loading ? (
+//         <p>No favourite services yet.</p>
+//       ) : (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+//           {favourites.map((service) => (
+//             <FavouriteCard
+//               key={service._id}
+//               id={service._id}
+//               title={service.serviceName}
+//               image={service.thumbnailImage || service.category?.image}
+//               moduleName={service.category?.name}
+//               rating={service.averageRating}
+//               reviews={service.totalReviews}
+//               features={service.keyValues}
+//               franchiseDetails={service.franchiseDetails}
+//               packages={service.serviceDetails?.packages}
+//               isFavourite={true} 
+//               onToggleFavourite={() => removeFavourite(userId, service._id)}  
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
 "use client";
 
 import { useEffect } from "react";
@@ -121,7 +177,13 @@ import { useFavourites } from "@/src/context/FavouriteContext";
 import FavouriteCard from "@/src/components/ui/FavouriteCard";
 
 export default function FavouriteServices({ userId }: { userId: string }) {
-  const { favourites, loading, error, fetchFavourites } = useFavourites();
+  const {
+    favourites,
+    loading,
+    error,
+    fetchFavourites,
+    removeFavourite,
+  } = useFavourites();
 
   useEffect(() => {
     if (userId) {
@@ -133,16 +195,12 @@ export default function FavouriteServices({ userId }: { userId: string }) {
     return <p className="text-red-500">{error}</p>;
   }
 
+  const handleRemove = async (serviceId: string) => {
+    await removeFavourite(userId, serviceId);
+  };
+
   return (
     <div>
-      {/* ✅ Soft loading (no UI replace) */}
-      {/* {loading && (
-        <p className="text-sm text-gray-500 mb-3">
-          Updating favourites...
-        </p>
-      )} */}
-
-      {/* ✅ Empty state only when NOT loading */}
       {!favourites.length && !loading ? (
         <p>No favourite services yet.</p>
       ) : (
@@ -159,6 +217,8 @@ export default function FavouriteServices({ userId }: { userId: string }) {
               features={service.keyValues}
               franchiseDetails={service.franchiseDetails}
               packages={service.serviceDetails?.packages}
+              isFavourite={true} 
+              onToggleFavourite={() => handleRemove(service._id)}
             />
           ))}
         </div>
