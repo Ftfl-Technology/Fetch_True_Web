@@ -90,6 +90,7 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
             keyValues: service.keyValues?.map((item) => ({
                 id: item._id,
                 label: item.value,
+                icon: item.icon || null
             })) || [],
             commission: service.franchiseDetails.commission
 
@@ -187,24 +188,24 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
                                         </div>
 
 
-                                        <div className="flex items-cente mb-2">
-                                            <div className="inline-flex items-center gap-4 text-[9px] md:text-[12px] px-3 py-1 whitespace-nowrap shrink-0">
-                                                {/* <PenIcon className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            Create & Practice */}
-                                                {item.keyValues.map((kv) => (
+                                      <div className="flex items-center mb-2">
+                                            <div className="inline-flex items-center gap-4 text-[9px] md:text-[12px] px-3 py-1 -ml-2 whitespace-nowrap shrink-0">
+                                                {item.keyValues.map((kv, index) => (
                                                     <span
-                                                        key={kv.id}
-                                                        className="text-[11px] text-gray-700 leading-snug"
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-[11px] text-gray-700"
                                                     >
+                                                        {kv.icon && (
+                                                            <img
+                                                                src={kv.icon}
+                                                                alt={kv.label || "icon"}
+                                                                className="w-3 h-3 object-contain inline-block"
+                                                            />
+                                                        )}
                                                         {kv.label}
                                                     </span>
                                                 ))}
                                             </div>
-
-                                            {/* <span className="inline-flex items-center gap-2 text-[9px] md:text-[12px] px-3 py-1 whitespace-nowrap shrink-0">
-                                            <Eye className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            Design with empathy
-                                        </span> */}
                                         </div>
 
 

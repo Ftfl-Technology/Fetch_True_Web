@@ -163,6 +163,11 @@
 import { User } from "lucide-react";
 import { CiBookmark } from "react-icons/ci";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useModule } from "@/src/context/ModuleContext";
+
 
 type Props = {
     id: string;
@@ -213,8 +218,18 @@ export default function HomeCard({
     roi,
     franchiseDetails
 }: Props) {
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
 
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
     const router = useRouter()
+     const { modules } = useModule();
     const isFranchiseOrFinanceOrBusiness =
         moduleName.toLowerCase().includes("franchise") ||
         moduleName.toLowerCase().includes("finance") ||
@@ -284,15 +299,69 @@ export default function HomeCard({
     const toFolderName = (name: string) =>
         name.trim().replace(/\s+/g, "-");
 
-    const handleClick = () => {
-        const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
-        const folderName = toFolderName(moduleName);
-        if (commentPathModules.includes(folderName)) {
-            // Comment path
-            router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+    // const handleClick = () => {
+    //     const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+    //     const folderName = toFolderName(moduleName);
+    //     if (commentPathModules.includes(folderName)) {
+    //         // Comment path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+    //     } else {
+    //         // Default path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+    //     }
+    // };
+
+//    const handleClick = () => {
+//         const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+//         const folderName = toFolderName(moduleName);
+
+//         if (commentPathModules.includes(folderName)) {
+
+//             const moduleData = modules?.find(
+//                 (module: any) => module.name === "Business"
+//             );
+
+//             const moduleId = moduleData?._id;
+
+
+//             if (moduleId) {
+//                 router.push(`/MainModules/${folderName}/${moduleId}/[categoryId]/${id}`);
+//             } else {
+//                 router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+//             }
+//         } else {
+//             router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+//         }
+//     };
+
+const handleClick = () => {
+    const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+    const folderName = toFolderName(moduleName);
+    
+    if (commentPathModules.includes(folderName)) {
+        // Find the module ID from modules.data array
+        const moduleData = modules?.find(
+            (m) => commentPathModules.includes(m.name) // Check if module name is in the list
+        );
+        
+        const moduleId = moduleData?._id;
+        
+        if (moduleId) {
+            router.push(`/MainModules/${folderName}/${moduleId}/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
         } else {
-            // Default path
-            router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+            router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+        }
+    } else {
+        router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+    }
+};
+
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
         }
     };
 
@@ -321,9 +390,20 @@ export default function HomeCard({
                     }}
                 />
 
-                <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow cursor-pointer hover:bg-gray-50">
+                {/* <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow cursor-pointer hover:bg-gray-50">
                     <CiBookmark size={20} />
-                </div>
+                </div> */}
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleToggleFavourite(id);
+                    }}
+                    className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                ${isFavourite(id) ? "bg-red-500" : "bg-black"}`}
+                >
+                    <CiBookmark size={14} color="#fff" />
+                </button>
             </div>
 
             {/* HEADER */}
@@ -491,7 +571,7 @@ export default function HomeCard({
 
                         {/* BUSINESS */}
                         {isBusiness && (
-                            <div className="grid grid-cols-3 w-full h-full">
+                            <div className="grid grid-cols-2 w-full h-full">
                                 {investmentRange && (
                                     <div className="relative px-2 flex flex-col gap-1 text-center justify-center">
                                         <span className="font-semibold text-[12px] lg:text-[12px] text-gray-900">
@@ -589,7 +669,7 @@ export default function HomeCard({
                     /* NORMAL SERVICE (On-Demand, Marketing, Legal, IT Services, etc.) */
                     <div className="flex items-center justify-between h-[56px] w-full">
                         <div className="space-y-2 p-2 flex-1">
-                            {filteredFeatures.slice(0, 2).map((f, i) => (
+                            {filteredFeatures.map((f, i) => (
                                 <div
                                     key={i}
                                     className="flex items-center gap-2 leading-tight text-[12px] lg:text-[14px]"
