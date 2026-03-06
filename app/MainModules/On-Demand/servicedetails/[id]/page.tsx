@@ -37,19 +37,19 @@ type CourseInfo = {
     commission: string;
 };
 
-const DATA: CourseInfo = {
-    title: "Kitchen Deep Cleaning",
-    subtitle: "On Demand Service",
-    rating: 4.8,
-    reviews: "2,400+ reviews",
-    price: "3,999",
-    originalPrice: 3499,
-    discount: "12% Off",
-    emi: 199,
-    level: "Beginner",
-    lessons: 72,
-    commission: "Earn Up to 7%",
-};
+// const DATA: CourseInfo = {
+//     title: "Kitchen Deep Cleaning",
+//     subtitle: "On Demand Service",
+//     rating: 4.8,
+//     reviews: "2,400+ reviews",
+//     price: "3,999",
+//     originalPrice: 3499,
+//     discount: "12% Off",
+//     emi: 199,
+//     level: "Beginner",
+//     lessons: 72,
+//     commission: "Earn Up to 7%",
+// };
 
 export default function ServiceDetails() {
 
@@ -147,11 +147,14 @@ export default function ServiceDetails() {
                         {/* RIGHT CONTENT */}
                         <div className="flex-1 space-y-4">
                             <h1 className="text-[40px] font-semibold whitespace-nowrap">
-                                {DATA.title}
+                                {service?.serviceName}
                             </h1>
 
                             <p className="text-gray-500 text-[24px]">
-                                {service?.serviceName}
+                               {service?.serviceName}
+                            </p>
+                             <p className="text-gray-500 text-[24px]">
+                               {service?.category.name}
                             </p>
 
                             <div className="flex items-center gap-2 text-[20px]">
@@ -180,7 +183,7 @@ export default function ServiceDetails() {
                                         Franchise Commission
                                     </p>
                                     <p className="text-green-600 text-[32px] font-semibold">
-                                        {DATA.commission}
+                                        {service?.franchiseDetails?.commission}
                                     </p>
                                 </div>
 
@@ -254,7 +257,7 @@ export default function ServiceDetails() {
 
                         {/* SUBTITLE */}
                         <p className="text-[13px] text-gray-500">
-                            {DATA.subtitle}
+                            {service?.category.name}
                         </p>
 
                         {/* PRICE */}
@@ -291,7 +294,7 @@ export default function ServiceDetails() {
                                     Franchise Commission
                                 </p>
                                 <p className="text-green-600 font-semibold">
-                                    {DATA.commission}
+                                    {service?.franchiseDetails?.commission}
                                 </p>
                             </div>
 

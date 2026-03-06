@@ -1,5 +1,9 @@
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useModule } from "@/src/context/ModuleContext";
 import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { CiBookmark } from "react-icons/ci";
 
 type Props = {
@@ -51,8 +55,18 @@ export default function TopTrendingHomeCard({
     roi,
     franchiseDetails
 }: Props) {
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
 
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
     const router = useRouter()
+    const { modules } = useModule();
     const isFranchiseOrFinanceOrBusiness =
         moduleName.toLowerCase().includes("franchise") ||
         moduleName.toLowerCase().includes("finance") ||
@@ -123,18 +137,50 @@ export default function TopTrendingHomeCard({
     const toFolderName = (name: string) =>
         name.trim().replace(/\s+/g, "-");
 
+    // const handleClick = () => {
+    //     const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
+    //     const folderName = toFolderName(moduleName);
+    //     if (commentPathModules.includes(folderName)) {
+    //         // Comment path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+    //     } else {
+    //         // Default path
+    //         router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+    //     }
+    // };
+
     const handleClick = () => {
         const commentPathModules = ['Legal-Services', 'Finance', 'Business', 'AI-Hub', 'Franchise'];
         const folderName = toFolderName(moduleName);
+
         if (commentPathModules.includes(folderName)) {
-            // Comment path
-            router.push(`/MainModules/${toFolderName(moduleName)}/[moduleId]/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+            // Find the module ID from modules.data array
+            const moduleData = modules?.find(
+                (m) => commentPathModules.includes(m.name)
+            );
+
+            const moduleId = moduleData?._id;
+
+
+            if (moduleId) {
+                router.push(`/MainModules/${folderName}/${moduleId}/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+            } else {
+                router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+            }
         } else {
-            // Default path
-            router.push(`/MainModules/${toFolderName(moduleName)}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
+            router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
         }
     };
 
+
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
 
     return (
         <div className="w-[345px] h-[360px] md:w-[400px] md:h-[380px] lg:w-[424px] lg:h-[400px] flex-shrink-0 bg-gradient-to-b 
@@ -158,9 +204,20 @@ export default function TopTrendingHomeCard({
                     }}
                 />
 
-                <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow cursor-pointer hover:bg-gray-50">
+                {/* <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow cursor-pointer hover:bg-gray-50">
                     <CiBookmark size={20} />
-                </div>
+                </div> */}
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleToggleFavourite(id);
+                    }}
+                    className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                ${isFavourite(id) ? "bg-red-500" : "bg-black"}`}
+                >
+                    <CiBookmark size={14} color="#fff" />
+                </button>
             </div>
 
             {/* HEADER */}

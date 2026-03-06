@@ -248,7 +248,6 @@
 "use client";
 
 import { useOffers } from "@/src/context/OfferContext";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 

@@ -489,18 +489,18 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
         );
     };
 
-     const filteredServices =
-  services?.filter((service) => {
-    if (!searchQuery?.trim()) return true;
+    const filteredServices =
+        services?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
 
-    const q = searchQuery.toLowerCase();
+            const q = searchQuery.toLowerCase();
 
-    return (
-      service.serviceName?.toLowerCase().includes(q) ||
-      service.category?.name?.toLowerCase().includes(q)
-    );
-  }) || [];  
-   
+            return (
+                service.serviceName?.toLowerCase().includes(q) ||
+                service.category?.name?.toLowerCase().includes(q)
+            );
+        }) || [];
+
     const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
@@ -517,6 +517,7 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
             keyValues: service.keyValues?.map((item) => ({
                 id: item._id,
                 label: item.value,
+                icon: item.icon,
             })) || [],
             commission: service.franchiseDetails.commission
 
@@ -573,7 +574,7 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
                 className="flex gap-4 md:gap-6 overflow-x-auto  snap-x snap-mandatory no-scrollbar"
             >
                 {mappedServices.length > 0 ? (
-                    mappedServices.map((item,index) => (
+                    mappedServices.map((item, index) => (
                         <>
                             <div
                                 key={index}
@@ -628,7 +629,7 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
 
                                             <span className="text-[8px] md:text-[10px] text-white lg:mr-2 mr-2 px-1 py-1 bg-[#548AFE] rounded-lg whitespace-nowrap shrink-0">
                                                 {/* {item?.earn} */}
-                                                Earn upto {item.commission} 
+                                                Earn upto {item.commission}
                                             </span>
                                         </div>
 
@@ -644,24 +645,24 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
                                         </div>
 
 
-                                        <div className="flex items-cente mb-2">
-                                            <div className="inline-flex items-center gap-2 text-[9px] md:text-[12px] px-3 py-1 whitespace-nowrap shrink-0">
-                                                {/* <PenIcon className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            Create & Practice */}
-                                                {item.keyValues.map((kv) => (
+                                        <div className="flex items-center mb-2">
+                                            <div className="inline-flex items-center gap-4 text-[9px] md:text-[12px] px-3 py-1 -ml-2 whitespace-nowrap shrink-0">
+                                                {item.keyValues.map((kv, index) => (
                                                     <span
-                                                        key={kv.id}
-                                                        className="text-[11px] text-gray-700 leading-snug"
+                                                        key={index}
+                                                        className="flex items-center gap-1 text-[11px] text-gray-700"
                                                     >
+                                                        {kv.icon && (
+                                                            <img
+                                                                src={kv.icon}
+                                                                alt={kv.label || "icon"}
+                                                                className="w-3 h-3 object-contain inline-block"
+                                                            />
+                                                        )}
                                                         {kv.label}
                                                     </span>
                                                 ))}
                                             </div>
-
-                                            {/* <span className="inline-flex items-center gap-2 text-[9px] md:text-[12px] px-3 py-1 whitespace-nowrap shrink-0">
-                                            <Eye className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            Design with empathy
-                                        </span> */}
                                         </div>
 
 

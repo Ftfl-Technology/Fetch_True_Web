@@ -351,6 +351,9 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { useRecommendedServices } from "@/src/context/RecommendedContext";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 
 
@@ -377,11 +380,23 @@ export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
 
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
     const {
         services,
         loading,
         error, fetchRecommendedServices
     } = useRecommendedServices();
+
+
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
+
 
     useEffect(() => {
         if (!moduleId) return;
@@ -389,6 +404,14 @@ export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
         fetchRecommendedServices(moduleId);
     }, [moduleId]);
 
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
 
     type CardBgProps = {
         active?: boolean;
@@ -426,37 +449,38 @@ export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
     };
 
 
- const filteredServices =
-  services?.filter((service) => {
-    if (!searchQuery?.trim()) return true;
+    const filteredServices =
+        services?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
 
-    const q = searchQuery.toLowerCase();
+            const q = searchQuery.toLowerCase();
 
-    return (
-      service.serviceName?.toLowerCase().includes(q) ||
-      service.category?.name?.toLowerCase().includes(q)
-    );
-  }) || [];   
+            return (
+                service.serviceName?.toLowerCase().includes(q) ||
+                service.category?.name?.toLowerCase().includes(q)
+            );
+        }) || [];
 
     const mappedServices = filteredServices.map((service) => {
-         const packages = service.serviceDetails?.packages || [];
+        const packages = service.serviceDetails?.packages || [];
         const startingPackage = getStartingPackage(packages);
         return ({
-        id: service._id,
-        title: service.serviceName,
-        category: service.category?.name || "Unknown",
-        image: service.thumbnailImage || "/image/placeholder.png",
-        rating: service.averageRating ?? 0,
-        reviews: service.totalReviews,
-        price: startingPackage?.discountedPrice ?? 0,
-        originalPrice: startingPackage?.price ?? 0,
-        discount: startingPackage?.discount ?? 0,
-        keyValues: service.keyValues?.map((item) => ({
-            id: item._id,
-            label: item.value,
-        })) || [],
-        commission: service.franchiseDetails.commission
-    })
+            id: service._id,
+            title: service.serviceName,
+            category: service.category?.name || "Unknown",
+            image: service.thumbnailImage || "/image/placeholder.png",
+            rating: service.averageRating ?? 0,
+            reviews: service.totalReviews,
+            price: startingPackage?.discountedPrice ?? 0,
+            originalPrice: startingPackage?.price ?? 0,
+            discount: startingPackage?.discount ?? 0,
+            keyValues: service.keyValues?.map((item) => ({
+                id: item._id,
+                label: item.value,
+                icon: item.icon || null,
+            })) || [],
+            commission: service.franchiseDetails.commission
+        })
 
     });
 
@@ -516,8 +540,16 @@ export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
                                     </span>
 
                                     {/* Bookmark */}
-                                    <button className="absolute top-5 right-6 bg-black/70 p-2 rounded-full">
-                                        <Bookmark size={16} className="text-white" />
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleToggleFavourite(item.id);
+                                        }}
+                                        className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                                                   ${isFavourite(item.id) ? "bg-red-500" : "bg-black"}`}
+                                    >
+                                        <CiBookmark size={14} color="#fff" />
                                     </button>
                                 </div>
 
@@ -539,22 +571,30 @@ export default function HighInDemand({ moduleId, searchQuery }: SectionProps) {
 
                                     <div className="flex items-center lg:-mt-2 mb-2">
                                         <div className="inline-flex items-center gap-2 text-[9px] md:text-[12px] px-1 py-1 whitespace-nowrap shrink-0">
-                                            {/* <Zap className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            Faster project delivery */}
-                                            {item.keyValues.map((kv) => (
+                                            {/* {item.keyValues.map((kv) => (
                                                 <span
                                                     key={kv.id}
                                                     className="text-[11px] text-gray-700 leading-snug"
                                                 >
                                                     {kv.label}
                                                 </span>
+                                            ))} */}
+                                            {item.keyValues.map((kv, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="flex items-center gap-1 text-[11px] text-gray-700"
+                                                >
+                                                    {kv.icon && (
+                                                        <img
+                                                            src={kv.icon}
+                                                            alt={kv.label || "icon"}
+                                                            className="w-3 h-3 object-contain inline-block"
+                                                        />
+                                                    )}
+                                                    {kv.label}
+                                                </span>
                                             ))}
                                         </div>
-
-                                        {/* <span className="inline-flex items-center gap-2 text-[9px] md:text-[12px] px-3 py-1 whitespace-nowrap shrink-0">
-                                            <Clock className="inline-block w-[12px] h-[12px] flex-shrink-0" />
-                                            24×7 technical support
-                                        </span> */}
                                     </div>
 
 
