@@ -373,6 +373,7 @@ import { useState, useEffect } from "react";
 import {
     User, Heart, Wallet, ShieldCheck, Ticket, Briefcase,
     Users, Info, Bell, HelpCircle, FileText, LogOut, Menu, X,
+    ChevronLeft,
 } from "lucide-react";
 import ServiceCard from "./ServiceCards";
 import { useParams, useSearchParams } from "next/navigation";
@@ -400,6 +401,7 @@ import HelpCenter from "@/app/Account/helpCenter/page";
 // import TermsConditions from "@/app/Account/terms/page";
 // import RefundPolicy from "@/app/Account/refund/page";
 import DeleteAccountSection from "@/app/Account/delete/page";
+import { useTopRatedProviders } from "@/src/context/HomeTopRatedProvider";
 
 /*  TYPES  */
 // Sidebar-level sections
@@ -452,7 +454,7 @@ export default function ProviderDashboardLayout() {
 
     const handleSelect = (section: SidebarSection) => {
         setActiveSection(section);
-        setSidebarOpen(false); 
+        setSidebarOpen(false);
     };
 
     return (
@@ -477,8 +479,21 @@ export default function ProviderDashboardLayout() {
                     flex flex-col
                 `}
             >
-                <div className="p-4 font-semibold text-lg bg-gray-200 flex items-center justify-between shrink-0">
+                {/* <div className="p-4 font-semibold text-lg bg-gray-200 flex items-center justify-between shrink-0">
+                    <button className="cursor-pointer" onClick={() => window.history.back()}><ChevronLeft size={20} /></button>
+
                     <span>{providerName}</span>
+                    <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
+                        <X size={20} />
+                    </button>
+                </div> */}
+                <div className="p-4 font-semibold text-lg bg-gray-200 flex items-center shrink-0">
+                    <button className="cursor-pointer" onClick={() => window.history.back()}>
+                        <ChevronLeft size={20} />
+                    </button>
+
+                    <span className="flex-1 text-center">{providerName}</span>
+
                     <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
                         <X size={20} />
                     </button>
@@ -488,24 +503,24 @@ export default function ProviderDashboardLayout() {
                     <nav className="p-3 space-y-1 text-[13px] lg:text-[15px]">
 
                         <div className="pb-1 pt-2 text-xs text-gray-400 uppercase px-2">Account</div>
-                        <SidebarItem icon={<User size={16} />}        label="Profile"            active={activeSection === "Profile"}            onClick={() => handleSelect("Profile")} />
-                        <SidebarItem icon={<Heart size={16} />}       label="Favorite"           active={activeSection === "Favorite"}           onClick={() => handleSelect("Favorite")} />
-                        <SidebarItem icon={<Wallet size={16} />}      label="Wallet"             active={activeSection === "Wallet"}             onClick={() => handleSelect("Wallet")} />
-                        <SidebarItem icon={<ShieldCheck size={16} />} label="5X Guarantee"       active={activeSection === "5X Guarantee"}       onClick={() => handleSelect("5X Guarantee")} />
-                        <SidebarItem icon={<Ticket size={16} />}      label="Coupon"             active={activeSection === "Coupon"}             onClick={() => handleSelect("Coupon")} />
+                        <SidebarItem icon={<User size={16} />} label="Profile" active={activeSection === "Profile"} onClick={() => handleSelect("Profile")} />
+                        <SidebarItem icon={<Heart size={16} />} label="Favorite" active={activeSection === "Favorite"} onClick={() => handleSelect("Favorite")} />
+                        <SidebarItem icon={<Wallet size={16} />} label="Wallet" active={activeSection === "Wallet"} onClick={() => handleSelect("Wallet")} />
+                        <SidebarItem icon={<ShieldCheck size={16} />} label="5X Guarantee" active={activeSection === "5X Guarantee"} onClick={() => handleSelect("5X Guarantee")} />
+                        <SidebarItem icon={<Ticket size={16} />} label="Coupon" active={activeSection === "Coupon"} onClick={() => handleSelect("Coupon")} />
 
                         <div className="pb-1 pt-4 text-xs text-gray-400 uppercase px-2">Provider</div>
-                        <SidebarItem icon={<Briefcase size={16} />}   label="Service"            active={activeSection === "Service"}            onClick={() => handleSelect("Service")} />
-                        <SidebarItem icon={<Users size={16} />}       label="Customer"           active={activeSection === "Customer"}           onClick={() => handleSelect("Customer")} />
+                        <SidebarItem icon={<Briefcase size={16} />} label="Service" active={activeSection === "Service"} onClick={() => handleSelect("Service")} />
+                        <SidebarItem icon={<Users size={16} />} label="Customer" active={activeSection === "Customer"} onClick={() => handleSelect("Customer")} />
 
                         <div className="pb-1 pt-4 text-xs text-gray-400 uppercase px-2">App Info</div>
-                        <SidebarItem icon={<Info size={16} />}        label="About Us"           active={activeSection === "About Us"}           onClick={() => handleSelect("About Us")} />
-                        <SidebarItem icon={<Bell size={16} />}        label="Notification"       active={activeSection === "Notification"}       onClick={() => handleSelect("Notification")} />
-                        <SidebarItem icon={<HelpCircle size={16} />}  label="Help & Support"     active={activeSection === "Help & Support"}     onClick={() => handleSelect("Help & Support")} />
-                        <SidebarItem icon={<FileText size={16} />}    label="Privacy & Policy"   active={activeSection === "Privacy & Policy"}   onClick={() => handleSelect("Privacy & Policy")} />
-                        <SidebarItem icon={<FileText size={16} />}    label="Terms & Conditions" active={activeSection === "Terms & Conditions"} onClick={() => handleSelect("Terms & Conditions")} />
-                        <SidebarItem icon={<FileText size={16} />}    label="Refund Policy"      active={activeSection === "Refund Policy"}      onClick={() => handleSelect("Refund Policy")} />
-                        <SidebarItem icon={<LogOut size={16} />}      label="Delete Account"     active={activeSection === "Delete Account"}     onClick={() => handleSelect("Delete Account")} />
+                        <SidebarItem icon={<Info size={16} />} label="About Us" active={activeSection === "About Us"} onClick={() => handleSelect("About Us")} />
+                        <SidebarItem icon={<Bell size={16} />} label="Notification" active={activeSection === "Notification"} onClick={() => handleSelect("Notification")} />
+                        <SidebarItem icon={<HelpCircle size={16} />} label="Help & Support" active={activeSection === "Help & Support"} onClick={() => handleSelect("Help & Support")} />
+                        <SidebarItem icon={<FileText size={16} />} label="Privacy & Policy" active={activeSection === "Privacy & Policy"} onClick={() => handleSelect("Privacy & Policy")} />
+                        <SidebarItem icon={<FileText size={16} />} label="Terms & Conditions" active={activeSection === "Terms & Conditions"} onClick={() => handleSelect("Terms & Conditions")} />
+                        <SidebarItem icon={<FileText size={16} />} label="Refund Policy" active={activeSection === "Refund Policy"} onClick={() => handleSelect("Refund Policy")} />
+                        <SidebarItem icon={<LogOut size={16} />} label="Delete Account" active={activeSection === "Delete Account"} onClick={() => handleSelect("Delete Account")} />
                     </nav>
                 </div>
             </aside>
@@ -540,21 +555,21 @@ export default function ProviderDashboardLayout() {
     */
 function RightContent({ activeSection }: { activeSection: SidebarSection }) {
     switch (activeSection) {
-        case "Service":            return <ServiceSection />;
-        case "Profile":            return <ProfilePage />;
-        case "Favorite":           return <FavouritePage userId={'3929292'}/>;
-        case "Wallet":             return <EarningsPage />;
-        case "5X Guarantee":       return <FiveXReturnPage />;
-        case "Coupon":             return <CouponsPage />;
+        case "Service": return <ServiceSection />;
+        case "Profile": return <ProfilePage />;
+        case "Favorite": return <FavouritePage userId={'3929292'} />;
+        case "Wallet": return <EarningsPage />;
+        case "5X Guarantee": return <FiveXReturnPage />;
+        case "Coupon": return <CouponsPage />;
         // case "Customer":           return <CustomerList onAdd={leela}/>;
-        case "About Us":           return <AboutUsPage />;
-        case "Notification":       return <NotificationSettings />;
-        case "Help & Support":     return <HelpCenter />;
+        case "About Us": return <AboutUsPage />;
+        case "Notification": return <NotificationSettings />;
+        case "Help & Support": return <HelpCenter />;
         // case "Privacy & Policy":   return <PrivacyPolicy />;
         // case "Terms & Conditions": return <TermsConditions />;
         // case "Refund Policy":      return <RefundPolicy />;
-        case "Delete Account":     return <DeleteAccountSection />;
-        default:                   return <ServiceSection />;
+        case "Delete Account": return <DeleteAccountSection />;
+        default: return <ServiceSection />;
     }
 }
 
@@ -570,10 +585,17 @@ function ServiceSection() {
     const [matchedProvider, setMatchedProvider] = useState<Provider | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>("all");
     const [activeTab, setActiveTab] = useState<ServiceTab>("Service");
-    const [filteredServices, setFilteredServices] = useState<SubscribedService[]>([]);
     const [error, setError] = useState("");
 
     const providerName = searchParams.get("providerName");
+
+    const { providers } = useTopRatedProviders();
+
+    const cover = providers.find(provider => provider._id === providerId)?.storeInfo.cover || "placeholder-image-url";
+
+    const filteredServices = activeCategory === "all"
+        ? subscribedServices
+        : subscribedServices?.filter((s) => s.category?._id === activeCategory) ?? [];
 
     useEffect(() => {
         if (providerId) {
@@ -581,16 +603,6 @@ function ServiceSection() {
             fetchSubscribedCategoryServices(providerId);
         }
     }, [providerId]);
-
-    useEffect(() => {
-        if (subscribedServices?.length > 0) {
-            setFilteredServices(
-                activeCategory === "all"
-                    ? subscribedServices
-                    : subscribedServices.filter((s) => s.category?._id === activeCategory)
-            );
-        }
-    }, [activeCategory, subscribedServices]);
 
     useEffect(() => {
         const load = async () => {
@@ -623,11 +635,10 @@ function ServiceSection() {
                                     <button
                                         key={cat._id}
                                         onClick={() => setActiveCategory(cat._id)}
-                                        className={`px-3 py-1 text-xs rounded-full border cursor-pointer transition-colors ${
-                                            activeCategory === cat._id
-                                                ? "bg-blue-500 text-white border-blue-500"
-                                                : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-                                        }`}
+                                        className={`px-3 py-1 text-xs rounded-full border cursor-pointer transition-colors ${activeCategory === cat._id
+                                            ? "bg-blue-500 text-white border-blue-500"
+                                            : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+                                            }`}
                                     >
                                         {cat.name}
                                     </button>
@@ -645,10 +656,10 @@ function ServiceSection() {
                     </div>
                 );
             // Correctly nested — only visible when sidebar "Service" is active
-            case "About":   return <AboutSection providerId={providerId} />;
+            case "About": return <AboutSection providerId={providerId} />;
             case "Gallery": return <GallerySection providerId={providerId} />;
             case "Reviews": return <ReviewSection providerId={providerId} />;
-            default:        return null;
+            default: return null;
         }
     };
 
@@ -658,7 +669,8 @@ function ServiceSection() {
             {/* Banner */}
             <div className="w-full md:h-[200px] lg:h-[290px] bg-gray-300 overflow-hidden">
                 <img
-                    src={subscribedServices?.[0]?.bannerImages?.[0] || "/default-banner.jpg"}
+                    // src={subscribedServices?.[0]?.bannerImages?.[0] || "/default-banner.jpg"}
+                    src={cover}
                     alt="banner"
                     className="w-full h-full object-fit"
                 />
@@ -717,9 +729,8 @@ function SidebarItem({ icon, label, active = false, onClick }: SidebarItemProps)
     return (
         <button
             onClick={onClick}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded transition text-left ${
-                active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded transition text-left ${active ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-100"
+                }`}
         >
             {icon}
             <span>{label}</span>

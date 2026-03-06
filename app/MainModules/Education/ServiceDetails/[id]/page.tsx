@@ -39,19 +39,12 @@ type CourseInfo = {
     commission: string;
 };
 
-const DATA: CourseInfo = {
-    title: "Figma UI UX Design Essential",
-    subtitle: "IT & Software",
-    rating: 4.8,
-    reviews: "2,400+ reviews",
-    price: 499,
-    originalPrice: 3499,
-    discount: "12% Off",
-    emi: 199,
-    level: "Beginner",
-    lessons: 72,
-    commission: "Earn Up to 7%",
-};
+interface Module {
+    _id: string;
+    name: string;
+    [key: string]: unknown;
+}
+
 
 export default function ServiceDetails() {
 
@@ -75,7 +68,7 @@ export default function ServiceDetails() {
     const serviceName = searchParams.get("service");
 
     const educationModule = modules?.find(
-        (module: any) => module.name === "Education"
+        (module: Module) => module.name === "Education"
     );
 
     const educationId = educationModule?._id;
@@ -95,10 +88,10 @@ export default function ServiceDetails() {
                     <div className="w-screen fixed top-0 z-50 bg-white mx-auto flex items-center justify-between px-8 py-4">
                         {/* LEFT */}
                         <div className="flex items-center gap-3 ml-20">
-                             <button
-                                    onClick={() => router.push(`/MainModules/Education/${educationId}`)}>
-                                    <ChevronLeft size={28} className="cursor-pointer" />
-                                </button>
+                            <button
+                                onClick={() => router.push(`/MainModules/Education/${educationId}`)}>
+                                <ChevronLeft size={28} className="cursor-pointer" />
+                            </button>
                             <h1 className="text-[24px] font-semibold">Service Details</h1>
                         </div>
 
@@ -132,12 +125,16 @@ export default function ServiceDetails() {
 
                                 {/* BADGES */}
                                 <div className="absolute bottom-4 left-3 right-3 flex justify-between">
-                                    <div className="bg-white px-4 py-1 rounded-full text-[20px] shadow">
+                                    {/* <div className="bg-white px-4 py-1 rounded-full text-[20px] shadow">
                                         • Online Mode
+                                    </div> */}
+                                    <div className="bg-white px-4 py-1 rounded-full text-[20px] shadow flex whitespace-nowrap items-center gap-1">
+                                        <span className="text-green-500 text-lg leading-none">•</span>
+                                        Online Mode
                                     </div>
 
                                     <div className="bg-white px-4 py-1 rounded-full text-[20px] shadow">
-                                        Duration 16 Weeks
+                                        Duration {service?.serviceDetails?.duration.weeks} Weeks {service?.serviceDetails?.duration.hours} Hours
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +147,7 @@ export default function ServiceDetails() {
                                 {serviceName}
                             </h1>
 
-                            <p className="text-gray-500 text-[24px]">Education Service</p>
+                            <p className="text-xl text-gray-500">{service?.category.name}</p>
 
                             {/* RATING */}
                             <div className="flex items-center gap-2 text-[20px]">
@@ -160,23 +157,6 @@ export default function ServiceDetails() {
                             </div>
 
                             {/* PRICE */}
-                            {/* <div className="border rounded-xl gap-4 p-3 inline-flex items-center">
-                                <div className="text-[24px]">Starting price</div>
-
-                                <span className="text-[36px] font-semibold">
-                                    ₹{service?.serviceDetails.packages[0]?.discountedPrice}
-                                </span>
-
-                                <div>
-                                    <span className="line-through text-[20px] text-gray-400">
-                                        ₹{service?.serviceDetails.packages[0]?.price}
-                                    </span>
-                                    <span className="bg-[#281A83] text-white text-sm px-2 py-1 rounded ml-2">
-                                      {service?.serviceDetails.packages[0]?.discount}% OFF
-                                    </span>
-                                </div>
-                            </div> */}
-
                             <div className="border rounded-lg p-2 mt-4 w-[50%]">
                                 <div className="lg:text-[20px]">Starting price from</div>
                                 <div className="flex items-center gap-4">
@@ -195,15 +175,15 @@ export default function ServiceDetails() {
                             {/* META INFO */}
                             <div className="flex gap-4">
                                 <div className="border rounded-full px-4 py-2">
-                                    🎓 Level: {DATA.level}
+                                    🎓 Level: {service?.serviceDetails.level}
                                 </div>
                                 <div className="border rounded-full px-4 py-2">
-                                    📘 Lessons: {DATA.lessons}
+                                    📘 Lessons: {service?.serviceDetails.lessonCount}
                                 </div>
                             </div>
 
                             {/* TAGS */}
-                            <div className="flex gap-4">
+                            {/* <div className="flex gap-4">
                                 <div className="flex items-center bg-gray-200 px-4 py-2 rounded-3xl gap-2">
                                     <Eye size={24} className="text-gray-600" />
                                     <span className="text-[20px]">Design with empathy</span>
@@ -213,6 +193,24 @@ export default function ServiceDetails() {
                                     <Pencil size={24} className="text-gray-600" />
                                     <span className="text-[20px]">Create and practice</span>
                                 </div>
+                            </div> */}
+                            <div className="flex gap-2 flex-wrap">
+                                {service?.keyValues?.map((item, index) => (
+                                    <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                        {item.icon ? (
+                                            <img
+                                                src={item.icon}
+                                                alt={item.value}
+                                                className="w-8 h-8 object-contain"
+                                            />
+                                        ) : (
+                                            <Eye size={16} className="text-gray-600" />
+                                        )}
+                                        <span className="text-[20px] whitespace-nowrap">
+                                            {item.value}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
 
                             {/* COMMISSION */}
@@ -222,7 +220,7 @@ export default function ServiceDetails() {
                                         Franchise Commission
                                     </p>
                                     <p className="text-green-600 text-[28px] font-semibold">
-                                        {DATA.commission}
+                                        {service?.franchiseDetails?.commission}
                                     </p>
                                 </div>
 
@@ -275,13 +273,14 @@ export default function ServiceDetails() {
                         />
 
                         {/* ===== DURATION BADGES ===== */}
-                        <div className="absolute -bottom-2 left-3 right-3 flex justify-between">
-                            <div className="bg-white px-4 py-1 rounded-full text-xs shadow">
-                                • Online Mode
+                        <div className="absolute -bottom-2 left-3 right-3 gap-1 flex justify-between">
+                            <div className="bg-white px-4 py-1 rounded-full text-xs shadow flex whitespace-nowrap items-center gap-1">
+                                <span className="text-green-500 text-lg leading-none">•</span>
+                                Online Mode
                             </div>
 
-                            <div className="bg-white px-4 py-1 rounded-full text-xs shadow">
-                                Duration 16 Weeks
+                            <div className="bg-white px-2 py-1 rounded-full text-xs shadow whitespace-nowrap">
+                                Duration {service?.serviceDetails?.duration.weeks} Weeks {service?.serviceDetails?.duration.hours} Hours
                             </div>
                         </div>
                     </div>
@@ -290,7 +289,7 @@ export default function ServiceDetails() {
                     <div className="px-4 mt-4 space-y-3">
 
                         <div className="flex justify-between items-start">
-                            <h2 className="text-[16px] font-semibold">{DATA.title}</h2>
+                            <h2 className="text-[16px] font-semibold">{service?.serviceName}</h2>
 
                             <div className="flex flex-col items-center gap-1 text-sm">
                                 <div>
@@ -303,7 +302,7 @@ export default function ServiceDetails() {
                             </div>
                         </div>
 
-                        <p className="text-sm text-gray-500">{DATA.subtitle}</p>
+                        <p className="text-sm text-gray-500">{service?.category.name}</p>
 
                         {/* PRICE */}
                         <div className="border rounded-lg inline-block p-1">
@@ -322,29 +321,32 @@ export default function ServiceDetails() {
                         <p className="text-[12px]">EMI Option available</p>
 
                         {/* FEATURES */}
-                        <div className="flex gap-2">
-                            <div className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
-                                <Eye size={16} className="text-gray-600" />
-                                <span className="text-[12px] whitespace-nowrap">
-                                    Design with empathy
-                                </span>
-                            </div>
-
-                            <div className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
-                                <Pencil size={16} className="text-gray-600" />
-                                <span className="text-[12px] whitespace-nowrap">
-                                    Create and practice
-                                </span>
-                            </div>
+                        <div className="flex gap-2 flex-wrap">
+                            {service?.keyValues?.map((item, index) => (
+                                <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                    {item.icon ? (
+                                        <img
+                                            src={item.icon}
+                                            alt={item.value}
+                                            className="w-4 h-4 object-contain"
+                                        />
+                                    ) : (
+                                        <Eye size={16} className="text-gray-600" />
+                                    )}
+                                    <span className="text-[12px] whitespace-nowrap">
+                                        {item.value}
+                                    </span>
+                                </div>
+                            ))}
                         </div>
 
                         {/* TAGS */}
                         <div className="flex gap-3 mt-3">
                             <div className="border rounded-full px-3 py-1 text-xs">
-                                🎓 Level: {DATA.level}
+                                🎓 Level:  {service?.serviceDetails.level}
                             </div>
                             <div className="border rounded-full px-3 py-1 text-xs">
-                                📘 Lessons: {DATA.lessons}
+                                📘 Lessons: {service?.serviceDetails.lessonCount}
                             </div>
                         </div>
 
@@ -353,7 +355,7 @@ export default function ServiceDetails() {
                             <div>
                                 <p className="text-sm font-medium">Franchise Commission</p>
                                 <p className="text-green-600 font-semibold">
-                                    {DATA.commission}
+                                    {service?.franchiseDetails?.commission}
                                 </p>
                             </div>
                             <button className="flex items-center gap-1 text-sm">

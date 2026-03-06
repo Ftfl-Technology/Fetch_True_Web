@@ -43,9 +43,10 @@ export default function AboutSection({ providerId }: props) {
         const fetchProviderData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(
-                    `https://api.fetchtrue.com/api/provider/${providerId}`
-                );
+                // const response = await axios.get(
+                //     `https://api.fetchtrue.com/api/provider/${providerId}`
+                // );
+                const response = await axios.get(`/api/provider/${providerId}`);
                 setProviderData(response.data);
             } catch (err: unknown) {
                 if (err instanceof Error) {

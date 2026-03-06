@@ -168,7 +168,7 @@ export default function ServiceDetails() {
                                         ₹{service?.serviceDetails.packages[0]?.price}
                                     </span>
                                     <span className="text-[16px] text-white bg-black font-semibold px-3 py-1 rounded whitespace-nowrap">
-                                        ₹{service?.serviceDetails.packages[0]?.discount} OFF
+                                        {service?.serviceDetails.packages[0]?.discount}% OFF
                                     </span>
                                 </div>
                             </div>

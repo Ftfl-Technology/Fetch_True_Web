@@ -411,13 +411,19 @@ import RatingsReviews from "@/src/components/ItServiceDetails/Reviews";
 import TermsAndConditions from "@/src/components/ItServiceDetails/TermsAndConditions";
 import WhyChooseUs from "@/src/components/ItServiceDetails/WhyChooseUs";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, Share2, ShoppingCart } from "lucide-react";
+import { ChevronLeft, Eye, Share2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useReview } from "@/src/context/ReviewContext";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import { useModule } from "@/src/context/ModuleContext";
+
+interface Module {
+    _id: string;
+    name: string;
+    [key: string]: unknown;
+}
 
 const ServiceDetails = () => {
 
@@ -456,7 +462,7 @@ const ServiceDetails = () => {
     }, [serviceId, fetchServiceDetails, fetchReviews]);
 
     const itServicesModule = modules?.find(
-        (module: any) => module.name === "It Services"
+        (module: Module) => module.name === "It Services"
     );
 
     const itServicesId = itServicesModule?._id;
@@ -568,22 +574,22 @@ const ServiceDetails = () => {
                             <div className="flex flex-col flex-1">
 
                                 {/* TITLE */}
-                                <div className="space-y-4">
+                                <div className="space-y-2">
                                     <h2 className="text-[40px] font-semibold text-black">
                                         {serviceName}
                                     </h2>
 
-                                    <p className="text-gray-500 text-[32px]">IT Service</p>
+                                    <p className="text-gray-500 text-[32px]">{service?.category.name}</p>
 
                                     <div className="flex items-center gap-2 text-[32px] text-gray-600">
                                         <span className="text-yellow-500">★</span>
-                                        <span className="font-medium text-black">{reviewServices?.averageRating}</span>
-                                        <span> ({reviewServices?.totalReviews ?? 0} {reviewServices?.totalReviews === 1 ? 'review' : 'reviews'})</span>
+                                        <span className="font-medium text-black">{service?.averageRating}</span>
+                                        <span> ({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</span>
                                     </div>
                                 </div>
 
                                 {/* PRICE BOX */}
-                                <div className="border rounded-lg p-4 mt-10 w-full">
+                                <div className="border rounded-lg p-4 mt-6 w-full">
                                     <div className="lg:text-[20px]">Starting Form</div>
                                     <div className="flex items-center gap-4">                                       
                                         <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
@@ -595,6 +601,26 @@ const ServiceDetails = () => {
                                         </span>
                                     </div>
                                 </div>
+                               
+                               {/* Key values */}
+                                 <div className="flex gap-2 mt-4 flex-wrap">
+                                {service?.keyValues?.map((item, index) => (
+                                    <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                        {item.icon ? (
+                                            <img
+                                                src={item.icon}
+                                                alt={item.value}
+                                                className="w-8 h-8 object-contain"
+                                            />
+                                        ) : (
+                                            <Eye size={16} className="text-gray-600" />
+                                        )}
+                                        <span className="text-[20px] whitespace-nowrap">
+                                            {item.value}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
 
                                 {/* COMMISSION BOX */}
                                 <div className="border border-[#8B5E3C] rounded-lg p-5 mt-8 flex justify-between items-center">
@@ -702,11 +728,33 @@ const ServiceDetails = () => {
 
                                 <div className="flex items-center gap-1 text-sm">
                                     <span className="text-yellow-500">★</span>
-                                    <span className="font-medium">{reviewServices?.averageRating}</span>
+                                    <span className="font-medium">{service?.averageRating}</span>
+                                     <p className="text-xs text-gray-500">({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</p>
                                 </div>
                             </div>
 
-                            <p className="text-xs text-gray-500">({reviewServices?.totalReviews ?? 0} {reviewServices?.totalReviews === 1 ? 'review' : 'reviews'})</p>
+                           
+
+
+                              {/* FEATURES */}
+                        <div className="flex gap-2 flex-wrap">
+                            {service?.keyValues?.map((item, index) => (
+                                <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                    {item.icon ? (
+                                        <img
+                                            src={item.icon}
+                                            alt={item.value}
+                                            className="w-4 h-4 object-contain"
+                                        />
+                                    ) : (
+                                        <Eye size={16} className="text-gray-600" />
+                                    )}
+                                    <span className="text-[12px] whitespace-nowrap">
+                                        {item.value}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
 
                             {/* COMMISSION BOX */}
                             <div className="bg-[#E9EFF6] rounded-xl p-4 flex justify-between items-center">

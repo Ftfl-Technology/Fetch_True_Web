@@ -5,6 +5,8 @@ import { Bookmark, Clock, Wrench } from "lucide-react";
 import Image from "next/image";
 import type { SubscribedService } from "@/src/context/OnDemandSubscriberContext";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useTopRatedProviders } from "@/src/context/HomeTopRatedProvider";
 
 
 interface ServiceCardProps {
@@ -16,11 +18,9 @@ interface ServiceCardProps {
 
 export default function ServiceCard({
     services = [],
-    earnUpto = "Earn Upto 6%",
 }: ServiceCardProps) {
 
-
-
+   
     return (
         <div className="w-[280px] md:w-[700px] lg:w-[1200px]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
@@ -76,7 +76,7 @@ export default function ServiceCard({
                                     </div>
 
                                 ))}</span> */}
-                                 <span className="text-sm bg-gray-100 px-2 py-1 rounded-full">
+                                <span className="text-sm bg-gray-100 px-2 py-1 rounded-full">
                                     <div >
                                         <p className="text-[10px] md:text-[12px] lg:text-[14px]">{item.category.name}</p>
                                     </div>
@@ -189,16 +189,16 @@ export default function ServiceCard({
 
                             {/* Price Button */}
                             <Link href={`/MainModules/On-Demand/servicedetails/${item._id}?service=${encodeURIComponent(item.serviceName)}`}>
-                            <button className="mt-3 w-full bg-orange-400 hover:bg-orange-350 cursor-pointer text-white py-3 rounded-xl font-semibold transition">
-                                Starting From ₹{item.serviceDetails?.packages?.[0]?.discountedPrice || 'N/A'}
-                                <span className="ml-4 line-through">₹{item.serviceDetails?.packages?.[0]?.price || 'N/A'}</span>
-                                <span className="ml-2 text-red-500">{item.serviceDetails?.packages?.[0]?.discount || 'N/A'}% OFF</span>
-                            </button>
-                        </Link>
-                    </div>
+                                <button className="mt-3 w-full bg-orange-400 hover:bg-orange-350 cursor-pointer text-white py-3 rounded-xl font-semibold transition">
+                                    Starting From ₹{item.serviceDetails?.packages?.[0]?.discountedPrice || 'N/A'}
+                                    <span className="ml-4 line-through">₹{item.serviceDetails?.packages?.[0]?.price || 'N/A'}</span>
+                                    <span className="ml-2 text-red-500">{item.serviceDetails?.packages?.[0]?.discount || 'N/A'}% OFF</span>
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 ))}
-        </div>
+            </div>
         </div >
     );
 }
