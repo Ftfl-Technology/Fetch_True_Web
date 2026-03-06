@@ -2240,10 +2240,7 @@ useEffect(() => {
               
                 <AllServices categoryId={categoryId} moduleId={moduleId}
   selectedSubCategory={selectedSubCategory}/> 
-                {/* <SearchBudget categoryId={categoryId} moduleId={moduleId}/>
-                <Recommended categoryId={categoryId} moduleId={moduleId} />
-
-                <MostPopular categoryId={categoryId} /> */}
+          
             </div>
         </section>
     );
