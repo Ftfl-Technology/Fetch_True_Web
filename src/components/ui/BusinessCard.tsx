@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 
 
 type BusinessCardProps = {
@@ -65,10 +65,17 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
             e.stopPropagation();
             onToggleFavourite();
           }}
-          className={`absolute top-3 right-3 w-[24px] h-[24px] rounded-full flex items-center justify-center
-            ${isFavourite ? "bg-red-500" : "bg-black"}`}
-        >
-          <CiBookmark size={14} color="#fff" />
+          className="absolute top-3 right-3 bg-white  rounded-full p-1 shadow"
+              
+          >
+            <FaBookmark 
+                        size={16}
+                        className={`transition ${
+                          isFavourite
+                            ? "text-red-500 fill-red-500"
+                            : "text-gray-400"
+                        }`}
+                      />
         </button>
 
         <span className="absolute bottom-3 right-4 bg-[#1D4699] text-white text-[14px] rounded flex items-center px-1  lg:px-2 py-1 ">
