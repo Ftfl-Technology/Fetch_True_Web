@@ -162,7 +162,7 @@
 
 "use client";
 import Link from "next/link";
-import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 
 export default function FinanceCard({
   image,
@@ -202,10 +202,16 @@ export default function FinanceCard({
     e.stopPropagation();
     onToggleFavourite();
   }}
-  className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
-    ${isFavourite ? "bg-red-500" : "bg-black"}`}
+  className="absolute top-3 right-3 bg-white  rounded-full p-1 shadow"
 >
-  <CiBookmark size={14} color="#fff" />
+  <FaBookmark 
+              size={16}
+              className={`transition ${
+                isFavourite
+                  ? "text-red-500 fill-red-500"
+                  : "text-gray-400"
+              }`}
+            />
 </button>
       </div>
 
