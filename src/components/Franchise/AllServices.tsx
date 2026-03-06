@@ -112,6 +112,11 @@ export default function AllServices({ moduleId }: Props) {
                   investment={`${service.franchiseDetails?.investmentRange?.[0]?.range ?? ""}`}
                   area="500–1000 Sq"
                   bg={bgColors[index % bgColors.length]}
+                   isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                 />
               </Link>
               )
