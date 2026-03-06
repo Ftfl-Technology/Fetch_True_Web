@@ -351,6 +351,8 @@ import { useUser } from "@/src/context/UserContext";
 import CompleteProfile from "@/src/components/Account/Profile/CompleteProfile";
 import AddAddress from "@/src/components/Account/Profile/AddAddress";
 import BankKYC from "@/src/components/Account/Profile/BankKYC";
+import { useLeads } from "@/src/context/LeadsContext";
+import { useWallet } from "@/src/context/WalletContext";
 
 // function CompleteProfile() {
 //   return <div className="p-5">Complete Profile Page</div>;
@@ -366,7 +368,15 @@ import BankKYC from "@/src/components/Account/Profile/BankKYC";
 
 export default function ProfileSection() {
   const { user, loading, error } = useUser();
+    const { leads, loading: leadsLoading } = useLeads();
+    const { wallet, loading: walletLoading } = useWallet();
+  
     const [activeSection, setActiveSection] = useState<string | null>(null);
+
+
+  const totalEarnings = wallet?.totalCredits || 0;
+  const completedLeads =
+  leads?.filter((lead) => lead.isCompleted).length || 0;
 
 
   const accordions = [
@@ -430,7 +440,7 @@ export default function ProfileSection() {
                 <div>
                   <p className="text-blue-600 text-[18px] font-semibold">
                     {user?.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString()
+                      ? new Date(user.createdAt).toLocaleDateString("en-GB")
                       : "--"}
                   </p>
                   <p className="text-[#232323] text-[14px]">
@@ -440,7 +450,7 @@ export default function ProfileSection() {
 
                 <div>
                   <p className="text-blue-600 text-[18px] font-semibold">
-                    0
+                    {completedLeads}
                   </p>
                   <p className="text-[#232323] text-[14px]">
                     Lead Completed
@@ -449,7 +459,7 @@ export default function ProfileSection() {
 
                 <div>
                   <p className="text-blue-600 text-[18px] font-semibold">
-                    0
+                    {totalEarnings}
                   </p>
                   <p className="text-[#232323] text-[14px]">
                     Total Earning

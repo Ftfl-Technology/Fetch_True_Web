@@ -1191,22 +1191,22 @@ const images = service.bannerImages;
 
          {/* BENEFITS */}
                   <section className="w-full  mt-8 ps-4">
-                    <div className="w-full max-w-[1400px] flex flex-col gap-5">
+                    <div className=" max-w-[1400px] flex flex-col gap-5">
+                      <div className="rounded-xl p-6 sm:p-8">
                       <h2 className="text-[36px] text-[#5B3527] text-center font-medium">
                         Benefits
                       </h2>
         
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-10 gap-y-5 lg:ms-10">
-                        {extractBenefits(service?.serviceDetails?.benefits).map((item, index) => (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-15 gap-y-5 lg:ms-10">
+                        {extractBenefits(service?.serviceDetails?.benefits || []).map((item, index) => (
                           <div key={index} className="flex items-center gap-3 lg:ms-15">
-                            {/* <div className="text-[#BC9958] text-[22px]">
-                              {item.icon}
-                            </div> */}
+                          
                             <p className="text-[20px] lg:text-[22px] text-[#606060] font-medium">
                               {item}
                             </p>
                           </div>
                         ))}
+                      </div>
                       </div>
                     </div>
                   </section>
