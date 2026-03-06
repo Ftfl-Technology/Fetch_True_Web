@@ -92,7 +92,7 @@ export default function AllServices({ moduleId }: Props) {
         >
           {viewAll ? (
             services.map((service, index) => {
-                                const fav = isFavourite(service._id);
+              const fav = isFavourite(service._id);
 
               return(
               <Link

@@ -113,7 +113,10 @@ const handleToggleFavourite = async (serviceId: string) => {
           }
         >
           {viewAll ? (
-            filteredServices.map((service, index) => (
+            filteredServices.map((service, index) => {
+                    const fav = isFavourite(service._id);
+
+              return(
               <Link
                 key={service._id}
                 href={`/MainModules/Franchise/${moduleId}/${categoryId}/${service._id}`}
@@ -133,11 +136,12 @@ const handleToggleFavourite = async (serviceId: string) => {
                   bg={bgColors[index % bgColors.length]}
                 />
               </Link>
-            ))
+              )
+            })
           ) : (
             <HorizontalScroll>
               {filteredServices.map((service, index) => {
-                                  const fav = isFavourite(service._id);
+                    const fav = isFavourite(service._id);
 
                 return(
                 <Link
