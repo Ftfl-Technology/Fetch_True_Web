@@ -353,6 +353,7 @@ import AddAddress from "@/src/components/Account/Profile/AddAddress";
 import BankKYC from "@/src/components/Account/Profile/BankKYC";
 import { useLeads } from "@/src/context/LeadsContext";
 import { useWallet } from "@/src/context/WalletContext";
+import Link from "next/link";
 
 // function CompleteProfile() {
 //   return <div className="p-5">Complete Profile Page</div>;
@@ -481,10 +482,10 @@ export default function ProfileSection() {
 
         {/* Right Cards */}
         <div className="flex flex-row lg:flex-col gap-4">
-          <div className="bg-blue-600 text-white rounded-lg px-5 py-4 w-[200px]">
+          <Link href="/Packages" className="bg-blue-600 text-white rounded-lg px-5 py-4 w-[200px]">
             <p className="text-sm">Access your</p>
             <p className="font-semibold">package</p>
-          </div>
+          </Link>
 
           <div className="bg-yellow-400 rounded-lg px-5 py-4 w-[200px]">
             <p className="text-sm">Earn with</p>

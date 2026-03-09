@@ -823,9 +823,9 @@ export default function EarningsPage() {
             ₹ {wallet?.balance?.toFixed(2) ?? "0.00"}
           </p>
 
-          {/* <button className="text-xs text-blue-600 font-medium">
+          <button className="text-xs text-blue-600 font-medium">
             History
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -839,7 +839,7 @@ export default function EarningsPage() {
 
           <p className="text-lg font-semibold text-green-600 mt-1">
             {/* ₹ {(wallet?.selfEarnings ?? 0).toFixed(2)} */}
-            ₹ {(wallet?.balance?.toFixed(2))}
+            ₹ {(wallet?.totalCredits)}
           </p>
         </div>
 

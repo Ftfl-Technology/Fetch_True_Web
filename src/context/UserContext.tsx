@@ -51,6 +51,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   fetchUser: (userId: string) => Promise<void>;
+  deleteUser: (userId: string) => Promise<void>;
   clearUser: () => void;
 }
 
@@ -118,14 +119,61 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
   };
 
+  /* ================= DELETE USER ================= */
+
+const deleteUser = async (userId: string) => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem("token");
+
+    const res = await axios.delete(
+      `https://api.fetchtrue.com/api/users/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = res.data;
+
+    if (!data.success) {
+      throw new Error(data.message || "Failed to delete account");
+    }
+
+    // clear local storage
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
+    setUser(null);
+
+    // redirect
+    window.location.href = "/";
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      setError(err.response?.data?.message || err.message);
+    } else if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError("Something went wrong");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <UserContext.Provider
-      value={{ user, loading, error, fetchUser, clearUser }}
+      value={{ user, loading, error, fetchUser, clearUser,deleteUser }}
     >
       {children}
     </UserContext.Provider>
   );
 };
+
+
 
 /* ================= HOOK ================= */
 

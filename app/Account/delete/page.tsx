@@ -1,7 +1,21 @@
+import { useUser } from "@/src/context/UserContext";
 import Image from "next/image";
 import { FiTrash2 } from "react-icons/fi";
 
 export default function DeleteAccountSection() {
+const { user, deleteUser } = useUser();
+
+const handleDelete = async () => {
+  const confirmDelete = confirm("Are you sure you want to delete account?");
+  if (!confirmDelete || !user) return;
+
+  try {
+    await deleteUser(user._id);
+  } catch (err: any) {
+    alert(err.message);
+  }
+};
+
   return (
     <div className="w-full max-w-4xl">
       <h2 className="text-xl font-semibold mb-6">Delete Account</h2>
@@ -61,7 +75,8 @@ export default function DeleteAccountSection() {
           Cancel
         </button>
 
-        <button className="px-6 py-2 rounded-md bg-red-500 text-white hover:bg-red-600">
+        <button className="px-6 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
+        onClick={handleDelete}>
           Delete
         </button>
       </div>

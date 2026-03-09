@@ -65,7 +65,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
             e.stopPropagation();
             onToggleFavourite();
           }}
-          className="absolute top-3 right-3 bg-white  rounded-full p-1 shadow"
+          className="absolute top-4 right-4 bg-white  rounded-full p-1 shadow"
               
           >
             <FaBookmark 
@@ -78,10 +78,10 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
                       />
         </button>
 
-        <span className="absolute bottom-3 right-4 bg-[#1D4699] text-white text-[14px] rounded flex items-center px-1  lg:px-2 py-1 ">
+        {/* <span className="absolute bottom-3 right-4 bg-[#1D4699] text-white text-[14px] rounded flex items-center px-1  lg:px-2 py-1 ">
           <img src="/image/star.png" alt="star" className="w-4 h-4" />
           {rating}
-        </span>
+        </span> */}
       </div>
 
       {/* CONTENT */}

@@ -165,6 +165,10 @@ import { MdLocationOn } from "react-icons/md";
 import { CiClock2 } from "react-icons/ci";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { useRecommendedProviders } from "@/src/context/RecommendedProviderContext";
+import { useFavouriteProviders } from "@/src/context/FavouriteProviderContext";
+import { useAuth } from "@/src/context/AuthContext";
+import { FaBookmark  } from "react-icons/fa";
+
 
 interface Props {
   moduleId: string;
@@ -178,11 +182,34 @@ export default function SuggestedProviders({ moduleId }: Props) {
     fetchRecommendedProviders,
   } = useRecommendedProviders();
 
+  const { getFavouriteProviders,addFavouriteProviders,removeFavouriteProviders,isFavourite } =
+    useFavouriteProviders();
+
+      const { user } = useAuth();
+    
+      const userId = user?._id;
+    
+      useEffect(() => {
+      if (userId) {
+        getFavouriteProviders(userId);
+      }
+    }, [userId]);
+
   useEffect(() => {
     if (moduleId) {
       fetchRecommendedProviders(moduleId);
     }
   }, [moduleId]);
+
+  const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavouriteProviders(userId, serviceId);
+  } else {
+    await addFavouriteProviders(userId, serviceId);
+  }
+};
 
   console.log("marketing provider module Id:",moduleId)
 
@@ -211,9 +238,23 @@ export default function SuggestedProviders({ moduleId }: Props) {
             className="min-w-[350px] lg:min-w-[383px] bg-white border border-[#BEBEBE] rounded-[12px] p-4 relative"
           >
             {/* BOOKMARK */}
-            <div className="absolute top-4 right-4">
-              <BsBookmark />
-            </div>
+        {/* BOOKMARK */}
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+    handleToggleFavourite(item._id);
+  }}
+  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
+>
+  <FaBookmark
+    size={16}
+    className={`transition ${
+      isFavourite(item._id)
+        ? "text-red-500 fill-red-500"
+        : "text-gray-400"
+    }`}
+  />
+</button>
 
             {/* HEADER */}
             <div className="flex gap-3 mt-5">

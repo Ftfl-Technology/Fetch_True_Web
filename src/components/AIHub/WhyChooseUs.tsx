@@ -56,7 +56,7 @@ export default function WhyChooseUs({ moduleId }: props) {
               className="flex items-start gap-4 bg-white rounded-xl p-4 md:p-4 lg:p-8 shadow-sm hover:shadow-md transition"
             >
               {/* Icon */}
-              <div className="flex items-center justify-center w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-[#0ea5b7] text-white shrink-0">
+              <div className="flex items-center justify-center w-8 h-8 lg:w-12 lg:h-12  shrink-0">
                 {/* <Bot size={22} /> */}
                 <img src={service.icon} alt="Icon" width={32.22} height={32.22} />
               </div>

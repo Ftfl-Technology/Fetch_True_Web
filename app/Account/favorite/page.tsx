@@ -170,13 +170,74 @@
 // }
 
 
+// "use client";
+
+// import { useEffect } from "react";
+// import { useFavourites } from "@/src/context/FavouriteContext";
+// import FavouriteCard from "@/src/components/ui/FavouriteCard";
+
+// export default function FavouriteServices({ userId }: { userId: string }) {
+//   const {
+//     favourites,
+//     loading,
+//     error,
+//     fetchFavourites,
+//     removeFavourite,
+//   } = useFavourites();
+
+//   useEffect(() => {
+//     if (userId) {
+//       fetchFavourites(userId);
+//     }
+//   }, [userId, fetchFavourites]);
+
+//   if (error) {
+//     return <p className="text-red-500">{error}</p>;
+//   }
+
+//   const handleRemove = async (serviceId: string) => {
+//     await removeFavourite(userId, serviceId);
+//   };
+
+//   return (
+//     <div>
+//       {!favourites.length && !loading ? (
+//         <p>No favourite services yet.</p>
+//       ) : (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+//           {favourites.map((service) => (
+//             <FavouriteCard
+//               key={service._id}
+//               id={service._id}
+//               title={service.serviceName}
+//               image={service.thumbnailImage || service.category?.image}
+//               moduleName={service.category?.name}
+//               rating={service.averageRating}
+//               reviews={service.totalReviews}
+//               features={service.keyValues}
+//               franchiseDetails={service.franchiseDetails}
+//               packages={service.serviceDetails?.packages}
+//               isFavourite={true} 
+//               onToggleFavourite={() => handleRemove(service._id)}
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import FavouriteCard from "@/src/components/ui/FavouriteCard";
+import ProviderCard from "@/src/components/ui/ProviderCard";
+import { useFavouriteProviders } from "@/src/context/FavouriteProviderContext";
 
-export default function FavouriteServices({ userId }: { userId: string }) {
+export default function FavouritePage({ userId }: { userId: string }) {
+
   const {
     favourites,
     loading,
@@ -185,44 +246,107 @@ export default function FavouriteServices({ userId }: { userId: string }) {
     removeFavourite,
   } = useFavourites();
 
+  const {favouriteProviders,getFavouriteProviders,removeFavouriteProviders} = useFavouriteProviders()
+
+  const [activeTab, setActiveTab] = useState<"services" | "providers">("services");
+
   useEffect(() => {
     if (userId) {
       fetchFavourites(userId);
+      getFavouriteProviders(userId);
     }
-  }, [userId, fetchFavourites]);
+  }, [userId, fetchFavourites, getFavouriteProviders]);
 
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }
-
   const handleRemove = async (serviceId: string) => {
     await removeFavourite(userId, serviceId);
   };
 
+   const handleRemoveProviders = async (providerId:string) => {
+    await removeFavouriteProviders(userId,providerId);
+  };
+
   return (
-    <div>
-      {!favourites.length && !loading ? (
-        <p>No favourite services yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {favourites.map((service) => (
-            <FavouriteCard
-              key={service._id}
-              id={service._id}
-              title={service.serviceName}
-              image={service.thumbnailImage || service.category?.image}
-              moduleName={service.category?.name}
-              rating={service.averageRating}
-              reviews={service.totalReviews}
-              features={service.keyValues}
-              franchiseDetails={service.franchiseDetails}
-              packages={service.serviceDetails?.packages}
-              isFavourite={true} 
-              onToggleFavourite={() => handleRemove(service._id)}
-            />
-          ))}
-        </div>
+    <div className="p-4 lg:p-6">
+
+      {/* Header */}
+      <div className="flex items-center justify-around gap-6 mb-6 border-b pb-2">
+
+        <button
+          onClick={() => setActiveTab("services")}
+          className={`text-sm font-medium ${
+            activeTab === "services"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-500"
+          }`}
+        >
+          Services
+        </button>
+
+        <button
+          onClick={() => setActiveTab("providers")}
+          className={`text-sm font-medium ${
+            activeTab === "providers"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-500"
+          }`}
+        >
+          Provider
+        </button>
+
+      </div>
+
+      {/* SERVICES */}
+      {activeTab === "services" && (
+        <>
+          {!favourites.length && !loading ? (
+            <p>No favourite services yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {favourites.map((service) => (
+                <FavouriteCard
+                  key={service._id}
+                  id={service._id}
+                  title={service.serviceName}
+                  image={service.thumbnailImage || service.category?.image}
+                  moduleName={service.category?.name}
+                  rating={service.averageRating}
+                  reviews={service.totalReviews}
+                  features={service.keyValues}
+                  franchiseDetails={service.franchiseDetails}
+                  packages={service.serviceDetails?.packages}
+                  isFavourite={true}
+                  onToggleFavourite={() => handleRemove(service._id)}
+                  
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
+
+      {/* PROVIDERS */}
+      {activeTab === "providers" && (
+        <>
+          {!favouriteProviders.length && !loading ? (
+            <p>No favourite providers yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {favouriteProviders.map((provider) => (
+                <ProviderCard
+                  key={provider._id}
+                  provider={provider}
+                  isFavourite={true}
+                  onToggleFavourite={() => handleRemoveProviders(provider._id)}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
     </div>
   );
 }
