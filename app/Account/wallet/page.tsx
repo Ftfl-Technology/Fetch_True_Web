@@ -739,7 +739,7 @@ export default function EarningsPage() {
   const filteredTransactions = useMemo(() => {
     if (!wallet?.transactions) return [];
 
-    return wallet.transactions.filter((t) => {
+    const filtered = wallet.transactions.filter((t) => {
       const desc = (t.description || "").toUpperCase();
 
       if (activeTab === "self")
@@ -753,6 +753,12 @@ export default function EarningsPage() {
 
       return true;
     });
+
+    return filtered.sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
+  );
   }, [wallet, activeTab]);
 
   /* ---------------- LOADING ---------------- */
@@ -817,9 +823,9 @@ export default function EarningsPage() {
             ₹ {wallet?.balance?.toFixed(2) ?? "0.00"}
           </p>
 
-          <button className="text-xs text-blue-600 font-medium">
+          {/* <button className="text-xs text-blue-600 font-medium">
             History
-          </button>
+          </button> */}
         </div>
       </div>
 
