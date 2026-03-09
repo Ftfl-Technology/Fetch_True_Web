@@ -1,3 +1,5 @@
+"use client"
+
 import { useUser } from "@/src/context/UserContext";
 import Image from "next/image";
 import { FiTrash2 } from "react-icons/fi";
