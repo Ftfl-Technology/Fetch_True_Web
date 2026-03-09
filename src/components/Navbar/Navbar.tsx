@@ -146,7 +146,7 @@ const { user, logout} = useAuth();
     { label: "Home", href: "/", icon: Home },
     { label: "Offers", href: "/Offers", icon: Tag },
     { label: "Academy", href: "/Academy", icon: GraduationCap },
-    { label: "Account", href: "/Account", icon: User },
+    { label: "Account", href: "/Account/MyAccount", icon: User },
     { label: "Packages", href: "/Packages/", icon: Package },
   ];
 

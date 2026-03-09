@@ -91,7 +91,7 @@ export default function FranchisePageClient({ searchQuery,setSearchQuery }:any) 
               />
             </div>
 
-            <Link href="/Account?section=Favorite" >
+            <Link href="/Account/MyAccount?section=Favorite" >
             <img
               src="/image/Vector (2).png"
               className="w-[18px] h-[22px]"

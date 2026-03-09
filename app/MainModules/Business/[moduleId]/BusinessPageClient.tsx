@@ -1141,7 +1141,7 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
 
 
           {/* Bookmark Icon */}
-          <Link href="/Account?section=Favorite">
+          <Link href="/Account/MyAccount?section=Favorite">
           <img
             src="/image/Vector (2).png"
             alt="Bookmark"

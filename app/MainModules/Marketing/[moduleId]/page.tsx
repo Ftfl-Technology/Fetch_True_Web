@@ -129,7 +129,7 @@ if (loading) return null;
                               />
             </div>
             
-            <Link href="/Account?section=Favorite">
+            <Link href="/Account/MyAccount?section=Favorite">
             <Bookmark className="w-8 h-8" />
             </Link>
           </div>
