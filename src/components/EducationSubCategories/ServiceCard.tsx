@@ -3,9 +3,32 @@
 import { Bookmark, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UnifiedService } from "@/app/MainModules/Education/[moduleId]/[categoryId]/page";
+import { useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 export default function ServiceCard({ service }: { service: UnifiedService }) {
   const router = useRouter();
+  const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+  const { user } = useAuth();
+
+  const userId = user?._id;
+
+  useEffect(() => {
+    if (userId) {
+      fetchFavourites(userId);
+    }
+  }, [userId]);
+
+  const handleToggleFavourite = async (serviceId: string) => {
+    if (!userId) return;
+    if (isFavourite(serviceId)) {
+      await removeFavourite(userId, serviceId);
+    } else {
+      await addFavourite(userId, serviceId);
+    }
+  };
 
   return (
     <>
@@ -48,11 +71,22 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
             )} */}
 
             {/* Bookmark */}
-            <button
+            {/* <button
               onClick={(e) => e.stopPropagation()}
               className="absolute top-5 right-5 bg-black/70 p-2 rounded-full"
             >
               <Bookmark size={16} className="text-white" />
+            </button> */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleToggleFavourite(service.id);
+              }}
+              className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                    ${isFavourite(service.id) ? "bg-red-500" : "bg-black"}`}
+            >
+              <CiBookmark size={14} color="#fff" />
             </button>
           </div>
 

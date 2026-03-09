@@ -443,13 +443,13 @@ const ServiceDetails = () => {
 
     const displayPackage = selectedPackage ?? basicPackage;
 
-    
+
     useEffect(() => {
         // If service ID changed (and it's not the first load)
         if (prevServiceIdRef.current && prevServiceIdRef.current !== serviceId) {
-           setSelectedPackage(null, serviceId);
+            setSelectedPackage(null, serviceId);
         }
-        
+
         // Update the ref
         prevServiceIdRef.current = serviceId;
     }, [serviceId, setSelectedPackage]);
@@ -503,7 +503,7 @@ const ServiceDetails = () => {
 
     // if (loading) return <p className="text-[12px] md:text-[24px] text-center mt-15">Loading...</p>;
     // if (error) return <p>{error}</p>;
-    
+
     return (
         <>
             <section className="relative w-full lg:p-8 p-0">
@@ -574,7 +574,7 @@ const ServiceDetails = () => {
                             <div className="flex flex-col flex-1">
 
                                 {/* TITLE */}
-                                <div className="space-y-2">
+                                <div className="space-y-1">
                                     <h2 className="text-[40px] font-semibold text-black">
                                         {serviceName}
                                     </h2>
@@ -589,38 +589,38 @@ const ServiceDetails = () => {
                                 </div>
 
                                 {/* PRICE BOX */}
-                                <div className="border rounded-lg p-4 mt-6 w-full">
+                                <div className="border flex flex-row rounded-lg p-2 items-center gap-2 mt-6 w-fit">
                                     <div className="lg:text-[20px]">Starting Form</div>
-                                    <div className="flex items-center gap-4">                                       
+                                    <div className="flex items-center gap-4">
                                         <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
                                         <span className="line-through text-[20px] text-gray-400">
-                                             ₹{service?.serviceDetails.packages[0]?.price}
+                                            ₹{service?.serviceDetails.packages[0]?.price}
                                         </span>
                                         <span className="bg-black text-white text-[16px] px-3 py-1 rounded">
                                             {service?.serviceDetails.packages[0]?.discount}% OFF
                                         </span>
                                     </div>
                                 </div>
-                               
-                               {/* Key values */}
-                                 <div className="flex gap-2 mt-4 flex-wrap">
-                                {service?.keyValues?.map((item, index) => (
-                                    <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
-                                        {item.icon ? (
-                                            <img
-                                                src={item.icon}
-                                                alt={item.value}
-                                                className="w-8 h-8 object-contain"
-                                            />
-                                        ) : (
-                                            <Eye size={16} className="text-gray-600" />
-                                        )}
-                                        <span className="text-[20px] whitespace-nowrap">
-                                            {item.value}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
+
+                                {/* Key values */}
+                                <div className="flex gap-2 mt-4 flex-wrap">
+                                    {service?.keyValues?.map((item, index) => (
+                                        <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                            {item.icon ? (
+                                                <img
+                                                    src={item.icon}
+                                                    alt={item.value}
+                                                    className="w-8 h-8 object-contain"
+                                                />
+                                            ) : (
+                                                <Eye size={16} className="text-gray-600" />
+                                            )}
+                                            <span className="text-[20px] whitespace-nowrap">
+                                                {item.value}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
 
                                 {/* COMMISSION BOX */}
                                 <div className="border border-[#8B5E3C] rounded-lg p-5 mt-8 flex justify-between items-center">
@@ -729,32 +729,32 @@ const ServiceDetails = () => {
                                 <div className="flex items-center gap-1 text-sm">
                                     <span className="text-yellow-500">★</span>
                                     <span className="font-medium">{service?.averageRating}</span>
-                                     <p className="text-xs text-gray-500">({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</p>
+                                    <p className="text-xs text-gray-500">({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})</p>
                                 </div>
                             </div>
 
-                           
 
 
-                              {/* FEATURES */}
-                        <div className="flex gap-2 flex-wrap">
-                            {service?.keyValues?.map((item, index) => (
-                                <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
-                                    {item.icon ? (
-                                        <img
-                                            src={item.icon}
-                                            alt={item.value}
-                                            className="w-4 h-4 object-contain"
-                                        />
-                                    ) : (
-                                        <Eye size={16} className="text-gray-600" />
-                                    )}
-                                    <span className="text-[12px] whitespace-nowrap">
-                                        {item.value}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+
+                            {/* FEATURES */}
+                            <div className="flex gap-2 flex-wrap">
+                                {service?.keyValues?.map((item, index) => (
+                                    <div key={item._id || index} className="flex items-center bg-gray-200 p-2 rounded-3xl gap-1">
+                                        {item.icon ? (
+                                            <img
+                                                src={item.icon}
+                                                alt={item.value}
+                                                className="w-4 h-4 object-contain"
+                                            />
+                                        ) : (
+                                            <Eye size={16} className="text-gray-600" />
+                                        )}
+                                        <span className="text-[12px] whitespace-nowrap">
+                                            {item.value}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
 
                             {/* COMMISSION BOX */}
                             <div className="bg-[#E9EFF6] rounded-xl p-4 flex justify-between items-center">

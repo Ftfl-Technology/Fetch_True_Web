@@ -141,7 +141,7 @@ export default function ServiceDetails() {
                         </div>
 
                         {/* ===== RIGHT CONTENT ===== */}
-                        <div className="flex-1 space-y-4">
+                        <div className="flex-1 space-y-2">
 
                             <h1 className="text-[40px] font-semibold whitespace-nowrap">
                                 {serviceName}
@@ -157,8 +157,20 @@ export default function ServiceDetails() {
                             </div>
 
                             {/* PRICE */}
-                            <div className="border rounded-lg p-2 mt-4 w-[50%]">
+                            {/* <div className="border flex flex-row items-center rounded-lg p-2 mt-4 w-[50%]">
                                 <div className="lg:text-[20px]">Starting price from</div>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
+                                    <span className="line-through text-[20px] text-gray-400">
+                                        ₹{service?.serviceDetails.packages[0]?.price}
+                                    </span>
+                                    <span className="bg-black text-white text-[16px] px-3 py-1 rounded">
+                                        {service?.serviceDetails.packages[0]?.discount}% OFF
+                                    </span>
+                                </div>
+                            </div> */}
+                            <div className="border flex flex-row rounded-lg p-2 items-center gap-2 mt-6 inline-flex">
+                                <div className="lg:text-[20px]">Starting Form</div>
                                 <div className="flex items-center gap-4">
                                     <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
                                     <span className="line-through text-[20px] text-gray-400">

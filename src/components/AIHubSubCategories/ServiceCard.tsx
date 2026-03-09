@@ -3,9 +3,33 @@
 import { Bookmark } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UnifiedService } from "@/app/MainModules/AI-Hub/[moduleId]/[categoryId]/page";
+import { useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 export default function ServiceCard({ service }: { service: UnifiedService }) {
   const router = useRouter();
+  const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+  const { user } = useAuth();
+
+  const userId = user?._id;
+
+  useEffect(() => {
+    if (userId) {
+      fetchFavourites(userId);
+    }
+  }, [userId]);
+
+  const handleToggleFavourite = async (serviceId: string) => {
+    if (!userId) return;
+    if (isFavourite(serviceId)) {
+      await removeFavourite(userId, serviceId);
+    } else {
+      await addFavourite(userId, serviceId);
+    }
+  };
+
 
   return (
     <div
@@ -36,11 +60,22 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
           className="w-full h-full object-fit rounded-xl"
         />
 
-        <button
+        {/* <button
           onClick={(e) => e.stopPropagation()}
           className="absolute top-2 right-2 bg-black/60 p-1.5 rounded-full"
         >
           <Bookmark size={18} className="text-white" />
+        </button> */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleToggleFavourite(service.id);
+          }}
+          className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center               
+               ${isFavourite(service.id) ? "bg-red-500" : "bg-black"}`}
+        >
+          <CiBookmark size={14} color="#fff" />
         </button>
       </div>
 
@@ -65,8 +100,8 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
           {service.category}
         </span> */}
         <span className="absolute top-50 lg:top-62 left-2 bg-white text-[10px] lg:text-[12px] px-2 py-1 rounded-lg font-medium">
-    {service.category}
-  </span>
+          {service.category}
+        </span>
 
 
         {/* RATING */}
@@ -94,13 +129,13 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
               key={index}
               className="flex text-[10px] lg:text-[14px] text-gray-700 leading-snug gap-1"
             >
-                 {kv.icon && (
-                                    <img
-                                        src={kv.icon}
-                                        alt=""
-                                        className="w-[14px] h-[14px] items-center"
-                                    />
-                                )}
+              {kv.icon && (
+                <img
+                  src={kv.icon}
+                  alt=""
+                  className="w-[14px] h-[14px] items-center"
+                />
+              )}
               <span className="font-medium mr-1">{kv.key}:</span>
               <span className="text-gray-500">{kv.value}</span>
             </div>

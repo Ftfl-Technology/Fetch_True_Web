@@ -7,6 +7,10 @@ import type { SubscribedService } from "@/src/context/OnDemandSubscriberContext"
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTopRatedProviders } from "@/src/context/HomeTopRatedProvider";
+import { useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 
 interface ServiceCardProps {
@@ -19,8 +23,26 @@ interface ServiceCardProps {
 export default function ServiceCard({
     services = [],
 }: ServiceCardProps) {
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
 
-   
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
+
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
+
     return (
         <div className="w-[280px] md:w-[700px] lg:w-[1200px]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
@@ -53,8 +75,19 @@ export default function ServiceCard({
 
 
                             {/* Bookmark */}
-                            <button className="absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full">
+                            {/* <button className="absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full">
                                 <Bookmark size={14} />
+                            </button> */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleToggleFavourite(item._id);
+                                }}
+                                className={`absolute top-2 right-2 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                                            ${isFavourite(item._id) ? "bg-red-500" : "bg-black"}`}
+                            >
+                                <CiBookmark size={14} color="#fff" />
                             </button>
                         </div>
 

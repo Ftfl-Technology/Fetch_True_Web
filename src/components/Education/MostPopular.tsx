@@ -422,6 +422,9 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { useMostPopular } from "@/src/context/MostPopularContext"
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 
 
@@ -464,8 +467,16 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
-    const toSlug = (text: string) =>
-        text.toLowerCase().replace(/\s+/g, "-");
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
+
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
 
 
     const {
@@ -480,6 +491,14 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
         fetchMostPopular(moduleId);
     }, [moduleId]);
 
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
 
     const getStartingPackage = (packages: Package[] = []) => {
         if (!packages.length) return null;
@@ -608,8 +627,19 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
                                             </span>
 
                                             {/* Bookmark */}
-                                            <button className="absolute top-5 right-5 bg-black/70 p-2 rounded-full">
+                                            {/* <button className="absolute top-5 right-5 bg-black/70 p-2 rounded-full">
                                                 <Bookmark size={16} className="text-white" />
+                                            </button> */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleToggleFavourite(item.id);
+                                                }}
+                                                className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                                                            ${isFavourite(item.id) ? "bg-red-500" : "bg-black"}`}
+                                            >
+                                                <CiBookmark size={14} color="#fff" />
                                             </button>
                                         </div>
                                     </div>

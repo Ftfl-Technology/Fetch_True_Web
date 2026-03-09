@@ -17,127 +17,6 @@ const CATEGORY_TABS = [
     { label: "800 - 1000 Rs", value: "800-1000" },
 ];
 
-/* ---------------- SERVICES DATA ---------------- */
-const SERVICES = [
-    {
-        id: 1,
-        title: "Cyber Security",
-        subtitle: "Develop your future website",
-        category: "Digital Marketing",
-        users: "2400+ users",
-        rating: 4,
-        price: 450,
-        discount: "30%",
-        trusted: true,
-        earn: "Earn Up to 5%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 2,
-        title: "IT Consulting",
-        subtitle: "Develop your future website",
-        category: "UI / UX",
-        users: "1800+ users",
-        rating: 5,
-        price: 380,
-        discount: "25%",
-        trusted: true,
-        earn: "Earn Up to 4%",
-        image: "/image/ItServicecardbg1.png",
-
-    },
-    {
-        id: 3,
-        title: "App Development",
-        subtitle: "Develop your future website",
-        category: "Graphic Design",
-        users: "1200+ users",
-        rating: 4,
-        price: 280,
-        discount: "20%",
-        trusted: true,
-        earn: "Earn Up to 3%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 4,
-        title: "Cyber Security",
-        subtitle: "Develop your future website",
-        category: "Print Design",
-        users: "950+ users",
-        rating: 4,
-        price: 220,
-        discount: "15%",
-        trusted: true,
-        earn: "Earn Up to 2%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 5,
-        title: "IT Consulting",
-        subtitle: "Develop your future website",
-        category: "Digital Marketing",
-        users: "2100+ users",
-        rating: 5,
-        price: 320,
-        discount: "35%",
-        trusted: true,
-        earn: "Earn Up to 5%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 6,
-        title: "Web Development",
-        subtitle: "Develop your future website",
-        category: "UI / UX",
-        users: "1600+ users",
-        rating: 5,
-        price: 520,
-        discount: "20%",
-        trusted: true,
-        earn: "Earn Up to 6%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 7,
-        title: "Cyber Security",
-        subtitle: "Develop your future website",
-        category: "Print Design",
-        users: "1100+ users",
-        rating: 4,
-        price: 480,
-        discount: "18%",
-        trusted: true,
-        earn: "Earn Up to 3%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 8,
-        title: "Web Development",
-        subtitle: "Develop your future website",
-        category: "Graphic Design",
-        users: "1400+ users",
-        rating: 4,
-        price: 260,
-        discount: "22%",
-        trusted: true,
-        earn: "Earn Up to 3%",
-        image: "/image/ItServicecardbg1.png",
-    },
-    {
-        id: 9,
-        title: "App Development",
-        subtitle: "Develop your future website",
-        category: "Branding",
-        users: "900+ users",
-        rating: 5,
-        price: 750,
-        discount: "40%",
-        trusted: true,
-        earn: "Earn Up to 7%",
-        image: "/image/ItServicecardbg1.png",
-    },
-];
 
 /* ---------------- COMPONENT ---------------- */
 // type RecommendationProps = {
@@ -182,12 +61,6 @@ export default function Recommendation({ categoryId, moduleId }: Props) {
 
 
 
-
-
-    const toSlug = (text: string) =>
-        text.toLowerCase().replace(/\s+/g, "-");
-
-
     const mappedServices = services.map((service) => ({
         id: service._id,
         title: service.serviceName,
@@ -208,12 +81,6 @@ export default function Recommendation({ categoryId, moduleId }: Props) {
     if (error) return <p>{error}</p>;
 
 
-    const CARD_CLASSES = `
-    snap-center flex-shrink-0
-    w-[88vw] sm:w-[70vw] md:w-[390px] md:h-[362.04px]
-    rounded-3xl p-3
-    shadow-lg
-    `;
 
     // const filteredServices = SERVICES.filter((item) => {
     //     // PRICE FILTER

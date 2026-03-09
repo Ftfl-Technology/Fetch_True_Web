@@ -3,6 +3,10 @@
 import { Bookmark, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UnifiedService } from "@/app/MainModules/Education/[moduleId]/[categoryId]/page";
+import { useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 /* ---------- SVG BACKGROUND ---------- */
 const CardBg = () => (
@@ -30,6 +34,25 @@ const CardBg = () => (
 
 export default function ServiceCard({ service }: { service: UnifiedService }) {
     const router = useRouter();
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
+
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
+
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
 
     return (
         <div
@@ -71,11 +94,22 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
                     )} */}
 
                     {/* BOOKMARK */}
-                    <button
+                    {/* <button
                         onClick={(e) => e.stopPropagation()}
                         className="absolute top-5 right-5 bg-black/70 p-2 rounded-full"
                     >
                         <Bookmark size={16} className="text-white" />
+                    </button> */}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleToggleFavourite(service.id);
+                        }}
+                        className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                                    ${isFavourite(service.id) ? "bg-red-500" : "bg-black"}`}
+                    >
+                        <CiBookmark size={14} color="#fff" />
                     </button>
                 </div>
 
@@ -148,24 +182,24 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
                     </div>
 
                     {/* PRICE */}
-            <div className="absolute bottom-4 right-3 bg-[#F7F7F7] rounded-2xl px-3 py-2 text-center">
-              <p className="text-[10px] text-gray-500">Starting from</p>
+                    <div className="absolute bottom-4 right-3 bg-[#F7F7F7] rounded-2xl px-3 py-2 text-center">
+                        <p className="text-[10px] text-gray-500">Starting from</p>
 
-              <div className="font-semibold text-[20px] lg:text-[20px]">
-                ₹{service.price}
-              </div>
+                        <div className="font-semibold text-[20px] lg:text-[20px]">
+                            ₹{service.price}
+                        </div>
 
-              {service.discount > 0 && (
-                <div className="flex gap-1 justify-center text-[10px]">
-                  <span className="line-through text-gray-400">
-                    ₹{service.originalPrice}
-                  </span>
-                  <span className="text-blue-500">
-                    ({service.discount}% off)
-                  </span>
-                </div>
-              )}
-            </div>
+                        {service.discount > 0 && (
+                            <div className="flex gap-1 justify-center text-[10px]">
+                                <span className="line-through text-gray-400">
+                                    ₹{service.originalPrice}
+                                </span>
+                                <span className="text-blue-500">
+                                    ({service.discount}% off)
+                                </span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

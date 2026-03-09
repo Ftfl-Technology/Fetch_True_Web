@@ -5,7 +5,7 @@ import Benefits from "@/src/components/MarketingServiceDetails/Benefits";
 import MoreInformation from "@/src/components/MarketingServiceDetails/MoreInformation";
 import TermsAndConditions from "@/src/components/MarketingServiceDetails/TermsandConditions";
 import WhyChooseUs from "@/src/components/MarketingServiceDetails/WhyChooseUs";
-import { ChevronLeft, ClockIcon, Share2, ShoppingCart, ZapIcon } from "lucide-react";
+import { ChevronLeft, ClockIcon, Eye, Share2, ShoppingCart, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import HowItWorks from "@/src/components/MarketingServiceDetails/HowItWorks";
 import ChooseProvider from "@/src/components/MarketingServiceDetails/ChooseProvider";
@@ -35,19 +35,7 @@ type CourseInfo = {
     commission: string;
 };
 
-const DATA: CourseInfo = {
-    title: "Professional Logo Design Service",
-    subtitle: "Digital Marketing",
-    rating: 4.8,
-    reviews: "2,400+ reviews",
-    price: "3,999",
-    originalPrice: 3499,
-    discount: "12% Off",
-    emi: 199,
-    level: "Beginner",
-    lessons: 72,
-    commission: "Earn Up to 7%",
-};
+
 
 export default function ServiceDetails() {
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
@@ -60,11 +48,11 @@ export default function ServiceDetails() {
     const basicPackage = service?.serviceDetails?.packages?.[0];
 
     const displayPackage = selectedPackage ?? basicPackage;
-    
+
     const searchParams = useSearchParams();
-    
-        const serviceName = searchParams.get("service");
-    
+
+    const serviceName = searchParams.get("service");
+
     useEffect(() => {
         if (!serviceId) return;
 
@@ -115,7 +103,7 @@ export default function ServiceDetails() {
                                     </div>
 
 
-                                   <Link href={`/MainModules/Checkout?id=${serviceId}`}>
+                                    <Link href={`/MainModules/Checkout?id=${serviceId}`}>
                                         <button className="flex items-center gap-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium">
                                             <ShoppingCart className="w-[29px] h-[29px]" />
                                             Check out
@@ -162,35 +150,42 @@ export default function ServiceDetails() {
                                         </div> */}
                                         <div className="p-4 mt-2 w-full">
                                             <div className="flex items-center gap-4">
-                                                <span className="text-gray-500 text-[24px]">Starting</span>
-                                                <span className="text-[36px] font-semibold">{service?.serviceDetails?.packages?.[0]?.discountedPrice}</span>
+                                                <span className="text-gray-500 text-[24px]">Starting from</span>
+                                                <span className="text-[36px] font-semibold">₹{service?.serviceDetails?.packages?.[0]?.discountedPrice}</span>
                                                 <span className="line-through text-[20px] text-gray-400">
-                                                    {service?.serviceDetails?.packages?.[0]?.price}
+                                                    ₹{service?.serviceDetails?.packages?.[0]?.price}
                                                 </span>
                                                 <span className="text-[16px] text-blue-600 font-semibold px-3 py-1 rounded">
-                                                {service?.serviceDetails?.packages?.[0]?.discount}% OFF
+                                                    {service?.serviceDetails?.packages?.[0]?.discount}% OFF
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-row gap-4">
-                                            <div className="flex items-center border bg-gray-200 p-2 border-gray-200 rounded-3xl gap-2">
-                                                <ZapIcon size={24} className="cursor-pointer text-gray-600" />
-                                                <span className="text-[20px]">Quick Recognize</span>
-                                            </div>
-
-                                            <div className="flex items-center border bg-gray-200 p-2 border-gray-200 rounded-3xl gap-2">
-                                                <ClockIcon size={24} className="cursor-pointer text-gray-600" />
-                                                <span className="text-[20px]">On Time Guaranty</span>
-                                            </div>
-
+                                        {/* Key values */}
+                                        <div className="flex gap-2  flex-wrap">
+                                            {service?.keyValues?.map((item, index) => (
+                                                <div key={item._id || index} className="flex items-center bg-gray-200 p-3 rounded-3xl gap-1">
+                                                    {item.icon ? (
+                                                        <img
+                                                            src={item.icon}
+                                                            alt={item.value}
+                                                            className="w-8 h-8 object-contain"
+                                                        />
+                                                    ) : (
+                                                        <Eye size={16} className="text-gray-600" />
+                                                    )}
+                                                    <span className="text-[20px] whitespace-nowrap">
+                                                        {item.value}
+                                                    </span>
+                                                </div>
+                                            ))}
                                         </div>
 
                                         <div className="rounded-xl p-5 border-t-4 border-blue-500 bg-gray-200 flex justify-between items-center">
                                             <div className="space-y-4">
                                                 <p className="font-semibold text-[24px]">Franchise Commission</p>
                                                 <p className="text-green-600 text-[32px] font-semibold">
-                                                    {DATA.commission}
+                                                   Earn upto {service?.franchiseDetails?.commission}
                                                 </p>
                                             </div>
                                             <button className="text-[#281A83] text-[24px] mt-10 flex items-center gap-1">
@@ -221,7 +216,7 @@ export default function ServiceDetails() {
 
                         {/* RIGHT */}
                         <div className="flex items-center gap-2">
-                           <Link href={`/MainModules/Checkout?id=${serviceId}`}>
+                            <Link href={`/MainModules/Checkout?id=${serviceId}`}>
                                 <button className="flex items-center gap-1 bg-green-500 text-white px-3 py-1.5 rounded-md text-xs font-medium">
                                     <ShoppingCart className="w-4 h-4" />
                                     Checkout
@@ -250,7 +245,7 @@ export default function ServiceDetails() {
                         {/* TITLE + RATING */}
                         <div className="flex justify-between items-start">
                             <h2 className="text-[16px] font-semibold leading-tight">
-                             {service?.serviceName}
+                                {service?.serviceName}
                             </h2>
 
                             <div className="flex flex-col items-end text-xs">
@@ -259,47 +254,54 @@ export default function ServiceDetails() {
                                     <span>{reviewServices?.averageRating}</span>
                                 </div>
                                 <span className="text-gray-400 whitespace-nowrap">
-                                     ({reviewServices?.totalReviews})
+                                    ({reviewServices?.totalReviews} reviews) 
                                 </span>
                             </div>
                         </div>
 
-                        <p className="text-[13px] text-gray-500">{DATA.subtitle}</p>
+                        <p className="text-[13px] text-gray-500">{service?.category?.name}</p>
 
                         {/* PRICE */}
                         <div className="p-4 -mt-6 w-full">
-                             <span className="text-gray-500 text-[12px] ">Starting from</span>
+                            <span className="text-gray-500 text-[12px] ">Starting from</span>
                             <div className="flex items-center gap-4">
-                               
+
                                 <span className="text-[20px] font-semibold">₹ {service?.serviceDetails?.packages?.[0]?.discountedPrice}</span>
                                 <span className="line-through text-[12px] text-gray-400">
                                     ₹ {service?.serviceDetails?.packages?.[0]?.price}
                                 </span>
                                 <span className="text-[10px] text-blue-600 font-semibold px-3 py-1 rounded whitespace-nowrap">
-                                   {service?.serviceDetails?.packages?.[0]?.discount}% OFF
+                                    {service?.serviceDetails?.packages?.[0]?.discount}% OFF
                                 </span>
                             </div>
                         </div>
 
-                        {/* TAGS */}
-                        <div className="flex gap-2 flex-wrap">
-                            <div className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-[11px]">
-                                <ZapIcon size={14} className="text-gray-600" />
-                                Quick Recognize
-                            </div>
-
-                            <div className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-[11px]">
-                                <ClockIcon size={14} className="text-gray-600" />
-                                On Time Guaranty
-                            </div>
-                        </div>
+                       {/* Key values */}
+                                <div className="flex gap-2  flex-wrap">
+                                    {service?.keyValues?.map((item, index) => (
+                                        <div key={item._id || index} className="flex items-center bg-gray-200 p-2 md:p-3 rounded-3xl gap-1">
+                                            {item.icon ? (
+                                                <img
+                                                    src={item.icon}
+                                                    alt={item.value}
+                                                    className="w-5 h-5 object-contain"
+                                                />
+                                            ) : (
+                                                <Eye size={16} className="text-gray-600" />
+                                            )}
+                                            <span className="text-[12px] md:text-[15px] whitespace-nowrap">
+                                                {item.value}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
 
                         {/* COMMISSION CARD */}
                         <div className="mt-4 bg-white rounded-xl p-4 shadow border-t-4 border-blue-500 flex justify-between items-center">
                             <div>
                                 <p className="text-[13px] font-medium">Franchise Commission</p>
                                 <p className="text-green-600 font-semibold">
-                                    {DATA.commission}
+                                    {service?.franchiseDetails?.commission}
                                 </p>
                             </div>
 

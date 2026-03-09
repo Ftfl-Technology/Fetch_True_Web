@@ -7,6 +7,9 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import { useTopTrending } from "@/src/context/TopTrendingContext";
+import { CiBookmark } from "react-icons/ci";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
 
 
 
@@ -39,6 +42,16 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
+
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
 
     const {
         services,
@@ -52,6 +65,14 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
         fetchTopTrending(moduleId);
     }, [moduleId]);
 
+    const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
 
     const getStartingPackage = (packages: Package[] = []) => {
         if (!packages.length) return null;
@@ -62,17 +83,17 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
     };
 
 
-     const filteredServices =
-  services?.filter((service) => {
-    if (!searchQuery?.trim()) return true;
+    const filteredServices =
+        services?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
 
-    const q = searchQuery.toLowerCase();
+            const q = searchQuery.toLowerCase();
 
-    return (
-      service.serviceName?.toLowerCase().includes(q) ||
-      service.category?.name?.toLowerCase().includes(q)
-    );
-  }) || [];  
+            return (
+                service.serviceName?.toLowerCase().includes(q) ||
+                service.category?.name?.toLowerCase().includes(q)
+            );
+        }) || [];
 
     const mappedServices = filteredServices.map((service) => {
         const packages = service.serviceDetails?.packages || [];
@@ -151,8 +172,16 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
                                             </span>
 
                                             {/* Bookmark */}
-                                            <button className="absolute top-5 right-5 bg-black/70 p-2 rounded-full">
-                                                <Bookmark size={16} className="text-white" />
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleToggleFavourite(item.id);
+                                                }}
+                                                className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
+                                                                                                                            ${isFavourite(item.id) ? "bg-red-500" : "bg-black"}`}
+                                            >
+                                                <CiBookmark size={14} color="#fff" />
                                             </button>
                                         </div>
                                     </div>
@@ -188,7 +217,7 @@ export default function TopTrending({ moduleId, searchQuery }: SectionProps) {
                                         </div>
 
 
-                                      <div className="flex items-center mb-2">
+                                        <div className="flex items-center mb-2">
                                             <div className="inline-flex items-center gap-4 text-[9px] md:text-[12px] px-3 py-1 -ml-2 whitespace-nowrap shrink-0">
                                                 {item.keyValues.map((kv, index) => (
                                                     <span

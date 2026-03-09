@@ -386,7 +386,7 @@ export default function MostPopularHomeCard({
 
                         {/* BUSINESS */}
                         {isBusiness && (
-                            <div className="grid grid-cols-3 w-full h-full">
+                            <div className="grid grid-cols-2 w-full h-full">
                                 {investmentRange && (
                                     <div className="relative px-2 flex flex-col gap-1 text-center justify-center">
                                         <span className="font-semibold text-[12px] lg:text-[12px] text-gray-900">
@@ -484,7 +484,7 @@ export default function MostPopularHomeCard({
                     /* NORMAL SERVICE (On-Demand, Marketing, Legal, IT Services, etc.) */
                     <div className="flex items-center justify-between h-[56px] w-full">
                         <div className="space-y-2 p-2 flex-1">
-                            {filteredFeatures.slice(0, 2).map((f, i) => (
+                            {filteredFeatures.map((f, i) => (
                                 <div
                                     key={i}
                                     className="flex items-center gap-2 leading-tight text-[12px] lg:text-[14px]"

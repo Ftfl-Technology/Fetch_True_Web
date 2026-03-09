@@ -18,7 +18,7 @@ import WhyChooseUs from "@/src/components/OnDemand/WhyChooseUs";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import { useReview } from "@/src/context/ReviewContext";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
-import { ChevronLeft, ClockIcon, Share2, ShoppingCart, ZapIcon } from "lucide-react";
+import { ChevronLeft, ClockIcon, Eye, Share2, ShoppingCart, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -136,21 +136,19 @@ export default function ServiceDetails() {
                     <div className="max-w-[1400px] mx-auto flex gap-8 p-8">
 
                         {/* LEFT IMAGE */}
-                        <div className="w-[652px] h-[503px] rounded-xl overflow-hidden">
+                        <div className="w-[652px] h-[503px] mt-20 border rounded-xl overflow-hidden">
                             <img
                                 src={service?.bannerImages?.[0]}
                                 alt="Marketing"
-                                className="w-full h-full object-fit"
+                                className="w-full h-full  object-fit"
                             />
                         </div>
 
                         {/* RIGHT CONTENT */}
-                        <div className="flex-1 space-y-4">
-                            <h1 className="text-[40px] font-semibold whitespace-nowrap">
-                                {service?.serviceName}
-                            </h1>
+                       <div className="flex-1 space-y-4 mt-15 flex flex-col justify-center">
+                          
 
-                            <p className="text-gray-500 text-[24px]">
+                            <p className="text-black font-semibold text-[24px]">
                                {service?.serviceName}
                             </p>
                              <p className="text-gray-500 text-[24px]">
@@ -165,7 +163,7 @@ export default function ServiceDetails() {
 
                             <div className="p-4 -mt-6 w-full">
                                 <div className="flex items-center gap-4">
-                                    <span className="text-gray-500 text-[24px]">Starting</span>
+                                    <span className="text-gray-500 text-[24px]">Starting from</span>
                                     <span className="text-[36px] font-semibold"> ₹{service?.serviceDetails.packages[0]?.discountedPrice}</span>
                                     <span className="line-through text-[20px] text-gray-400">
                                         ₹{service?.serviceDetails.packages[0]?.price}
@@ -176,6 +174,27 @@ export default function ServiceDetails() {
                                 </div>
                             </div>
 
+                            
+                                {/* Key values */}
+                                <div className="flex gap-2  flex-wrap">
+                                    {service?.keyValues?.map((item, index) => (
+                                        <div key={item._id || index} className="flex items-center bg-gray-200 p-3 rounded-3xl gap-1">
+                                            {item.icon ? (
+                                                <img
+                                                    src={item.icon}
+                                                    alt={item.value}
+                                                    className="w-8 h-8 object-contain"
+                                                />
+                                            ) : (
+                                                <Eye size={16} className="text-gray-600" />
+                                            )}
+                                            <span className="text-[20px] whitespace-nowrap">
+                                                {item.value}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+
                             {/* COMMISSION */}
                             <div className="rounded-xl p-5 border flex justify-between items-center">
                                 <div className="space-y-2">
@@ -183,7 +202,7 @@ export default function ServiceDetails() {
                                         Franchise Commission
                                     </p>
                                     <p className="text-green-600 text-[32px] font-semibold">
-                                        {service?.franchiseDetails?.commission}
+                                       Earn upto {service?.franchiseDetails?.commission}
                                     </p>
                                 </div>
 
@@ -247,10 +266,10 @@ export default function ServiceDetails() {
                             <div className="flex flex-col items-end text-xs">
                                 <div className="flex items-center gap-1">
                                     <span className="text-yellow-500">★</span>
-                                    <span>{reviewServices?.averageRating}</span>
+                                    <span>{service?.averageRating}</span>
                                 </div>
                                 <span className="text-gray-400 whitespace-nowrap">
-                                    ({reviewServices?.totalReviews})
+                                   ({service?.totalReviews ?? 0} {service?.totalReviews === 1 ? 'review' : 'reviews'})
                                 </span>
                             </div>
                         </div>
@@ -262,39 +281,46 @@ export default function ServiceDetails() {
 
                         {/* PRICE */}
                         <div className="flex items-center gap-2">
-                            <span className="text-[12px] text-gray-500">Starting</span>
+                            <span className="text-[12px] text-gray-500">Starting from</span>
                             <span className="font-semibold text-[16px]">
-                                ₹ {service?.discountedPrice}
+                               ₹{service?.serviceDetails.packages[0]?.discountedPrice}
                             </span>
                             <span className="line-through text-gray-400 text-[12px]">
-                                ₹ {service?.price}
+                                ₹ {service?.serviceDetails.packages[0]?.price}
                             </span>
                             <span className="text-[#D56839] text-[12px] font-medium">
-                                {service?.discount}
+                                {service?.serviceDetails.packages[0]?.discount} % OFF
                             </span>
                         </div>
 
-                        {/* TAGS */}
-                        <div className="flex gap-2 flex-wrap">
-                            <div className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-[11px]">
-                                <ZapIcon size={14} className="text-gray-600" />
-                                Quick Recognize
-                            </div>
-
-                            <div className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-[11px]">
-                                <ClockIcon size={14} className="text-gray-600" />
-                                On Time Guaranty
-                            </div>
-                        </div>
+                               {/* Key values */}
+                                <div className="flex gap-2  flex-wrap">
+                                    {service?.keyValues?.map((item, index) => (
+                                        <div key={item._id || index} className="flex items-center bg-gray-200 p-2 md:p-3 rounded-3xl gap-1">
+                                            {item.icon ? (
+                                                <img
+                                                    src={item.icon}
+                                                    alt={item.value}
+                                                    className="w-5 h-5 object-contain"
+                                                />
+                                            ) : (
+                                                <Eye size={16} className="text-gray-600" />
+                                            )}
+                                            <span className="text-[12px] md:text-[15px] whitespace-nowrap">
+                                                {item.value}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
 
                         {/* COMMISSION CARD */}
-                        <div className="mt-4 bg-white rounded-xl p-4 shadow border flex justify-between items-center">
+                        <div className="mt-4 bg-white rounded-xl p-4 mb-4 shadow border flex justify-between items-center">
                             <div>
                                 <p className="text-[13px] font-medium">
                                     Franchise Commission
                                 </p>
                                 <p className="text-green-600 font-semibold">
-                                    {service?.franchiseDetails?.commission}
+                                   Earn upto {service?.franchiseDetails?.commission}
                                 </p>
                             </div>
 

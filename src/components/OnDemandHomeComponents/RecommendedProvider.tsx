@@ -5,6 +5,9 @@ import { Bookmark, Clock, Phone, MailIcon } from "lucide-react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useRecommendedProviders } from "@/src/context/RecommendedProviderContext"
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { CiBookmark } from "react-icons/ci";
 
 
 type SectionProps = {
@@ -25,7 +28,16 @@ export default function RecommendedProvider({ moduleId }: SectionProps) {
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     const router = useRouter();
+    const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
+    const { user } = useAuth();
 
+    const userId = user?._id;
+
+    useEffect(() => {
+        if (userId) {
+            fetchFavourites(userId);
+        }
+    }, [userId]);
 
     const {
         providers,
@@ -34,15 +46,23 @@ export default function RecommendedProvider({ moduleId }: SectionProps) {
         fetchRecommendedProviders,
     } = useRecommendedProviders();
 
-  
+
 
     useEffect(() => {
         if (moduleId) {
             fetchRecommendedProviders(moduleId);
         }
     }, [moduleId]);
-   
 
+
+     const handleToggleFavourite = async (serviceId: string) => {
+        if (!userId) return;
+        if (isFavourite(serviceId)) {
+            await removeFavourite(userId, serviceId);
+        } else {
+            await addFavourite(userId, serviceId);
+        }
+    };
     const mappedServices = providers.map((service) => ({
         id: service._id,
         name: service.storeInfo?.storeName || "Unknown Store",
@@ -127,8 +147,8 @@ export default function RecommendedProvider({ moduleId }: SectionProps) {
                             key={item.id}
                             className="shrink-0 w-[300px] lg:w-[479px]  bg-white border border-gray-300 rounded-xl p-4 lg:-ml-0 shadow-sm"
                             onClick={() => {
-                            // router.push(`/MainModules/On-Demand/${moduleId}/providers/${item.id}?providerName=${encodeURIComponent(item.name)}`)
-                              router.push(`/MainModules/providers/${item.id}?providerName=${encodeURIComponent(item.name)}`)
+                                // router.push(`/MainModules/On-Demand/${moduleId}/providers/${item.id}?providerName=${encodeURIComponent(item.name)}`)
+                                router.push(`/MainModules/providers/${item.id}?providerName=${encodeURIComponent(item.name)}`)
                             }}
                         >
                             {/* HEADER */}
@@ -151,7 +171,7 @@ export default function RecommendedProvider({ moduleId }: SectionProps) {
                                             </p>
                                         </div>
 
-                                         <div className="mt-1 flex gap-1 text-[10px] lg:text-[14px] text-gray-600">
+                                        <div className="mt-1 flex gap-1 text-[10px] lg:text-[14px] text-gray-600">
                                             <FaMapMarkerAlt
                                                 className="w-3 h-3 lg:w-4 lg:h-4 text-blue-500 shrink-0 mt-[2px]"
                                             />
@@ -166,7 +186,18 @@ export default function RecommendedProvider({ moduleId }: SectionProps) {
                                             </span>
                                         </div>
                                     </div>
-                                    <Bookmark className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400 shrink-0 mt-1 -ml-6" />
+                                    {/* <Bookmark className="w-4 h-4 lg:w-5 lg:h-5 text-gray-400 shrink-0 mt-1 -ml-6" /> */}
+                                    <button
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                e.stopPropagation();
+                                                                                handleToggleFavourite(item.id);
+                                                                            }}
+                                                                            className={`w-4 h-4 lg:w-5 lg:h-5 text-gray-400 shrink-0 mt-1 -ml-6
+                                                                                ${isFavourite(item.id) ? "bg-red-500" : "bg-black"}`}
+                                                                        >
+                                                                            <CiBookmark size={14} color="#fff" />
+                                                                        </button>
                                 </div>
                             </div>
 
