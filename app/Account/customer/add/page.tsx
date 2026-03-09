@@ -197,6 +197,8 @@
 import { User, Phone, Mail, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useServiceCustomers } from "@/src/context/ServiceCustomerContext";
+import { State, City } from "country-state-city";
+
 
 type Props = {
   onBack: () => void;
@@ -204,6 +206,8 @@ type Props = {
 
 export default function AddCustomerForm({ onBack }: Props) {
   const { addCustomer, loading } = useServiceCustomers();
+    const states = State.getStatesOfCountry("IN");
+
 
   const [form, setForm] = useState({
     name: "",
@@ -216,6 +220,19 @@ export default function AddCustomerForm({ onBack }: Props) {
     country: "India",
   });
 
+  const [errors, setErrors] = useState({
+  name: "",
+  phone: "",
+  email: "",
+  address: "",
+  state: "",
+  city: "",
+});
+
+   const [stateCode, setStateCode] = useState("");
+
+  const cities = City.getCitiesOfState("IN", stateCode);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -224,25 +241,95 @@ export default function AddCustomerForm({ onBack }: Props) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
 
-    const success = await addCustomer({
-      fullName: form.name,          // ✅ map सही field
-      phone: form.phone,
-      email: form.email,
-      description: form.description,
-      address: form.address,
-      city: form.city,
-      state: form.state,
-      country: form.country,
+  if (/^[a-zA-Z\s]*$/.test(value)) {
+    setForm({ ...form, name: value });
+  }
+};
+
+const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+
+  if (/^\d*$/.test(value)) {
+    setForm({ ...form, phone: value });
+  }
+};
+
+   const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const code = e.target.value;
+    setStateCode(code);
+
+    const stateName =
+      states.find((s) => s.isoCode === code)?.name || "";
+
+    setForm({
+      ...form,
+      state: stateName,
+      city: "",
     });
-
-    if (success) {
-      alert("Customer Added Successfully ✅");
-      onBack(); // ← back to list
-    }
   };
+
+  const validate = () => {
+  const newErrors: any = {};
+
+  if (!form.name.trim()) {
+    newErrors.name = "Name is required";
+  } else if (!/^[a-zA-Z\s]+$/.test(form.name)) {
+    newErrors.name = "Only characters allowed";
+  }
+
+  if (!form.phone) {
+    newErrors.phone = "Phone is required";
+  } else if (!/^[0-9]{10}$/.test(form.phone)) {
+    newErrors.phone = "Phone must be 10 digits";
+  }
+
+  if (!form.email) {
+    newErrors.email = "Email is required";
+  } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+    newErrors.email = "Invalid email";
+  }
+
+  if (!form.address.trim()) {
+    newErrors.address = "Address is required";
+  }
+
+  if (!form.state) {
+    newErrors.state = "State is required";
+  }
+
+  if (!form.city) {
+    newErrors.city = "City is required";
+  }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!validate()) return;
+
+  const success = await addCustomer({
+    fullName: form.name,
+    phone: form.phone,
+    email: form.email,
+    description: form.description,
+    address: form.address,
+    city: form.city,
+    state: form.state,
+    country: form.country,
+  });
+
+  if (success) {
+    alert("Customer Added Successfully ✅");
+    onBack();
+  }
+};
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
@@ -268,11 +355,14 @@ export default function AddCustomerForm({ onBack }: Props) {
           <input
             name="name"
             value={form.name}
-            onChange={handleChange}
+            onChange={handleNameChange}
             placeholder="Enter Name"
             className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {errors.name && (
+  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+)}
         </div>
 
         {/* Phone */}
@@ -284,11 +374,17 @@ export default function AddCustomerForm({ onBack }: Props) {
           <input
             name="phone"
             value={form.phone}
-            onChange={handleChange}
+            onChange={handlePhoneChange}
             placeholder="Enter Phone No"
+            maxLength={10}
+            inputMode="numeric"
             className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+
+          {errors.phone && (
+  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+)}
         </div>
 
         {/* Email */}
@@ -306,6 +402,9 @@ export default function AddCustomerForm({ onBack }: Props) {
             className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {errors.email && (
+  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+)}
         </div>
 
         {/* Description */}
@@ -337,11 +436,14 @@ export default function AddCustomerForm({ onBack }: Props) {
             className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {errors.address && (
+  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+)}
         </div>
 
         {/* City / State / Country */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
+          {/* <div>
             <label className="text-sm font-medium text-gray-700">
               City <span className="text-red-500">*</span>
             </label>
@@ -375,7 +477,58 @@ export default function AddCustomerForm({ onBack }: Props) {
               <option>Gujarat</option>
               <option>Karnataka</option>
             </select>
+          </div> */}
+
+                    {/* State */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">
+              State <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              onChange={handleStateChange}
+              className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm bg-white"
+              required
+            >
+              <option value="">Select State</option>
+
+              {states.map((s) => (
+                <option key={s.isoCode} value={s.isoCode}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            {errors.state && (
+  <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+)}
           </div>
+
+          {/* City */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">
+              City <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+              className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm bg-white"
+              required
+            >
+              <option value="">Select City</option>
+
+              {cities.map((c) => (
+                <option key={c.name} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            {errors.city && (
+  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+)}
+          </div>
+
 
           <div>
             <label className="text-sm font-medium text-gray-700">
@@ -384,9 +537,9 @@ export default function AddCustomerForm({ onBack }: Props) {
             <input
               name="country"
               value={form.country}
-              onChange={handleChange}
+              // onChange={handleChange}
+              readOnly
               className="mt-1 w-full border border-[#B6B6B6] rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
         </div>

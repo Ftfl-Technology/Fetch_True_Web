@@ -278,6 +278,7 @@
 import { useState } from "react";
 import { Search, UserPlus, Phone, Mail,MapIcon } from "lucide-react";
 import { useServiceCustomers } from "@/src/context/ServiceCustomerContext";
+import { RiWhatsappFill } from "react-icons/ri";
 
 type Props = {
   onAdd: () => void;
@@ -292,6 +293,18 @@ export default function CustomerList({ onAdd }: Props) {
   const filteredCustomers = customers.filter((c) =>
     c.fullName.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleCall = (phone: string) => {
+  window.location.href = `tel:${phone}`;
+};
+
+const handleWhatsApp = (phone: string) => {
+  window.open(`https://wa.me/91${phone}`, "_blank");
+};
+
+// const handleEmail = (email: string) => {
+//   window.location.href = `mailto:${email}`;
+// };
 
   if (loading) return <p className="p-6">Loading customers...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
@@ -362,8 +375,22 @@ export default function CustomerList({ onAdd }: Props) {
               
 
               <div className="flex gap-4">
-                <Phone className="w-4 h-4 text-blue-600" />
-                <Mail className="w-4 h-4 text-blue-600" />
+                  {/* Call */}
+  <button
+    onClick={() => handleCall(customer.phone)}
+    className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center hover:bg-blue-100"
+  >
+    <Phone className="w-4 h-4 text-blue-600" />
+  </button>
+
+  {/* WhatsApp */}
+  <button
+    onClick={() => handleWhatsApp(customer.phone)}
+    className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-green-100"
+  >
+    <RiWhatsappFill className="w-4 h-4 text-green-600" />
+  </button>
+
               </div>
             </div>
 
