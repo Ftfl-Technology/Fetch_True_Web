@@ -11,9 +11,10 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useModule } from '@/src/context/CategoriesContext';
+import SearchBar from '@/src/components/SearchBar/Search';
 
 export default function OnDemandModulePage() {
- 
+
     const sliderRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
@@ -40,7 +41,7 @@ export default function OnDemandModulePage() {
         return chunks;
     };
 
-    
+
 
     const slides = chunkArray(categories, 9);
 
@@ -87,7 +88,11 @@ export default function OnDemandModulePage() {
     };
 
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[200px]">
+            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+    );
     if (error) return <p>{error}</p>;
 
 
@@ -148,20 +153,25 @@ export default function OnDemandModulePage() {
                                 {/* RIGHT */}
                                 <div className="flex gap-6">
                                     <div className="relative w-[220px] md:w-[330px] lg:w-[520px]">
-                                        <input
+                                        {/* <input
                                             type="text"
                                             placeholder="Search"
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                             className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
+                                        /> */}
+                                        <SearchBar
+                                            value={searchQuery}
+                                            onChange={setSearchQuery}
+                                            placeholder="Search"
                                         />
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                                        {/* <span className="absolute left-3 top-1/2 -translate-y-1/2">
                                             <img
                                                 src="/image/itsearch.png"
                                                 className="w-[20px] h-[18px]"
                                                 alt="Search"
                                             />
-                                        </span>
+                                        </span> */}
                                     </div>
 
                                     <div className="bg-white rounded-full p-2 flex items-center justify-center">
@@ -218,20 +228,25 @@ export default function OnDemandModulePage() {
 
                     {/* ===== ROW 2: SEARCH ===== */}
                     <div className="relative w-[90%] md:w-[95%] mx-auto ml-6">
-                        <input
+                        {/* <input
                             type="text"
                             placeholder="Search"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
+                        /> */}
+                        <SearchBar
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                            placeholder="Search"
                         />
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                        {/* <span className="absolute left-4 top-1/2 -translate-y-1/2">
                             <img
                                 src="/image/itsearch.png"
                                 className="w-[18px] h-[16px]"
                                 alt="Search"
                             />
-                        </span>
+                        </span> */}
                     </div>
                 </div>
             </section>
@@ -312,7 +327,7 @@ export default function OnDemandModulePage() {
                             <div
                                 key={index}
                                 onClick={() =>
-                                    router.push(`/MainModules/On-Demand/${moduleId}/${item._id}?categoryName=${encodeURIComponent(item.name)}`)
+                                    router.push(`/MainModules/On-Demand/${moduleId}/categories/${item._id}?categoryName=${encodeURIComponent(item.name)}`)
                                 }
                                 className="flex flex-col items-center"
                             >
@@ -399,7 +414,7 @@ export default function OnDemandModulePage() {
                                     <div
                                         key={i}
                                         onClick={() =>
-                                             router.push(`/MainModules/On-Demand/${moduleId}/${item._id}?categoryName=${encodeURIComponent(item.name)}`)
+                                            router.push(`/MainModules/On-Demand/${moduleId}/${item._id}?categoryName=${encodeURIComponent(item.name)}`)
                                         }
                                         className="flex flex-col items-center"
                                     >
@@ -420,10 +435,10 @@ export default function OnDemandModulePage() {
             </section>
 
             {/* ================= OTHER SECTIONS ================= */}
-            <section className="relative w-full ">
-                <RecommendedProvider moduleId={moduleId} />
-                <MostPopularProvider moduleId={moduleId} />
-                <TopTrending moduleId={moduleId} />
+            <section className="relative w-full">
+                <RecommendedProvider moduleId={moduleId} searchQuery={searchQuery} />
+                <MostPopularProvider moduleId={moduleId} searchQuery={searchQuery} />
+                <TopTrending moduleId={moduleId} searchQuery={searchQuery} />
                 <WhyChooseUs moduleId={moduleId} />
             </section>
         </>

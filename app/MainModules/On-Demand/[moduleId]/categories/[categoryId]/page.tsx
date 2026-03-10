@@ -31,15 +31,15 @@ export default function BudgetFilter() {
     const [nearMe, setNearMe] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-   const params = useParams();
-       const searchParams = useSearchParams();
-   
-   
-       const moduleId = params.moduleId as string;
-       const categoryId = params.categoryId as string;
-   
-   
-     const categoryName = searchParams.get("categoryName");
+    const params = useParams();
+    const searchParams = useSearchParams();
+
+
+    const moduleId = params.moduleId as string;
+    const categoryId = params.categoryId as string;
+
+
+    const categoryName = searchParams.get("categoryName");
 
     return (
         <>
@@ -68,7 +68,7 @@ export default function BudgetFilter() {
 
 
                             <h1 className="text-[16px] lg:text-[24px] font-semibold text-[#000000] whitespace-nowrap">
-                               {categoryName}
+                                {categoryName}
                             </h1>
                         </div>
 
@@ -92,12 +92,12 @@ export default function BudgetFilter() {
                                 rounded-t
                                 gap-3
                             "
-                      >
+                    >
                         {/* ===== ROW 1: HEADER ===== */}
                         <div className="flex items-center justify-between">
                             {/* LEFT */}
                             <div className="flex items-center gap-3 min-w-0">
-                               <Link href={`/MainModules/On-Demand/${moduleId}`}>
+                                <Link href={`/MainModules/On-Demand/${moduleId}`}>
                                     <ChevronLeft className="w-[28px] h-[28px] text-black cursor-pointer bg-white rounded-full p-1 shrink-0" />
                                 </Link>
 
@@ -109,7 +109,7 @@ export default function BudgetFilter() {
                             {/* RIGHT */}
                             <div className="flex items-center justify-center bg-white w-8 h-8 rounded-full shrink-0">
                                 <img
-                                   src="/image/educationbookmark.png"
+                                    src="/image/educationbookmark.png"
                                     className="w-[14px] h-[14px]"
                                     alt="Bookmark"
                                 />
@@ -140,7 +140,7 @@ export default function BudgetFilter() {
 
                 </div>
                 {/* ================= DESKTOP ================= */}
-                <div className="hidden md:block p-8">
+                {/* <div className="hidden md:block p-8">
                     <h2 className="text-xl font-semibold mb-4">Select Your Budget</h2>
 
                     <div className="flex flex-wrap gap-3">
@@ -149,20 +149,20 @@ export default function BudgetFilter() {
                                 key={item}
                                 onClick={() => setActiveBudget(item)}
                                 className={`px-6 py-2 rounded-full border text-sm font-medium transition
-                ${activeBudget === item
+                 ${activeBudget === item
                                         ? 'bg-orange-500 text-white border-gray'
                                         : 'bg-white text-black border-gray-400'
                                     }
-              `}
+                 `}
                             >
                                 {item}
                             </button>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* ================= MOBILE ================= */}
-                <div className="md:hidden">
+                {/* <div className="md:hidden">
                     <h2 className="text-[16px] lg:text-[24px] font-semibold mb-4">Select Your Budget</h2>
 
                     <div className="flex gap-3 overflow-x-auto scrollbar-hide">
@@ -171,17 +171,17 @@ export default function BudgetFilter() {
                                 key={item}
                                 onClick={() => setActiveBudget(item)}
                                 className={`px-4 py-2 lg:px-6 lg:py-2 rounded-full text-sm font-medium whitespace-nowrap transition
-                ${activeBudget === item
+                   ${activeBudget === item
                                         ? 'bg-orange-500 text-white'
                                         : 'bg-gray-200 text-gray-800'
                                     }
-              `}
+                  `}
                             >
                                 {item}
                             </button>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* ================= NEAR MY LOCATION ================= */}
                 <div className="flex items-center  pt-4 p-2 md:p-8 lg:p-8">
@@ -211,9 +211,9 @@ export default function BudgetFilter() {
             </div>
 
             <section className="w-full md:p-6 lg:p-0 mt-2 md:mt-2">
-                <RecommendedProvider  categoryId={categoryId} moduleId={moduleId}/>
-                <MostPopularProvider />
-                <TopTrending categoryId={categoryId} moduleId={moduleId}/>
+                <RecommendedProvider categoryId={categoryId} moduleId={moduleId} />
+                <MostPopularProvider categoryId={categoryId} moduleId={moduleId}/>
+                <TopTrending categoryId={categoryId} moduleId={moduleId} />
             </section>
         </>
     );

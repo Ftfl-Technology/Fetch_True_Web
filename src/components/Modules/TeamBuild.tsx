@@ -6,7 +6,7 @@ export default function TeamBuild() {
     return (
         <>
             <div className="lg:w-[1480px] mx-auto mt-4 mb-6">
-                <div className="lg:w-[1430px] md:w-[750px] relative">
+                <div className="lg:w-[1450px] md:w-[750px] mx-auto relative">
                     <img src="/image/teambuildcardbg.jpg" alt="refercardbackground" className="w-full h-[234px] md:h-[230px] lg:h-[400px] object-fit rounded-lg" />
                     <h2 className="absolute bottom-40 left-10 md:bottom-42 md:left-30 lg:bottom-70 lg:left-35 lg:text-[32px] text-[#1D4699] md:text-[20px] text-[14px] font-bold">Team Build</h2>
                     <p className="absolute text-[12px] md:text-[14px] lg:text-[20px] leading-tight bottom-27 left-10 md:bottom-28 md:left-30 lg:bottom-50 lg:left-35 w-[150px] md:w-[180px] lg:w-[370px] whitespace-normal break-words">

@@ -375,7 +375,7 @@ const handleClick = () => {
 
 
     return (
-        <div className="w-[345px] h-[360px] md:w-[400px] md:h-[380px] lg:w-[424px] lg:h-[400px] flex-shrink-0 bg-gradient-to-b 
+        <div className="w-[345px] h-[360px] mx-auto md:w-[400px] md:h-[380px] lg:w-[424px] lg:h-[400px] flex-shrink-0 bg-gradient-to-b 
             from-white to-[#D8E0F099] rounded-[14px] border border-[#E7E7E7] 
             shadow p-4 flex flex-col gap-4"
             // onClick={() =>

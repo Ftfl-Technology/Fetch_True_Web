@@ -12,9 +12,14 @@ import axios from "axios";
 
 
 export interface CouponsService {
-    _id: string,
-  couponCode: string;
-  discountTitle: string;
+ _id: string;
+    couponCode: string;
+    discountTitle: string;
+    discountAmountType: "Percentage" | "Fixed Amount";
+    amount: number;
+    maxDiscount?: number;
+    minPurchase?: number;
+    limitPerUser?: number;
 }
 
 

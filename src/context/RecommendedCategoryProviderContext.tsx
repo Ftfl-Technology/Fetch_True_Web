@@ -88,8 +88,7 @@ export const RecommendedCategoryProvidersProvider = ({ children }: Props) => {
         `https://api.fetchtrue.com/api/provider/recommended?categoryId=${categoryId}`
       );
 
-      console.log("RAW CATEGORY RECOMMENDED API RESPONSE:", res.data);
-
+      
       //  API returns array directly
       if (Array.isArray(res.data)) {
         setProviders(res.data);

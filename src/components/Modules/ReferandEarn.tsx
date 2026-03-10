@@ -5,8 +5,8 @@ export default function ReferandEarn() {
 
     return (
         <>
-            <div className="lg:w-[1480px] p-0 md:p-4 lg:p-4 mx-auto mt-12">
-                <div className="lg:w-[1430px]  relative">
+            <div className="lg:w-[1480px] mx-auto mt-12">
+                <div className="lg:w-[1460px] mx-auto relative">
                     <img src="/image/referbackground.png" alt="refercardbackground" className="w-full h-[219px] md:w-full md:h-full lg:w-full lg:h-full object-cover" />
                     <img src="/image/referimage.png" alt="referimage" className="absolute left-38 bottom-5 md:bottom-5 md:left-30 lg:bottom-10 lg:left-50 h-[160px] md:w-[180px] md:h-[180px] lg:w-[334px] lg:h-[353px] object-contain" />
                    <h2 className="absolute right-50 bottom-40 md:bottom-40 md:right-60 lg:bottom-60 lg:right-130 lg:text-[32px] md:text-[24px] text-[18px] font-bold whitespace-nowrap">Refer & Earn</h2>

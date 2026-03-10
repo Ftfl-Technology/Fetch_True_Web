@@ -55,7 +55,7 @@
 //         }
 //     }, [userId]);
 
-  
+
 
 
 //     const {
@@ -374,15 +374,6 @@ import { useFavourites } from "@/src/context/FavouriteContext";
 import { useAuth } from "@/src/context/AuthContext";
 import { CiBookmark } from "react-icons/ci";
 
-// const CATEGORY_TABS = [
-//     { label: "All", value: "all" },
-//     { label: "300", value: "0-300" },
-//     { label: "300 - 400 Rs", value: "300-400" },
-//     { label: "400 - 600 Rs", value: "400-600" },
-//     { label: "600 - 800 Rs", value: "600-800" },
-//     { label: "800 - 1000 Rs", value: "800-1000" },
-// ];
-
 type SectionProps = {
     moduleId?: string;
     selectedRange?: string;
@@ -449,7 +440,7 @@ export default function Recommendation({ moduleId, searchQuery }: SectionProps) 
         fetchRecommendedServices(moduleId);
     }, [moduleId]);
 
-  
+
     const handleToggleFavourite = async (serviceId: string) => {
         if (!userId) return;
         if (isFavourite(serviceId)) {
@@ -498,7 +489,11 @@ export default function Recommendation({ moduleId, searchQuery }: SectionProps) 
         };
     });
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[200px]">
+            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+    );
     if (error) return <p>{error}</p>;
 
     return (
@@ -542,7 +537,7 @@ export default function Recommendation({ moduleId, searchQuery }: SectionProps) 
                                         Trusted
                                     </span>
 
-                                  
+
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -578,20 +573,20 @@ export default function Recommendation({ moduleId, searchQuery }: SectionProps) 
                                                 </span>
                                             ))} */}
                                             {item.keyValues.map((kv, index) => (
-                                            <span
-                                                key={index}
-                                                className="flex items-center gap-1 text-[11px] text-gray-700"
-                                            >
-                                                {kv.icon && (
-                                                    <img
-                                                        src={kv.icon}
-                                                        alt={kv.label || "icon"}
-                                                        className="w-3 h-3 object-contain inline-block"
-                                                    />
-                                                )}
-                                                {kv.label}
-                                            </span>
-                                        ))}
+                                                <span
+                                                    key={index}
+                                                    className="flex items-center gap-1 text-[11px] text-gray-700"
+                                                >
+                                                    {kv.icon && (
+                                                        <img
+                                                            src={kv.icon}
+                                                            alt={kv.label || "icon"}
+                                                            className="w-3 h-3 object-contain inline-block"
+                                                        />
+                                                    )}
+                                                    {kv.label}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
 

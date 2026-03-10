@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bookmark, Clock, ShieldCheck, Calendar, Phone, MailIcon } from "lucide-react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { useParams } from "next/navigation";
 import { useRecommendedCategoryProviders } from "@/src/context/RecommendedCategoryProviderContext";
 
 type SectionProps = {
@@ -18,51 +17,14 @@ type SectionProps = {
 
 
 
-export default function RecommendedProvider({ selectedRange, selectedCategory, searchQuery = "", contextTitle, moduleId, categoryId }: SectionProps) {
+export default function RecommendedProvider({ moduleId, categoryId, searchQuery }: SectionProps) {
 
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const [isDown, setIsDown] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
 
-    // const services = [
-    //     {
-    //         id: 1,
-    //         name: "G-Kitchen Costar",
-    //         description: "We provide you the best kitchen service",
-    //         phone: "5684562680",
-    //         email: "company@gmail.com",
-    //         address: "Plot 3, High Sky Building, Pune 415005",
-    //         categories: ["Cooking", "Kitchen Cleaning", "Meal Prep"],
-    //         experience: "6+ Years",
-    //         rating: 4,
-    //         reviews: 300,
-    //         time: "9-11 PM",
-    //         tools: "All Tools Included",
-    //         trusted: true,
-    //         day: "Sunday",
-    //         status: "Available",
-    //         image: "/image/OnDemandRecommended.png",
-    //     },
-    //     ...Array.from({ length: 6 }).map((_, i) => ({
-    //         id: i + 2,
-    //         name: "Home Chef Pro",
-    //         description: "Premium home cooking services",
-    //         phone: "9876543210",
-    //         email: "chef@gmail.com",
-    //         address: "Baner Road, Pune",
-    //         categories: ["Cooking", "Meal Prep"],
-    //         experience: "4+ Years",
-    //         rating: 5,
-    //         reviews: 180,
-    //         time: "10-8 PM",
-    //         tools: "All Tools Included",
-    //         trusted: true,
-    //         day: "Monday",
-    //         status: "Available",
-    //         image: "/image/OnDemandRecommended.png",
-    //     })),
-    // ];
+
 
     const {
         providers,
@@ -71,9 +33,6 @@ export default function RecommendedProvider({ selectedRange, selectedCategory, s
         fetchRecommendedCategoryProviders,
     } = useRecommendedCategoryProviders();
 
-
-    const params = useParams();
-   
 
 
     useEffect(() => {
@@ -84,14 +43,17 @@ export default function RecommendedProvider({ selectedRange, selectedCategory, s
 
 
    
+const filteredServices =
+        providers?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
+            const q = searchQuery.toLowerCase();
+            return (
+                service.fullName?.toLowerCase().includes(q) ||
+                service.category_list?.some((cat) => cat.toLowerCase().includes(q))
+            );
+        }) || [];
 
-
-    useEffect(() => {
-      
-    }, [providers]);
-
-
-    const mappedServices = providers.map((service) => ({
+    const mappedServices = filteredServices.map((service) => ({
         id: service._id,
         name: service.storeInfo?.storeName || "Unknown Store",
         phone: service.phoneNo,
@@ -170,10 +132,12 @@ export default function RecommendedProvider({ selectedRange, selectedCategory, s
                 {/* CARD WRAPPER */}
                 <div className="flex gap-6 min-w-max p-2 lg:p-12">
 
-                    {mappedServices.map((item) => (
+                      {mappedServices.length > 0 ? (
+                        mappedServices.map((item) => (
                         <div
                             key={item.id}
                             className="shrink-0 w-[300px] lg:w-[479px]  bg-white border border-gray-300 rounded-xl p-4 lg:-ml-0 shadow-sm"
+                            
                         >
                             {/* HEADER */}
                             <div className="-mx-4 -mt-4 lg:-mt-4 p-4 max-h-[150px] bg-[#F7FAFE] rounded-t-xl">
@@ -293,30 +257,13 @@ export default function RecommendedProvider({ selectedRange, selectedCategory, s
 
 
                             {/* SERVICE DETAILS */}
-                            {/* <div className="mt-4 grid grid-cols-2 gap-2  text-[10px] lg:text-[16px]">
-                                <div className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg">
-                                    <Clock className="w-4 h-4 text-blue-500" /> {item.time}
-                                </div>
-                                <div className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg">
-                                    <img src="/image/OnDemandTools.png" className="w-4 h-4" />
-                                     {item.tools} 
-                                    All Tools Included
-                                </div>
-                                <div className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg">
-                                    <ShieldCheck className="w-4 h-4 text-blue-500" /> Trusted
-                                </div>
-                                <div className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg">
-                                    <Calendar className="w-4 h-4 text-blue-500" /> Monday
-                                     {item.day} 
-                                </div>
-                            </div> */}
                             <div className="mt-4 grid grid-cols-2 gap-2 text-[10px] lg:text-[16px]">
                                 {item.tags.slice(0, 4).map((tag: string, index: number) => (
                                     <div
                                         key={index}
                                         className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg"
                                     >
-                                        {getTagIcon(index)}
+                                        {/* {getTagIcon(index)} */}
                                         <span>{tag}</span>
                                     </div>
                                 ))}
@@ -324,7 +271,26 @@ export default function RecommendedProvider({ selectedRange, selectedCategory, s
 
 
                         </div>
-                    ))}
+                    ))
+                     ) : (
+                        <div className="w-full flex justify-center py-2">
+                            <div className="bg-white border border-gray-200 rounded-xl p-8 text-center max-w-md shadow-sm">
+                                <div className="flex justify-center mb-4">
+                                    <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2">No Services Found</h3>
+                                <p className="text-gray-500 mb-6">We couldn&apos;t find any services matching your criteria.</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                                >
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

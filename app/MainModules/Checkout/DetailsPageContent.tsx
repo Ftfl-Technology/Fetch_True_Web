@@ -65,9 +65,9 @@ useEffect(() => {
         <div className="hidden lg:block w-screen">
           <div className="bg-[#E2E9F1] flex items-center justify-between p-6 rounded-xl">
             <div className="flex items-center gap-4 ml-10">
-              <Link href="/">
+             <button onClick={() => window.history.back()}>
                 <img src="/image/Checkoutback.png" className="w-[30px] cursor-pointer" />
-              </Link>
+              </button>
               <h1 className="text-2xl font-semibold">Details</h1>
             </div>
             <div className="flex items-center gap-4 mr-10 bg-[#BEBEBE] rounded-3xl px-4 py-2 text-white">

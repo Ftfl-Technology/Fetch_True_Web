@@ -17,7 +17,7 @@ type SectionProps = {
 
 
 
-export default function MostPopularProvider({ moduleId }: SectionProps) {
+export default function MostPopularProvider({ moduleId, searchQuery }: SectionProps) {
 
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const [isDown, setIsDown] = useState(false);
@@ -43,12 +43,20 @@ export default function MostPopularProvider({ moduleId }: SectionProps) {
    
 
 
-    useEffect(() => {
-      
-    }, [providers]);
+    const filteredServices =
+        providers?.filter((service) => {
+            if (!searchQuery?.trim()) return true;
+            const q = searchQuery.toLowerCase();
+            return (
+                service.fullName?.toLowerCase().includes(q) ||
+                service.category_list?.some((cat) => cat.toLowerCase().includes(q)) ||
+                service.storeInfo?.storeName?.toLowerCase().includes(q)
+            );
+        }) || [];
 
 
-    const mappedServices = providers.map((service) => ({
+
+    const mappedServices = filteredServices.map((service) => ({
         id: service._id,
         name: service.storeInfo?.storeName || "Unknown Store",
         phone: service.phoneNo,
@@ -127,7 +135,8 @@ export default function MostPopularProvider({ moduleId }: SectionProps) {
                 {/* CARD WRAPPER */}
                 <div className="flex gap-6 min-w-max p-2 lg:p-12">
 
-                    {mappedServices.map((item) => (
+                    {mappedServices.length > 0 ? (
+                        mappedServices.map((item) => (
                         <div
                             key={item.id}
                             className="shrink-0 w-[300px] lg:w-[479px]  bg-white border border-gray-300 rounded-xl p-4 lg:-ml-0 shadow-sm"
@@ -278,7 +287,26 @@ export default function MostPopularProvider({ moduleId }: SectionProps) {
 
 
                         </div>
-                    ))}
+                    ))
+                    ) : (
+                       <div className="w-[250px] md:w-[300px] lg:w-full flex justify-start py-2">
+                            <div className="bg-white border border-gray-200 rounded-xl p-4 lg:p-8 text-center max-w-md shadow-sm">
+                                <div className="flex justify-center mb-4">
+                                    <svg className="w-10 h-10 lg:w-20 lg:h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-sm lg:text-xl font-semibold text-gray-800 lg:text-gray-800 mb-2">No Services Found</h3>
+                                <p className="text-sm lg:text-lg text-gray-500 mb-6">We couldn&apos;t find any services matching your criteria.</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="bg-blue-500 hover:bg-blue-600 text-sm lg:text-base text-white px-6 py-2 rounded-lg transition-colors"
+                                >
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

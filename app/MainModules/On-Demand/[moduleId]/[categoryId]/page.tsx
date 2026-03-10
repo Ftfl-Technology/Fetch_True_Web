@@ -141,7 +141,7 @@ export default function BudgetFilter() {
                 </div>
                 {/* ================= DESKTOP ================= */}
                 <div className="hidden md:block p-8">
-                    <h2 className="text-xl font-semibold mb-4">Select Your Budget</h2>
+                    <h2 className="text-xl font-semibold mb-4">Select Your Budgetfff</h2>
 
                     <div className="flex flex-wrap gap-3">
                         {budgets.map((item) => (
@@ -212,7 +212,7 @@ export default function BudgetFilter() {
 
             <section className="w-full md:p-6 lg:p-0 mt-2 md:mt-2">
                 <RecommendedProvider  categoryId={categoryId} moduleId={moduleId}/>
-                <MostPopularProvider />
+                <MostPopularProvider categoryId={categoryId} moduleId={moduleId}/>
                 <TopTrending categoryId={categoryId} moduleId={moduleId}/>
             </section>
         </>

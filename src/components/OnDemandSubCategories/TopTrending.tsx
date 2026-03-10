@@ -129,7 +129,8 @@ export default function TopTrending({ selectedRange, selectedCategory, searchQue
                 {/* CARD WRAPPER */}
                 <div className="flex gap-6 min-w-max p-2 lg:p-12">
 
-                    {mappedServices.map((item) => (
+                     {mappedServices.length > 0 ? (
+                        mappedServices.map((item) => (
                         <div
                             key={item.id}
                             className="shrink-0 w-[300px] lg:w-[479px]  bg-white border border-gray-300 rounded-xl p-4 lg:-ml-0 shadow-sm"
@@ -275,7 +276,7 @@ export default function TopTrending({ selectedRange, selectedCategory, searchQue
                                         key={index}
                                         className="bg-blue-50 h-[40px] flex items-center justify-center gap-2 px-3 py-2 rounded-lg"
                                     >
-                                        {getTagIcon(index)}
+                                        {/* {getTagIcon(index)} */}
                                         <span>{tag}</span>
                                     </div>
                                 ))}
@@ -283,7 +284,26 @@ export default function TopTrending({ selectedRange, selectedCategory, searchQue
 
 
                         </div>
-                    ))}
+                    ))
+                ) : (
+                        <div className="w-full flex justify-center py-2">
+                            <div className="bg-white border border-gray-200 rounded-xl p-8 text-center max-w-md shadow-sm">
+                                <div className="flex justify-center mb-4">
+                                    <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2">No Services Found</h3>
+                                <p className="text-gray-500 mb-6">We couldn&apos;t find any services matching your criteria.</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                                >
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
