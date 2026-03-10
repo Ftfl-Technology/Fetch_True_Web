@@ -837,6 +837,8 @@ type CheckoutData = {
 };
 
 type DetailsStepProps = {
+    serviceId: string;
+  packageId: string;
     data: CheckoutData | null;
     onNext: (data: CheckoutData) => void;
 };
@@ -935,7 +937,15 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
 
    
     const searchParams = useSearchParams();
-    const serviceId = searchParams.get("id") ?? "";
+
+const serviceId =
+  searchParams.get("serviceId") ||
+  searchParams.get("id") ||
+  "";
+
+const packageId =
+  searchParams.get("packageId") ||
+  "";
 
     const [selected, setSelected] = useState<"me" | "customer">("me");
     const [openSidebar, setOpenSidebar] = useState(false);
@@ -949,18 +959,26 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
 
     useEffect(() => {
         if (!serviceId) return;
-        loadPackage(serviceId);         // rehydrate from sessionStorage after refresh
+        loadPackage(serviceId,packageId);         
         fetchServiceDetails(serviceId);
         fetchReviews(serviceId);
-    }, [serviceId]);
+    }, [serviceId,packageId,loadPackage]);
 
     useEffect(() => {
         fetchCommission();
     }, []);
 
     const commission = services?.[0];
-    const basicPackage = service?.serviceDetails?.packages?.[0];
-    const packageToUse = selectedPackage ?? basicPackage;
+    const packages = service?.serviceDetails?.packages || [];
+
+const packageToUse =
+  selectedPackage ??
+  packages.find((pkg:any) => String(pkg._id) === String(packageId)) ??
+  packages[0] ??
+  null;
+
+    console.log("selectedPackage:", selectedPackage);
+console.log("packageToUse:", packageToUse);
 
     const couponDiscount = 800; // TODO: replace with real selected coupon value
 
@@ -994,14 +1012,14 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
     };
 
     // ── GUARD 1: wait for hydration + API fetch
-    if (!hydrated || loading) {
-        return (
-            <div className="flex flex-col items-center justify-center mt-20 gap-3">
-                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-500 text-sm">Loading...</p>
-            </div>
-        );
-    }
+    // if (!hydrated || loading) {
+    //     return (
+    //         <div className="flex flex-col items-center justify-center mt-20 gap-3">
+    //             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+    //             <p className="text-gray-500 text-sm">Loading...</p>
+    //         </div>
+    //     );
+    // }
 
     // ── GUARD 2: API error
     if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;

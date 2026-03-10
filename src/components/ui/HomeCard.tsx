@@ -162,7 +162,7 @@
 
 import { User } from "lucide-react";
 import { CiBookmark } from "react-icons/ci";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
@@ -199,7 +199,10 @@ type Props = {
             fees: number;
         };
     };
+    
 };
+
+
 
 export default function HomeCard({
     id,
@@ -220,6 +223,11 @@ export default function HomeCard({
 }: Props) {
     const { addFavourite, removeFavourite, isFavourite, fetchFavourites } = useFavourites();
     const { user } = useAuth();
+
+    const { categoryId } = useParams<{
+        moduleId: string;
+        categoryId: string;
+      }>();
 
     const userId = user?._id;
 
@@ -347,7 +355,7 @@ const handleClick = () => {
         const moduleId = moduleData?._id;
         
         if (moduleId) {
-            router.push(`/MainModules/${folderName}/${moduleId}/[categoryId]/${id}?service=${encodeURIComponent(title)}`);
+            router.push(`/MainModules/${folderName}/${moduleId}/${categoryId}/${id}`);
         } else {
             router.push(`/MainModules/${folderName}/ServiceDetails/${id}?service=${encodeURIComponent(title)}`);
         }

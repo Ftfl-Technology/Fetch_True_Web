@@ -1294,14 +1294,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState,useEffect } from "react";
+import { useState,useEffect, useMemo, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { RiFileList3Line } from "react-icons/ri";
 import { MdOutlineDownload } from "react-icons/md";
 import { LuCircleCheckBig } from "react-icons/lu";
-
-
-
 import MoreInformation from "@/src/components/Section/MoreInformationSection";
 import TermsConditions from "@/src/components/Section/TermsandCondition";
 import FAQs from "@/src/components/Section/FAQ";
@@ -1311,6 +1308,7 @@ import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { RatingDistribution, useReview } from "@/src/context/ReviewContext";
 import Link from "next/link";
 import { Share2 } from "lucide-react";
+import { useCheckout } from "@/src/context/CheckoutContext";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1368,17 +1366,20 @@ const { moduleId, serviceId } = useParams<{
 
   
 const [activeImage, setActiveImage] = useState<string>("");
+const initialized = useRef(false);
+const { selectedPackage, setSelectedPackage } = useCheckout();
+
 
 const { service, loading, error, fetchServiceDetails } = useServiceDetails();
   const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
   const { reviewServices, fetchReviews } = useReview();
 
-    useEffect(() => {
+  useEffect(() => {
   if (!serviceId) return;
 
   fetchServiceDetails(serviceId);
   fetchFranchiseModels(serviceId);
-  fetchReviews(serviceId)
+  fetchReviews(serviceId);
 }, [serviceId]);
 
 
@@ -1391,16 +1392,42 @@ const { service, loading, error, fetchServiceDetails } = useServiceDetails();
 }, [service]);
 
 
-  const franchiseCards =
-  service?.franchiseDetails?.franchiseModel?.map((serviceModel) => {
-    const modelDetails = models.find(
-      (m) =>
-        m.franchiseSize.toLowerCase().trim() ===
-        serviceModel.title.toLowerCase().trim()
+const franchiseCards = useMemo(() => {
+  return (
+    service?.franchiseDetails?.franchiseModel?.map((serviceModel) => {
+      const modelDetails = models.find(
+        (m) =>
+          m.franchiseSize.toLowerCase().trim() ===
+          serviceModel.title.toLowerCase().trim()
+      );
+
+      return { serviceModel, modelDetails };
+    }) || []
+  );
+}, [service, models]);
+
+useEffect(() => {
+  if (!initialized.current && franchiseCards.length > 0) {
+    const firstPackage = franchiseCards[0].serviceModel;
+
+    setSelectedPackage(
+      {
+        _id: firstPackage._id,
+        name: firstPackage.title,
+        price: firstPackage.price,
+        discount: 0,
+        discountedPrice: firstPackage.price,
+      },
+      serviceId
     );
 
-    return { serviceModel, modelDetails };
-  }) || [];
+    initialized.current = true;
+  }
+}, [franchiseCards]);
+
+const selectedPackageData = franchiseCards.find(
+  (item) => item.serviceModel._id === selectedPackage?._id
+)?.serviceModel;
 
   const splitText = (text: string) => {
     const [label, ...rest] = text.split(":");
@@ -1437,7 +1464,7 @@ if (!service) {
     <>
 
     <section className="">
-       <div className="ms-12 pt-5">
+       <div className="w-full flex justify-between fixed bg-white/10 px-12 pt-5 z-20">
     <Link
       href={`/MainModules/Franchise/${moduleId}`}
       
@@ -1445,14 +1472,20 @@ if (!service) {
       {/* <FiLayers size={20} /> */}
       <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[18px] hover:underline ">Service Details</span>
     </Link>
-    </div>
-  <div className="w-full fixed flex justify-end gap-4 mx-auto px-12 mb-5 ">
-    
 
-    {/* RIGHT : Actions */}
+     {/* RIGHT : Actions */}
     <div className="flex items-center gap-3 mb-5 ">
+
+      <p>
+ ₹{selectedPackageData?.price?.toLocaleString() || 0}
+</p>
+
       <Link
-        href={`/MainModules/Checkout`}>
+        href={
+  selectedPackage?._id
+    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+    : "#"
+}>
        <button className="bg-green-500 hover:bg-green-600 text-white
                    px-4 sm:px-5 py-2 rounded
                    flex items-center gap-2 text-[14px]"
@@ -1469,8 +1502,8 @@ if (!service) {
         Share
       </button>
     </div>
-
-  </div>
+    </div>
+  
 </section>
       {/* PAGE WRAPPER */}
       <div className="bg-[#F4F4F4]">
@@ -1901,7 +1934,24 @@ if (!service) {
       {franchiseCards?.map(({ serviceModel, modelDetails }) => (
         <div
           key={serviceModel._id}
-          className="p-6 flex flex-col justify-between"
+              onClick={() =>
+  setSelectedPackage(
+    {
+      _id: serviceModel._id,
+      name: serviceModel.title,
+      price: serviceModel.price,
+      discount: 0,
+      discountedPrice: serviceModel.price,
+    },
+    serviceId
+  )
+}
+          className={`p-6 flex flex-col justify-between cursor-pointer
+${
+  selectedPackage?._id === serviceModel._id
+    ? "border-2 border-[#6E26CB] bg-purple-50"
+    : ""
+}`}
           style={{
             borderRadius: "14px",
             border: "2px solid",
@@ -1921,7 +1971,7 @@ if (!service) {
             <div className="flex justify-between items-center mb-4">
               <div>
                 <p className="text-[22px] font-semibold text-[#6E26CB]">
-                  ₹{serviceModel.price.toLocaleString()}
+                  ₹{serviceModel.price?.toLocaleString() || 0}
                 </p>
                 <p className="text-[14px] text-[#8A8A8A]">
                   +{serviceModel.gst}% GST
@@ -1942,7 +1992,7 @@ if (!service) {
               <div>
                 <p className="text-[#8A8A8A]">Franchise Fees</p>
                 <p className="font-semibold">
-                  ₹{serviceModel.fees.toLocaleString()}
+                  ₹{serviceModel.fees?.toLocaleString() || 0}
                 </p>
               </div>
 
@@ -2007,7 +2057,7 @@ if (!service) {
 
      {/* Cards Grid */}
      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-       {service.serviceDetails.keyAdvantages.map((item) => {
+       {service?.serviceDetails?.keyAdvantages?.map((item) => {
 
         return (
           <div

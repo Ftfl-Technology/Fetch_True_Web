@@ -917,9 +917,10 @@ import { useParams } from "next/navigation";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useReview } from "@/src/context/ReviewContext";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useServiceProviders } from "@/src/context/ServicewiseProviderContext";
 import Link from "next/link";
+import { useCheckout } from "@/src/context/CheckoutContext";
 
  const extractBenefits = (benefits: string[]): string[] => {
    if (!benefits?.length) return [];
@@ -990,6 +991,8 @@ const mappedProviders = providers.map((p) => ({
   available: p.isStoreOpen,
 }));
 
+const initialized = useRef(false);
+const { selectedPackage, setSelectedPackage } = useCheckout();
       const { service, loading, error, fetchServiceDetails } = useServiceDetails();
         const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
         const { reviewServices, fetchReviews } = useReview();
@@ -1004,16 +1007,36 @@ const mappedProviders = providers.map((p) => ({
           fetchProvidersByService(serviceId);
         }, [serviceId]);
 
-                const franchiseCards =
-  service?.franchiseDetails?.franchiseModel?.map((serviceModel) => {
-    const modelDetails = models.find(
-      (m) =>
-        m.franchiseSize.toLowerCase().trim() ===
-        serviceModel.title.toLowerCase().trim()
+const franchiseCards = useMemo(() => {
+  return (
+    service?.serviceDetails?.packages?.map((pkg) => ({
+      serviceModel: pkg,
+    })) || []
+  );
+}, [service]);
+
+useEffect(() => {
+  if (!initialized.current && franchiseCards.length > 0) {
+    const firstPackage = franchiseCards[0].serviceModel;
+
+    setSelectedPackage(
+      {
+        _id: firstPackage._id,
+        name: firstPackage.name,
+        price: firstPackage.price,
+        discount: firstPackage.discount,
+        discountedPrice: firstPackage.discountedPrice,
+      },
+      serviceId
     );
 
-    return { serviceModel, modelDetails };
-  }) || [];
+    initialized.current = true;
+  }
+}, [franchiseCards, serviceId]);
+
+const selectedPackageData = franchiseCards.find(
+  (item) => item.serviceModel._id === selectedPackage?._id
+)?.serviceModel;
 
   const splitText = (text: string) => {
     const [label, ...rest] = text.split(":");
@@ -1044,7 +1067,7 @@ const images = service.bannerImages;
   return (
     <div className="bg-[#F4F4F4] w-full ">
      <section className="">
-       <div className="ms-12 pt-5">
+       <div className="w-full flex fixed justify-between px-12 pt-5 bg-white/10">
     <Link
       href={`/MainModules/Legal-Services/${moduleId}`}
       
@@ -1052,14 +1075,18 @@ const images = service.bannerImages;
       {/* <FiLayers size={20} /> */}
       <span className="flex items-center gap-2 text-[#5B3527] font-medium text-[18px] hover:underline ">Service Details</span>
     </Link>
-    </div>
-  <div className="w-full fixed flex justify-end gap-4 mx-auto px-12 mb-5 ">
-    
 
-    {/* RIGHT : Actions */}
+     {/* RIGHT : Actions */}
     <div className="flex items-center gap-3 mb-5 ">
+<p>
+  ₹{selectedPackageData
+    ? Math.floor(Number(selectedPackageData.discountedPrice)).toLocaleString("en-IN")
+    : 0}
+</p>
       <Link
-        href={`/MainModules/Checkout`}>
+        href={selectedPackage?._id
+    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+    : "#"}>
        <button className="bg-green-500 hover:bg-green-600 text-white
                    px-4 sm:px-5 py-2 rounded
                    flex items-center gap-2 text-[14px]"
@@ -1076,8 +1103,9 @@ const images = service.bannerImages;
         Share
       </button>
     </div>
+    
+    </div>
 
-  </div>
 </section>
 
         <section className="py-6 sm:py-8 lg:py-10 lg:px-10">
@@ -1140,17 +1168,30 @@ const images = service.bannerImages;
               </p>
 
               <p className="text-[22px] lg:text-[26px] font-semibold text-[#1E1E1E]">
-                ₹{service?.serviceDetails?.packages?.[0]?.discountedPrice}
+                {/* ₹{service?.serviceDetails?.packages?.[0]?.discountedPrice} */}
+                ₹{selectedPackage
+  ? Math.floor(Number(selectedPackage.discountedPrice)).toLocaleString("en-IN")
+  : 0}
               </p>
 
-              <div className="flex items-center gap-2 mt-1">
+              {/* <div className="flex items-center gap-2 mt-1">
                 <span className="line-through text-[#9E9E9E] text-[16px] lg:text-[18px]">
                   ₹{service?.serviceDetails?.packages?.[0]?.price}
                 </span>
                 <span className="text-[12px] lg:text-[14px] text-white bg-[#BC9958] px-2 py-[2px] rounded">
                   {service?.serviceDetails?.packages?.[0]?.discount}% OFF
                 </span>
-              </div>
+              </div> */}
+              {selectedPackage && (
+    <div className="flex items-center gap-2 mt-1">
+      <span className="line-through text-[#9E9E9E] text-[16px] lg:text-[18px]">
+        ₹{selectedPackage.price}
+      </span>
+      <span className="text-[12px] lg:text-[14px] text-white bg-[#BC9958] px-2 py-[2px] rounded">
+        {selectedPackage.discount}% OFF
+      </span>
+    </div>
+  )}
             </div>
 
             {/* Time */}
@@ -1376,9 +1417,25 @@ const images = service.bannerImages;
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {service?.serviceDetails?.packages.map((pkg, index) => {
         const isPopular = index === 1;
+        const isSelected = selectedPackage?._id === pkg._id;
         return (
           
-          <div key={pkg._id} className="bg-white rounded-[12px] shadow-md p-6 sm:p-8  flex flex-col justify-between">
+          <div key={pkg._id}
+        onClick={() =>
+          setSelectedPackage(
+            {
+              _id: pkg._id,
+              name: pkg.name,
+              price: pkg.price,
+              discount: pkg.discount,
+              discountedPrice: pkg.discountedPrice,
+            },
+            serviceId
+          )
+        }
+        className={`cursor-pointer bg-white rounded-[12px] shadow-md p-6 sm:p-8 flex flex-col justify-between border-2 ${
+          isSelected ? "border-[#BC9958]" : "border-transparent"
+        }`}>
             {isPopular && (
                   <span className="absolute -mt-10 left-1/2 -translate-x-1/2 z-10  w-[90px] bg-[#C9A36A] text-white text-[12px] px-2  py-[2px] rounded-full">
                     Most Popular

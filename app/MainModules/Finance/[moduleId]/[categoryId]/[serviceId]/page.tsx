@@ -684,11 +684,14 @@ import FAQs from "@/src/components/Section/FAQ";
 import MoreInformation from "@/src/components/Section/MoreInformationSection";
 import RatingsReviews from "@/src/components/Section/RatingReviews";
 import TermsConditions from "@/src/components/Section/TermsandCondition";
+import { useCheckout } from "@/src/context/CheckoutContext";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useReview } from "@/src/context/ReviewContext";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
+import { Share2 } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
  const extractBenefits = (benefits: string[]): string[] => {
    if (!benefits?.length) return [];
@@ -751,6 +754,8 @@ export default function FinanceDetailPage() {
   const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
     const { reviewServices, fetchReviews } = useReview();
+    const initialized = useRef(false);
+    const { selectedPackage, setSelectedPackage } = useCheckout();
 
        useEffect(() => {
       if (!serviceId) return;
@@ -763,16 +768,36 @@ export default function FinanceDetailPage() {
     
       console.log("service Id:",serviceId)
 
-        const franchiseCards =
-  service?.franchiseDetails?.franchiseModel?.map((serviceModel) => {
-    const modelDetails = models.find(
-      (m) =>
-        m.franchiseSize.toLowerCase().trim() ===
-        serviceModel.title.toLowerCase().trim()
+const franchiseCards = useMemo(() => {
+  return (
+    service?.serviceDetails?.packages?.map((pkg) => ({
+      serviceModel: pkg,
+    })) || []
+  );
+}, [service]);
+
+useEffect(() => {
+  if (!initialized.current && franchiseCards.length > 0) {
+    const firstPackage = franchiseCards[0].serviceModel;
+
+    setSelectedPackage(
+      {
+        _id: firstPackage._id,
+        name: firstPackage.name,
+        price: firstPackage.price,
+        discount: firstPackage.discount,
+        discountedPrice: firstPackage.discountedPrice,
+      },
+      serviceId
     );
 
-    return { serviceModel, modelDetails };
-  }) || [];
+    initialized.current = true;
+  }
+}, [franchiseCards, serviceId]);
+
+const selectedPackageData = franchiseCards.find(
+  (item) => item.serviceModel._id === selectedPackage?._id
+)?.serviceModel;
 
   const splitText = (text: string) => {
     const [label, ...rest] = text.split(":");
@@ -802,7 +827,49 @@ const images = service.bannerImages;
 
   return (
     <>
+    <section className="">
+       <div className="w-full flex fixed justify-between px-12 pt-5 bg-white/10">
+    <Link
+      href={`/MainModules/Finance/${moduleId}`}
+      
+    >
+      {/* <FiLayers size={20} /> */}
+      <span className="flex items-center gap-2 text-[#5B3527] font-medium text-[18px] hover:underline ">Service Details</span>
+    </Link>
+
+     {/* RIGHT : Actions */}
+    <div className="flex items-center gap-3 mb-5 ">
+{/* <p>
+  ₹{selectedPackageData
+    ? Math.floor(Number(selectedPackageData.discountedPrice)).toLocaleString("en-IN")
+    : 0}
+</p> */}
+      <Link
+        href={selectedPackage?._id
+    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+    : "#"}>
+       <button className="bg-green-500 hover:bg-green-600 text-white
+                   px-4 sm:px-5 py-2 rounded
+                   flex items-center gap-2 text-[14px]"
+      >
+        Check out</button>
+      </Link>
+
+      <button
+        className="bg-blue-600 hover:bg-blue-700 text-white
+                   px-4 sm:px-5 py-2 rounded
+                   flex items-center gap-2 text-[14px]"
+      >
+        <Share2 size={16} />
+        Share
+      </button>
+    </div>
+    
+    </div>
+
+</section>
     <section className="w-full bg-white">
+      
       <div
         className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-[32px] lg:gap-[42px] px-4 sm:px-6 lg:px-[36px] py-10 lg:py-[75px] bg-white"
         style={{

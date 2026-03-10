@@ -1031,7 +1031,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaStar,FaRegCalendarAlt,FaCrown  } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineDownload } from "react-icons/md";
@@ -1070,6 +1070,7 @@ import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useReview } from "@/src/context/ReviewContext";
 import Link from "next/link";
+import { useCheckout } from "@/src/context/CheckoutContext";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1100,6 +1101,8 @@ export default function DetailsAllPage() {
   const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
     const { reviewServices, fetchReviews } = useReview();
+    const initialized = useRef(false);
+    const { selectedPackage, setSelectedPackage } = useCheckout();
   
   
   
@@ -1121,16 +1124,42 @@ export default function DetailsAllPage() {
 }, [service]);
 
   
-    const franchiseCards =
+const franchiseCards = useMemo(() => {
+  return (
     service?.franchiseDetails?.franchiseModel?.map((serviceModel) => {
       const modelDetails = models.find(
         (m) =>
           m.franchiseSize.toLowerCase().trim() ===
           serviceModel.title.toLowerCase().trim()
       );
-  
+
       return { serviceModel, modelDetails };
-    }) || [];
+    }) || []
+  );
+}, [service, models]);
+
+useEffect(() => {
+  if (!initialized.current && franchiseCards.length > 0) {
+    const firstPackage = franchiseCards[0].serviceModel;
+
+    setSelectedPackage(
+      {
+        _id: firstPackage._id,
+        name: firstPackage.title,
+        price: firstPackage.price,
+        discount: 0,
+        discountedPrice: firstPackage.price,
+      },
+      serviceId
+    );
+
+    initialized.current = true;
+  }
+}, [franchiseCards]);
+
+const selectedPackageData = franchiseCards.find(
+  (item) => item.serviceModel._id === selectedPackage?._id
+)?.serviceModel;
   
     const splitText = (text: string) => {
       const [label, ...rest] = text.split(":");
@@ -1165,23 +1194,29 @@ export default function DetailsAllPage() {
   return (
     <>
 
-             <section className="">
-       <div className="ms-12 pt-5">
+<section className="">
+       <div className="w-full flex justify-between fixed bg-white/10 px-12 pt-5 z-20">
     <Link
-      href={`/MainModules/Business/${moduleId}`}
+      href={`/MainModules/Franchise/${moduleId}`}
       
     >
       {/* <FiLayers size={20} /> */}
-      <span className="flex items-center gap-2 text-[#5B3527] font-medium text-[18px] hover:underline ">Service Details</span>
+      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[18px] hover:underline ">Service Details</span>
     </Link>
-    </div>
-  <div className="w-full fixed flex justify-end gap-4 mx-auto px-12 mb-5 ">
-    
 
-    {/* RIGHT : Actions */}
+     {/* RIGHT : Actions */}
     <div className="flex items-center gap-3 mb-5 ">
+
+      <p>
+ ₹{selectedPackageData?.price?.toLocaleString() || 0}
+</p>
+
       <Link
-        href={`/MainModules/Checkout`}>
+        href={
+  selectedPackage?._id
+    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+    : "#"
+}>
        <button className="bg-green-500 hover:bg-green-600 text-white
                    px-4 sm:px-5 py-2 rounded
                    flex items-center gap-2 text-[14px]"
@@ -1198,8 +1233,8 @@ export default function DetailsAllPage() {
         Share
       </button>
     </div>
-
-  </div>
+    </div>
+  
 </section>
 
       {/* PAGE WRAPPER */}
@@ -1644,7 +1679,24 @@ export default function DetailsAllPage() {
       {franchiseCards?.map(({ serviceModel, modelDetails }) => (
         <div
           key={serviceModel._id}
-          className="p-6 flex flex-col justify-between"
+           onClick={() =>
+  setSelectedPackage(
+    {
+      _id: serviceModel._id,
+      name: serviceModel.title,
+      price: serviceModel.price,
+      discount: 0,
+      discountedPrice: serviceModel.price,
+    },
+    serviceId
+  )
+}
+          className={`p-6 flex flex-col justify-between cursor-pointer
+${
+  selectedPackage?._id === serviceModel._id
+    ? "border-2 border-[#6E26CB] bg-purple-50"
+    : ""
+}`}
           style={{
             borderRadius: "14px",
             border: "2px solid",
