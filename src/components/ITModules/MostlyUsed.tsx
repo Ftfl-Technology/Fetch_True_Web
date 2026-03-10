@@ -655,7 +655,11 @@ export default function MostlyUsed({ moduleId, searchQuery }: SectionProps) {
     });
 
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[200px]">
+            <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+    );
     if (error) return <p>{error}</p>;
 
 
@@ -752,20 +756,20 @@ export default function MostlyUsed({ moduleId, searchQuery }: SectionProps) {
                                                     {kv.label}
                                                 </span>
                                             ))} */}  {item.keyValues.map((kv, index) => (
-                                            <span
-                                                key={index}
-                                                className="flex items-center gap-1 text-[11px] text-gray-700"
-                                            >
-                                                {kv.icon && (
-                                                    <img
-                                                        src={kv.icon}
-                                                        alt={kv.label || "icon"}
-                                                        className="w-3 h-3 object-contain inline-block"
-                                                    />
-                                                )}
-                                                {kv.label}
-                                            </span>
-                                        ))}
+                                                <span
+                                                    key={index}
+                                                    className="flex items-center gap-1 text-[11px] text-gray-700"
+                                                >
+                                                    {kv.icon && (
+                                                        <img
+                                                            src={kv.icon}
+                                                            alt={kv.label || "icon"}
+                                                            className="w-3 h-3 object-contain inline-block"
+                                                        />
+                                                    )}
+                                                    {kv.label}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
 

@@ -43,7 +43,7 @@ export default function PackagesMain() {
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`flex-1 py-2 rounded-lg text-[12px] md:text-[18px] lg:text-[24px] font-semibold transition ${activeTab === tab
+                                className={`flex-1 py-2 rounded-lg text-[12px] md:text-[18px] lg:text-[24px] cursor-pointer font-semibold transition ${activeTab === tab
                                     ? "bg-green-50 text-blue-600 border border-green-200"
                                     : "text-gray-500"
                                     }`}

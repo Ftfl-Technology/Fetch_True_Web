@@ -2,12 +2,12 @@
 
 import { useOffers } from "@/src/context/OfferContext";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Offer } from '@/src/context/OfferContext'
 import Eligibility from "@/src/components/Offers/Eligibility";
 import HowToParticipate from "@/src/components/Offers/HowToParticipate";
 import TermsAndConditions from "@/src/components/Offers/TermsandConditions";
 import FAQ from "@/src/components/Offers/Faq";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Date formatting function using Intl
 const formatDate = (isoString: string): string => {
@@ -25,19 +25,11 @@ const formatDate = (isoString: string): string => {
 
 export default function TodaysBestOffer() {
     const { offers, loading } = useOffers();
-    const [offerData, setOfferData] = useState<Offer | null>(null);
+    const router = useRouter();
     const params = useParams();
     const serviceId = params.id as string;
 
-    useEffect(() => {
-        if (!offers.length || !serviceId) return;
-
-        const matched = offers.find(
-            (offer) => offer._id === serviceId
-        );
-
-        setOfferData(matched ?? null);
-    }, [offers, serviceId]);
+    const offerData = offers.find((offer) => offer._id === serviceId) ?? null;
 
     if (loading) return null;
     if (!offerData) return null;
@@ -45,9 +37,16 @@ export default function TodaysBestOffer() {
     return (
         <section className="w-full bg-white py-10">
             <div className="max-w-[1440px] mx-auto ">
+                <button onClick={() => router.back()}>
+                    <div className="flex flex-row items-center cursor-pointer ml-4 md:ml-10 lg:ml-10">
+                        <ChevronLeft />
+                        <span className="text-lg">Offers</span>
+                    </div>
+
+                </button>
 
                 {/* Heading */}
-                <div className="text-center mb-10">
+                <div className="text-center mb-2">
                     <h2 className="text-[18px] md:text-[25px] lg:text-[26px] font-semibold text-gray-900">
                         Todays Best Offer for you
                     </h2>
@@ -62,7 +61,7 @@ export default function TodaysBestOffer() {
                         <img
                             src={offerData.bannerImage}
                             alt="Offer Banner Image"
-                            className="w-full h-[180px] md:h-[220px] lg:h-[350px] rounded-[18px] object-fit"
+                            className="w-full h-[180px] md:h-[220px] lg:h-[400px] rounded-[18px] object-fit"
                         />
                     </div>
                 </div>

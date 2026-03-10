@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function SGPComponent() {
   return (
     <>
@@ -91,14 +93,17 @@ export default function SGPComponent() {
           </div>
         </div>
 
-        <button className="mt-5 bg-blue-600 text-white w-full py-3 rounded-xl font-semibold">
-          Explore Benefits
-        </button>
+        <Link href="/Packages/Benefits">
+          <button className="mt-5 bg-blue-600 text-white w-full py-3 rounded-xl font-semibold cursor-pointer">
+            Explore Benefits
+          </button>
+        </Link>
+
       </div>
 
-            {/* Reward Selection */}
+      {/* Reward Selection */}
       <div className="border-2 border-dashed border-blue-500 rounded-2xl p-4 mt-6 bg-white">
-        
+
         {/* Header */}
         <div className="text-center mb-4">
           <div className="flex justify-center mb-2">
@@ -117,7 +122,7 @@ export default function SGPComponent() {
 
         {/* Option 1 */}
         <div className="border-2 border-green-500 rounded-xl p-3 flex gap-3 items-center mb-3 relative">
-          
+
           {/* Check */}
           <div className="absolute top-2 right-2 text-green-600 text-lg">✔</div>
 
@@ -146,7 +151,7 @@ export default function SGPComponent() {
 
         {/* Option 2 */}
         <div className="border rounded-xl p-3 flex gap-3 items-center mb-4">
-          
+
           <img
             src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7"
             alt="Increase Earning"
@@ -163,7 +168,7 @@ export default function SGPComponent() {
           </div>
 
           <div className="text-gray-400 text-lg">
-            <input type="checkbox" className="w-4 h-4"/>
+            <input type="checkbox" className="w-4 h-4" />
           </div>
         </div>
 

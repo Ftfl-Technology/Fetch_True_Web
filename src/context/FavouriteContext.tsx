@@ -730,6 +730,8 @@ const removeFavourite = async (userId: string, serviceId: string) => {
 
   const isFavourite = (serviceId: string) =>
     favourites.some((fav) => fav._id === serviceId);
+  console.log("FAVOURITES IN CONTEXT", favourites);
+ 
 
   return (
     <FavouriteContext.Provider
@@ -759,3 +761,5 @@ export const useFavourites = () => {
 
   return context;
 };
+
+

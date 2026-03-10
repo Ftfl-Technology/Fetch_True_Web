@@ -166,7 +166,11 @@ type NormalizedService = {
   };
 };
 
-export default function TopTrendingHome({searchQuery}:any) {
+type Props = {
+  searchQuery?: string;
+};
+
+export default function TopTrendingHome({searchQuery}:Props) {
   const { services, loading, error } = useHomeTopTrending();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -355,7 +359,7 @@ export default function TopTrendingHome({searchQuery}:any) {
   /* ================= RENDER ================= */
 
   return (
-    <div className="p-4 lg:p-2 lg:ml-12">
+    <div className="p-4 lg:p-12">
       <h2 className="text-xl font-semibold mb-6">Top Trending</h2>
 
       <div className="relative w-full">

@@ -312,7 +312,11 @@ type NormalizedService = {
   };
 };
 
-export default function MostPopularHome({searchQuery}:any) {
+type Props = {
+  searchQuery?: string;
+};
+
+export default function MostPopularHome({searchQuery}:Props) {
   const { services, loading, error } = useHomeMostPopular();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -500,7 +504,7 @@ export default function MostPopularHome({searchQuery}:any) {
 
 
   return (
-    <div className="p-4 lg:p-8 lg:ml-2">
+    <div className="p-4 lg:p-12">
       <h2 className="text-xl font-semibold mb-6 lg:ml-2">Most Popular</h2>
 
       <div className="relative w-full">

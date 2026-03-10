@@ -311,7 +311,7 @@ export default function TodaysBestOffer() {
                 <img
                   src={offer.thumbnailImage}
                   alt="Offer Thumbnail"
-                  className="w-full h-[240px] rounded-[18px] object-cover"
+                  className="w-full h-[240px] rounded-[18px] object-cover cursor-pointer"
                 />
               
             </div>

@@ -787,7 +787,7 @@
 
 'use client';
 
-import { MapPin, Phone, PlusCircle } from "lucide-react";
+import { Phone, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import CustomerList from "./CustomerList";
@@ -798,6 +798,7 @@ import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import AddCustomerDialog from "./AddCustomerForm";
 import { useCommission } from "@/src/context/PlatformFeeContext";
 import { useReview } from "@/src/context/ReviewContext";
+import { useAuth } from "@/src/context/AuthContext";
 
 /* ================= MOCK DATA ================= */
 
@@ -813,13 +814,7 @@ const serviceCardData = {
     rewardText: "₹15%"
 };
 
-// TODO: Replace with real user data from auth context
-const userData = {
-    name: "Suhani Shaha",
-    phone: "789578990",
-    address: "Flat no.3, Sky Building, Pune",
-    note: "Customer Requested urgent Service"
-};
+
 
 type PaymentData = {
     listingPrice: number;
@@ -848,7 +843,9 @@ function PaymentSummary({
     service,
     platformFee,
     assuranceFee,
+    selectedCoupon,
     couponDiscount,
+    serviceDiscountAmount,
     grandTotal,
     isTermsAccepted,
     setIsTermsAccepted,
@@ -862,6 +859,8 @@ function PaymentSummary({
     platformFee: number;
     assuranceFee: number;
     couponDiscount: number;
+    serviceDiscountAmount: number;
+    selectedCoupon: any;
     grandTotal: number;
     isTermsAccepted: boolean;
     setIsTermsAccepted: (v: boolean) => void;
@@ -870,22 +869,37 @@ function PaymentSummary({
     handleProceed: () => void;
     containerClass?: string;
 }) {
+
+    const getCouponLabel = () => {
+        if (!selectedCoupon) return "Coupon Discount";
+
+        if (selectedCoupon.discountAmountType === "Percentage") {
+            return `Coupon Discount (${selectedCoupon.amount}%)`;
+        } else {
+            return `Coupon Discount (₹${selectedCoupon.amount})`;
+        }
+    };
     return (
         <section className={`bg-white rounded-xl border border-gray-200 mb-10 p-6 space-y-6 ${containerClass}`}>
             <div className="space-y-4">
                 <h3 className="md:text-[12px] lg:text-[16px] font-semibold text-black">Payment Details</h3>
                 <div className="space-y-3 md:text-[12px] lg:text-[16px]">
                     <Row label="Listing Price" value={`₹ ${packageToUse.price.toFixed(2)}`} />
-                    <Row label="Service Discount" value={`- ₹ ${packageToUse.discount.toFixed(2)}`} valueClass="text-red-500" />
+                    <Row label={`Service Discount (${packageToUse.discount}%)`} value={`- ₹ ${serviceDiscountAmount.toFixed(2)}`}
+                        valueClass="text-red-500" />
                     <Row label="Price After Discount" value={`₹ ${packageToUse.discountedPrice.toFixed(2)}`} />
-                    <Row label="Coupon Discount (50%)" value={`- ₹ ${couponDiscount.toFixed(2)}`} valueClass="text-red-500" />
+                    <Row
+                        label={getCouponLabel()}
+                        value={`- ₹ ${couponDiscount.toFixed(2)}`}
+                        valueClass="text-red-500"
+                    />
                     <Row
                         label={`Service GST (${service?.gst ?? 18}%)`}
-                        value={`+ ₹ ${(((packageToUse.discountedPrice - couponDiscount) * (service?.gst ?? 18)) / 100).toFixed(2)}`}
+                        value={`+ ₹ ${(((packageToUse.discountedPrice) * (service?.gst ?? 18)) / 100).toFixed(2)}`}
                         valueClass="text-green-600"
                     />
                     <Row label="Platform Fee" value={`+ ₹ ${platformFee.toFixed(2)}`} valueClass="text-green-600" />
-                    <Row label="Fetch True Assurity Charges (10%)" value={`+ ₹ ${assuranceFee.toFixed(2)}`} valueClass="text-green-600" />
+                    <Row label="Fetch True Assurity Charges" value={`+ ₹ ${assuranceFee.toFixed(2)}`} valueClass="text-green-600" />
                 </div>
             </div>
 
@@ -933,7 +947,9 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
 
-   
+    const [selectedCoupon, setSelectedCoupon] = useState<any>(null);
+    const [couponDiscount, setCouponDiscount] = useState(0);
+
     const searchParams = useSearchParams();
     const serviceId = searchParams.get("id") ?? "";
 
@@ -946,6 +962,8 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
 
     const { selectedPackage, loadPackage, hydrated } = useCheckout();
     const { services, fetchCommission } = useCommission();
+    const { user } = useAuth();
+    console.log("User in DetailsStep:", user);
 
     useEffect(() => {
         if (!serviceId) return;
@@ -962,17 +980,41 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
     const basicPackage = service?.serviceDetails?.packages?.[0];
     const packageToUse = selectedPackage ?? basicPackage;
 
-    const couponDiscount = 800; // TODO: replace with real selected coupon value
+
+    const calculateCouponDiscount = (coupon: any, priceAfterServiceDiscount: number) => {
+        if (!coupon) return 0;
+
+        if (coupon.discountAmountType === "Percentage") {
+            const discountAmount = (priceAfterServiceDiscount * coupon.amount) / 100;
+            // return coupon.maxDiscount ? Math.min(discountAmount, coupon.maxDiscount) : discountAmount;
+            return discountAmount;
+        } else {
+            return coupon.amount;
+        }
+    };
+
+    const handleCouponSelect = (coupon: any) => {
+        setSelectedCoupon(coupon);
+        if (packageToUse) {
+            const serviceDiscountAmount = (packageToUse.price * packageToUse.discount) / 100;
+            const priceAfterServiceDiscount = packageToUse.price - serviceDiscountAmount;
+
+            const discount = calculateCouponDiscount(coupon, priceAfterServiceDiscount);
+            setCouponDiscount(discount);
+        }
+    };
 
     const computedPayment = packageToUse
         ? (() => {
-            const priceAfterCoupon = packageToUse.discountedPrice - couponDiscount;
+            const serviceDiscountAmount = (packageToUse.price * packageToUse.discount) / 100;
+            const priceAfterServiceDiscount = packageToUse.price - serviceDiscountAmount;
+            const priceAfterCoupon = priceAfterServiceDiscount - couponDiscount;
             const gstPercent = service?.gst ?? 18;
-            const gstAmount = (priceAfterCoupon * gstPercent) / 100;
+            const gstAmount = (priceAfterServiceDiscount * gstPercent) / 100;
             const platformFee = commission?.platformFee ?? 0;
             const assuranceFee = commission?.assurityfee ?? 0;
             const grandTotal = priceAfterCoupon + gstAmount + platformFee + assuranceFee;
-            return { gstAmount, platformFee, assuranceFee, grandTotal };
+            return { serviceDiscountAmount, priceAfterServiceDiscount, priceAfterCoupon, gstAmount, platformFee, assuranceFee, grandTotal };
         })()
         : null;
 
@@ -983,7 +1025,7 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
             selectedUser: selected,
             paymentData: {
                 listingPrice: packageToUse.price,
-                serviceDiscount: packageToUse.discount,
+                serviceDiscount: computedPayment.serviceDiscountAmount,
                 couponDiscount,
                 gst: computedPayment.gstAmount,
                 platformFee: computedPayment.platformFee,
@@ -1023,6 +1065,8 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
         platformFee: computedPayment.platformFee,
         assuranceFee: computedPayment.assuranceFee,
         couponDiscount,
+        selectedCoupon,
+        serviceDiscountAmount: computedPayment.serviceDiscountAmount,
         grandTotal: computedPayment.grandTotal,
         isTermsAccepted,
         setIsTermsAccepted,
@@ -1030,12 +1074,16 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
         setShowError,
         handleProceed,
     };
-
+    const couponLabel = !selectedCoupon
+        ? "Coupon Discount"
+        : selectedCoupon.discountAmountType === "Percentage"
+            ? `Coupon Discount (${selectedCoupon.amount}%)`
+            : `Coupon Discount (₹${selectedCoupon.amount})`;
     return (
         <>
-            {/* ======================================================
+            {/* 
                 DESKTOP VIEW (lg+)
-            ====================================================== */}
+             */}
             <section className="max-w-[1400px] hidden lg:block mx-auto">
                 <div className="grid grid-cols-12 gap-12 mb-15">
 
@@ -1048,21 +1096,21 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                                     <span className="absolute top-0 left-0 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
                                 )}
                                 <div className="absolute bottom-1 right-2 flex items-center justify-center bg-blue-600 lg:w-[67px] lg:h-[43px] text-white lg:text-[14px] px-2 py-1 rounded-md">
-                                    ⭐ {reviewServices?.averageRating ?? "—"}
+                                    ⭐ {service?.averageRating ?? "—"}
                                 </div>
                             </div>
                             <div className="p-4 space-y-3">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h3 className="font-semibold lg:text-[20px]">{service?.serviceName}</h3>
-                                        <p className="lg:text-[16px] text-gray-500">{serviceCardData.category}</p>
+                                        <p className="lg:text-[16px] text-gray-500">{service?.category.name}</p>
                                     </div>
                                     <div className="flex flex-col">
-                                        <p className="lg:text-[10px] text-[#4A2E82] font-medium">-EARN UP TO-</p>
-                                        <span className="text-[#2CB140] lg:text-[14px] text-center">{serviceCardData.rewardText}</span>
+                                        <p className="lg:text-[12px] text-[#4A2E82] font-medium">-EARN UP TO-</p>
+                                        <span className="text-[#2CB140] lg:text-[15px] text-center">{service?.franchiseDetails.commission}</span>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-3 text-center lg:text-[16px] mt-4">
+                                {/* <div className="grid grid-cols-3 text-center lg:text-[16px] mt-4">
                                     {serviceCardData.stats.map((item, i) => (
                                         <div key={i} className="relative px-3">
                                             {i !== serviceCardData.stats.length - 1 && (
@@ -1072,6 +1120,17 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                                             <p className="text-[#1D4699] font-semibold">{item.value}</p>
                                         </div>
                                     ))}
+                                </div> */}
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-[25px]">
+                                        ₹{service?.serviceDetails.packages[0]?.discountedPrice}
+                                    </span>
+                                    <span className="line-through text-gray-400 text-[18px]">
+                                        ₹ {service?.serviceDetails.packages[0]?.price}
+                                    </span>
+                                    <span className="text-[#D56839] text-[18px] font-medium">
+                                        {service?.serviceDetails.packages[0]?.discount}% OFF
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -1087,18 +1146,20 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                                 <input type="radio" name="serviceFor" checked={selected === "me"} onChange={() => setSelected("me")} />
                                 This Service is for me
                             </label>
-                            {selected === "me" && (
+                            {selected === "me" && user && (
                                 <div className="pl-6 lg:text-[16px] space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <p><strong>Name:</strong> {userData.name}</p>
+                                        <p><strong>Name:</strong> {user?.fullName}</p>
                                         <div className="lg:ml-22 flex flex-row gap-2">
                                             <Phone size={14} />
                                             <FaWhatsapp className="text-green-500" />
                                         </div>
                                     </div>
-                                    <p><strong>Phone:</strong> {userData.phone}</p>
-                                    <p className="flex items-center gap-1"><MapPin size={14} /> {userData.address}</p>
-                                    <p className="text-gray-500 lg:text-[14px]">Note: {userData.note}</p>
+                                    <p><strong>Phone:</strong> {user?.mobileNumber}</p>
+                                    {/* <p className="flex items-center gap-1">
+                                        <MapPin size={14} /> {userData.address}
+                                    </p>
+                                    <p className="text-gray-500 lg:text-[14px]">Note: {userData.note}</p> */}
                                 </div>
                             )}
                         </div>
@@ -1120,7 +1181,7 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                         </div>
 
                         {/* COUPON */}
-                        <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
+                        {/* <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
                             <div className="flex items-center justify-between">
                                 <h3 className="lg:text-[16px] font-semibold text-black">Best Coupon For You</h3>
                                 <button onClick={() => setOpenCoupons(true)} className="flex items-center gap-1 text-[14px] text-blue-600 font-medium cursor-pointer hover:underline">
@@ -1133,6 +1194,46 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                                 </div>
                                 <button disabled className="h-[48px] px-8 rounded-lg bg-gray-200 text-gray-500 font-medium cursor-not-allowed">Apply</button>
                             </div>
+                        </div> */}
+                        {/* COUPON */}
+                        <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="lg:text-[16px] font-semibold text-black">
+                                    {selectedCoupon ? 'Applied Coupon' : 'Best Coupon For You'}
+                                </h3>
+                                <button onClick={() => setOpenCoupons(true)} className="flex items-center gap-1 text-[14px] text-blue-600 font-medium cursor-pointer hover:underline">
+                                    {selectedCoupon ? 'Change' : 'All Coupons'} <span className="text-[18px] leading-none">›</span>
+                                </button>
+                            </div>
+
+                            {selectedCoupon ? (
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center justify-between h-[48px] flex-1 border border-green-300 bg-green-50 rounded-lg px-4">
+                                        <span className="font-semibold text-green-700">{selectedCoupon.couponCode}</span>
+                                        <span className="text-green-600 text-sm">
+                                            {selectedCoupon.discountAmountType === "Percentage"
+                                                ? `${selectedCoupon.amount}% off`
+                                                : `₹${selectedCoupon.amount} off`}
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setSelectedCoupon(null);
+                                            setCouponDiscount(0);
+                                        }}
+                                        className="h-[48px] px-6 rounded-lg border border-red-500 text-red-500 font-medium hover:bg-red-50 transition-colors"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex items-center justify-center h-[48px] w-[160px] border border-dashed border-gray-300 rounded-lg text-gray-500 font-semibold tracking-widest">
+                                        XXXXXX
+                                    </div>
+                                    <button disabled className="h-[48px] px-8 rounded-lg bg-gray-200 text-gray-500 font-medium cursor-not-allowed">Apply</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -1141,9 +1242,9 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
             {/* Desktop payment summary */}
             <PaymentSummary {...paymentSummaryProps} containerClass="hidden lg:block max-w-[1400px] mx-auto" />
 
-            {/* ======================================================
+            {/* 
                 TABLET VIEW (md only)
-            ====================================================== */}
+             */}
             <section className="hidden md:block lg:hidden px-6">
                 <div className="flex flex-col gap-6 mb-6">
 
@@ -1152,33 +1253,33 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                         <div className="relative">
                             <img src={serviceCardData.image} alt="Service" className="w-[300px] h-[200px] object-cover" />
                             {serviceCardData.trusted && (
-                                <span className="absolute top-0 left-0 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
+                                <span className="absolute top-2 left-2  bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
                             )}
-                            <div className="absolute bottom-2 right-1 flex items-center justify-center bg-blue-600 w-[47px] h-[31px] text-white text-[10px] px-2 py-1 rounded-md">
-                                ⭐ {reviewServices?.averageRating ?? "—"}
+                            <div className="absolute bottom-0 -right-0 whitespace-nowrap flex items-center justify-center bg-blue-600 w-[35px] h-[31px] text-white text-[10px] px-1 py-1 rounded-md">
+                                ⭐ {service?.averageRating ?? "—"}
                             </div>
                         </div>
                         <div className="p-3 space-y-2">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="font-semibold text-[15px]">{service?.serviceName}</h3>
-                                    <p className="text-[12px] text-gray-500">{serviceCardData.category}</p>
+                                    <p className="text-[12px] text-gray-500">{service?.category.name}</p>
                                 </div>
                                 <div className="flex flex-col text-right">
-                                    <p className="text-[8px] text-[#4A2E82] font-medium">-EARN UP TO-</p>
-                                    <span className="text-[#2CB140] text-[10px] text-center">{serviceCardData.rewardText}</span>
+                                    <p className="text-[8px] text-[#4A2E82] font-medium whitespace-nowrap">-EARN UP TO-</p>
+                                    <span className="text-[#2CB140] text-[10px] text-center">{service?.franchiseDetails.commission}</span>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-3 text-center text-[12px] mt-2">
-                                {serviceCardData.stats.map((item, i) => (
-                                    <div key={i} className="relative px-2">
-                                        {i !== serviceCardData.stats.length - 1 && (
-                                            <span className="absolute top-1/2 right-0 -translate-y-1/2 h-8 w-[2px] bg-gray-300" />
-                                        )}
-                                        <p className="text-gray-500">{item.label}</p>
-                                        <p className="text-[#1D4699] font-semibold">{item.value}</p>
-                                    </div>
-                                ))}
+                            <div className="flex items-center gap-2">
+                                <span className="font-semibold text-[20px]">
+                                    ₹{service?.serviceDetails.packages[0]?.discountedPrice}
+                                </span>
+                                <span className="line-through text-gray-400 text-[15px]">
+                                    ₹ {service?.serviceDetails.packages[0]?.price}
+                                </span>
+                                <span className="text-[#D56839] text-[15px] font-medium">
+                                    {service?.serviceDetails.packages[0]?.discount}% OFF
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -1194,10 +1295,10 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                             </label>
                             {selected === "me" && (
                                 <div className="pl-6 text-[12px] space-y-2">
-                                    <p><strong>Name:</strong> {userData.name}</p>
-                                    <p><strong>Phone:</strong> {userData.phone}</p>
-                                    <p className="flex items-center gap-1"><MapPin size={12} /> {userData.address}</p>
-                                    <p className="text-gray-500">Note: {userData.note}</p>
+                                    <p><strong>Name:</strong>{user?.fullName}</p>
+                                    <p><strong>Phone:</strong> {user?.mobileNumber}</p>
+                                    {/* <p className="flex items-center gap-1"><MapPin size={12} /> {userData.address}</p>
+                                    <p className="text-gray-500">Note: {userData.note}</p> */}
                                 </div>
                             )}
                         </div>
@@ -1237,19 +1338,19 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
             {/* Tablet payment summary */}
             <PaymentSummary {...paymentSummaryProps} containerClass="hidden md:block lg:hidden w-[650px] mx-auto" />
 
-            {/* ======================================================
+            {/* 
                 MOBILE VIEW (< md)
-            ====================================================== */}
+             */}
             <section className="block md:hidden px-4 pb-28 space-y-6">
 
                 {/* SERVICE CARD - mobile */}
                 <div className="border rounded-xl p-3 shadow-sm relative">
                     <img src={serviceCardData.image} className="w-full h-[200px] object-contain" alt="Service" />
                     {serviceCardData.trusted && (
-                        <span className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
+                        <span className="absolute top-6 left-3 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
                     )}
-                    <div className="absolute top-3 right-3 flex items-center justify-center bg-blue-600 w-[47px] h-[28px] text-white text-[10px] px-2 py-1 rounded-md">
-                        ⭐ {reviewServices?.averageRating ?? "—"}
+                    <div className="absolute top-43 right-3 flex items-center justify-center whitespace-nowrap bg-blue-600 w-[38px] h-[25px] text-white text-[10px] px-1 py-1 rounded-md">
+                        ⭐ {service?.averageRating ?? "—"}
                     </div>
                     <div className="mt-3 flex justify-between">
                         <div>
@@ -1257,17 +1358,20 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                             <p className="text-gray-500 text-sm">{serviceCardData.category}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-[10px] text-[#4A2E82]">-EARN UP TO-</p>
+                            <p className="text-[10px] text-[#4A2E82] whitespace-nowrap">-EARN UP TO-</p>
                             <p className="text-[#2CB140] text-sm font-semibold">{serviceCardData.rewardText}</p>
                         </div>
                     </div>
-                    <div className="grid grid-cols-3 text-center text-sm mt-4">
-                        {serviceCardData.stats.map((item, i) => (
-                            <div key={i}>
-                                <p className="text-gray-500">{item.label}</p>
-                                <p className="font-semibold text-[#1D4699]">{item.value}</p>
-                            </div>
-                        ))}
+                    <div className="flex items-center gap-2">
+                        <span className="font-semibold text-[20px]">
+                            ₹{service?.serviceDetails.packages[0]?.discountedPrice}
+                        </span>
+                        <span className="line-through text-gray-400 text-[15px]">
+                            ₹ {service?.serviceDetails.packages[0]?.price}
+                        </span>
+                        <span className="text-[#D56839] text-[15px] font-medium">
+                            {service?.serviceDetails.packages[0]?.discount}% OFF
+                        </span>
                     </div>
                 </div>
 
@@ -1282,12 +1386,12 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                         </label>
                         {selected === "me" && (
                             <div className="mt-3 space-y-2 text-sm">
-                                <p><strong>Name:</strong> {userData.name}</p>
+                                <p><strong>Name:</strong> {user?.fullName}</p>
                                 <p className="flex items-center gap-2">
-                                    <Phone size={14} /> {userData.phone} <FaWhatsapp className="text-green-500" />
+                                    <Phone size={14} /> {user?.mobileNumber} <FaWhatsapp className="text-green-500" />
                                 </p>
-                                <p className="flex items-center gap-1"><MapPin size={14} /> {userData.address}</p>
-                                <p className="text-gray-500">Note: {userData.note}</p>
+                                {/* <p className="flex items-center gap-1"><MapPin size={14} /> {user?.address}</p>
+                                <p className="text-gray-500">Note: {user?.note}</p> */}
                             </div>
                         )}
                     </div>
@@ -1326,10 +1430,19 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
                 <div className="border rounded-xl p-4 space-y-3 text-sm">
                     <h3 className="font-semibold">Payment Details</h3>
                     <Row label="Listing Price" value={`₹ ${packageToUse.price.toFixed(2)}`} />
-                    <Row label="Service Discount" value={`- ₹ ${packageToUse.discount.toFixed(2)}`} valueClass="text-red-500" />
+                    <Row
+                        label={`Service Discount (${packageToUse.discount}%)`}
+                        value={`- ₹ ${computedPayment.serviceDiscountAmount.toFixed(2)}`}
+                        valueClass="text-red-500"
+                    />
                     <Row label="Price After Discount" value={`₹ ${packageToUse.discountedPrice.toFixed(2)}`} />
-                    <Row label="Coupon Discount" value={`- ₹ ${couponDiscount.toFixed(2)}`} valueClass="text-red-500" />
-                    <Row label={`GST (${service?.gst ?? 18}%)`} value={`+ ₹ ${(((packageToUse.discountedPrice - couponDiscount) * (service?.gst ?? 18)) / 100).toFixed(2)}`} valueClass="text-green-600" />
+                    {/* <Row label="Coupon Discount" value={`- ₹ ${couponDiscount.toFixed(2)}`} valueClass="text-red-500" /> */}
+                    <Row
+                        label={couponLabel}
+                        value={`- ₹ ${couponDiscount.toFixed(2)}`}
+                        valueClass="text-red-500"
+                    />
+                    <Row label={`GST (${service?.gst ?? 18}%)`} value={`+ ₹ ${(((packageToUse.discountedPrice) * (service?.gst ?? 18)) / 100).toFixed(2)}`} valueClass="text-green-600" />
                     <Row label="Platform Fee" value={`+ ₹ ${computedPayment.platformFee.toFixed(2)}`} valueClass="text-green-600" />
                     <Row label="Assurity Charges" value={`+ ₹ ${computedPayment.assuranceFee.toFixed(2)}`} valueClass="text-green-600" />
 
@@ -1362,7 +1475,13 @@ export default function DetailsStep({ onNext }: DetailsStepProps) {
             {/* ======================================================
                 DIALOGS & OVERLAYS
             ====================================================== */}
-            {openCoupons && <CouponsDialog onClose={() => setOpenCoupons(false)} />}
+            {/* {openCoupons && <CouponsDialog onClose={() => setOpenCoupons(false)} />} */}
+            {openCoupons && (
+                <CouponsDialog
+                    onClose={() => setOpenCoupons(false)}
+                    onSelectCoupon={handleCouponSelect}
+                />
+            )}
             {openAddCustomers && <AddCustomerDialog onClose={() => setOpenAddCustomers(false)} />}
             {openSidebar && <div onClick={() => setOpenSidebar(false)} className="fixed inset-0 bg-black/40 z-40" />}
 

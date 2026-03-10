@@ -48,6 +48,7 @@ import { ServiceCustomerProvider } from "@/src/context/ServiceCustomerContext";
 import { AllCouponProvider } from "@/src/context/CoupanContext";
 import { CategoryBannerProvider } from "@/src/context/CategoryBannerContext";
 import { BannerProvider } from "@/src/context/CarouselBannerContext";
+import { ProviderFavouriteProvider } from "@/src/context/ProviderFavouriteContext";
 
 // export const metadata = {
 //   title: "Fetch True",
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
 
-   const isDashboardPage = pathname?.includes('/providers/');
+  const isDashboardPage = pathname?.includes('/providers/');
 
   return (
     <html lang="en">
@@ -72,101 +73,104 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <AllCouponProvider>
                       <CategoryBannerProvider>
                         <BannerProvider>
-            <FavouriteProvider>
+                          <FavouriteProvider>
 
-          <ResetPassProvider>
-            <FiveXProvider>
-        <ModuleProvider>
-          <CategoriesProvider>
-            <HomeRecommendedProvider>
-              <HomeMostPopularProvider>
-                <RecommendedServicesProvider>
-                  <MostPopularProvider>
-                    <TopTrendingProvider>
-                      <RecommendedProvidersProvider>
-                        <BannerCategorySelectionProvider>
-                          <SubCategoryProvider>
-                            <ServiceDetailsProvider>
-                              <RecommendedServiceByCategoryIdProvider>
-                                <MostPopularServiceByCategoryProvider>
-                                  <TopTrendingServiceByCategoryIdProvider>
-                                    <PopularProvidersProvider>
-                                      <TrendingProvidersProvider>
-                                        <RecommendedCategoryProvidersProvider>
-                                          <TrendingCategoryProvider>
-                                            <WhyChooseServiceProvider>
-                                              <CategorywiseServiceProvider>
+                            <ResetPassProvider>
+                              <FiveXProvider>
+                                <ModuleProvider>
+                                  <CategoriesProvider>
+                                    <HomeRecommendedProvider>
+                                      <HomeMostPopularProvider>
+                                        <RecommendedServicesProvider>
+                                          <MostPopularProvider>
+                                            <TopTrendingProvider>
+                                              <RecommendedProvidersProvider>
+                                                <BannerCategorySelectionProvider>
+                                                  <SubCategoryProvider>
+                                                    <ServiceDetailsProvider>
+                                                      <RecommendedServiceByCategoryIdProvider>
+                                                        <MostPopularServiceByCategoryProvider>
+                                                          <TopTrendingServiceByCategoryIdProvider>
+                                                            <PopularProvidersProvider>
+                                                              <TrendingProvidersProvider>
+                                                                <RecommendedCategoryProvidersProvider>
+                                                                  <TrendingCategoryProvider>
+                                                                    <WhyChooseServiceProvider>
+                                                                      <CategorywiseServiceProvider>
 
-                                                <ModulewiseServiceProvider>
-                                                  <OfferProvider>
-                                                    <ReviewProvider>
-                                                      <CheckoutProvider>
-                                                        <CouponProvider>
-                                                          <CommissionProvider>
-                                                            <HomeTopTrendingProvider>
-                                                              <TopRatedProviders>
-                                                                <FranchiseModelProvider>
-                                                                  <ServicewiseProviderProvider>
-                                                                    <SubscribedServicesProvider>
-                                                                      <SubscribedCategoryServicesProvider>
-
-
-                                                                        <main>{children}</main>
-
-                                                                      </SubscribedCategoryServicesProvider>
-
-                                                                    </SubscribedServicesProvider>
-
-                                                                  </ServicewiseProviderProvider>
-                                                                </FranchiseModelProvider>
-
-                                                              </TopRatedProviders>
-
-                                                            </HomeTopTrendingProvider>
-
-                                                          </CommissionProvider>
-
-                                                        </CouponProvider>
+                                                                        <ModulewiseServiceProvider>
+                                                                          <OfferProvider>
+                                                                            <ReviewProvider>
+                                                                              <CheckoutProvider>
+                                                                                <CouponProvider>
+                                                                                  <CommissionProvider>
+                                                                                    <HomeTopTrendingProvider>
+                                                                                      <TopRatedProviders>
+                                                                                        <FranchiseModelProvider>
+                                                                                          <ServicewiseProviderProvider>
+                                                                                            <SubscribedServicesProvider>
+                                                                                              <SubscribedCategoryServicesProvider>
+                                                                                                <ProviderFavouriteProvider>
 
 
+                                                                                                  <main>{children}</main>
 
-                                                      </CheckoutProvider>
+                                                                                                </ProviderFavouriteProvider>
 
-                                                    </ReviewProvider>
-                                                  </OfferProvider>
-                                                </ModulewiseServiceProvider>
-                                                {!isDashboardPage && <Footer />}
-                                              </CategorywiseServiceProvider>
-                                            </WhyChooseServiceProvider>
-                                          </TrendingCategoryProvider>
-                                        </RecommendedCategoryProvidersProvider>
-                                      </TrendingProvidersProvider>
-                                    </PopularProvidersProvider>
-                                  </TopTrendingServiceByCategoryIdProvider>
-                                </MostPopularServiceByCategoryProvider>
-                              </RecommendedServiceByCategoryIdProvider>
-                            </ServiceDetailsProvider>
-                          </SubCategoryProvider>
-                        </BannerCategorySelectionProvider>
-                      </RecommendedProvidersProvider>
-                    </TopTrendingProvider>
-                  </MostPopularProvider>
-                </RecommendedServicesProvider>
-              </HomeMostPopularProvider>
-            </HomeRecommendedProvider>
-          </CategoriesProvider>
-        </ModuleProvider>
-        </FiveXProvider>
-        </ResetPassProvider>
-        </FavouriteProvider>
-        </BannerProvider>
-        </CategoryBannerProvider>
-        </AllCouponProvider>
-        </ServiceCustomerProvider>
-        </PayoutProvider>
-        </LeadsProvider>
-        </WalletProvider>
-        </UserProvider>
+                                                                                              </SubscribedCategoryServicesProvider>
+
+                                                                                            </SubscribedServicesProvider>
+
+                                                                                          </ServicewiseProviderProvider>
+                                                                                        </FranchiseModelProvider>
+
+                                                                                      </TopRatedProviders>
+
+                                                                                    </HomeTopTrendingProvider>
+
+                                                                                  </CommissionProvider>
+
+                                                                                </CouponProvider>
+
+
+
+                                                                              </CheckoutProvider>
+
+                                                                            </ReviewProvider>
+                                                                          </OfferProvider>
+                                                                        </ModulewiseServiceProvider>
+                                                                        {!isDashboardPage && <Footer />}
+                                                                      </CategorywiseServiceProvider>
+                                                                    </WhyChooseServiceProvider>
+                                                                  </TrendingCategoryProvider>
+                                                                </RecommendedCategoryProvidersProvider>
+                                                              </TrendingProvidersProvider>
+                                                            </PopularProvidersProvider>
+                                                          </TopTrendingServiceByCategoryIdProvider>
+                                                        </MostPopularServiceByCategoryProvider>
+                                                      </RecommendedServiceByCategoryIdProvider>
+                                                    </ServiceDetailsProvider>
+                                                  </SubCategoryProvider>
+                                                </BannerCategorySelectionProvider>
+                                              </RecommendedProvidersProvider>
+                                            </TopTrendingProvider>
+                                          </MostPopularProvider>
+                                        </RecommendedServicesProvider>
+                                      </HomeMostPopularProvider>
+                                    </HomeRecommendedProvider>
+                                  </CategoriesProvider>
+                                </ModuleProvider>
+                              </FiveXProvider>
+                            </ResetPassProvider>
+                          </FavouriteProvider>
+                        </BannerProvider>
+                      </CategoryBannerProvider>
+                    </AllCouponProvider>
+                  </ServiceCustomerProvider>
+                </PayoutProvider>
+              </LeadsProvider>
+            </WalletProvider>
+          </UserProvider>
         </AuthProvider>
       </body>
     </html>
