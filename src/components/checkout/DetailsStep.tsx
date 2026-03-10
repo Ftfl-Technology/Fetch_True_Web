@@ -977,10 +977,10 @@ const packageId =
 
     useEffect(() => {
         if (!serviceId) return;
-        loadPackage(serviceId,packageId);         
+        loadPackage(serviceId);         
         fetchServiceDetails(serviceId);
         fetchReviews(serviceId);
-    }, [serviceId,packageId,loadPackage]);
+    }, [serviceId]);
 
     useEffect(() => {
         fetchCommission();
@@ -1141,14 +1141,14 @@ console.log("packageToUse:", packageToUse);
                                 </div> */}
                                 <div className="flex items-center gap-2">
                                     <span className="font-semibold text-[25px]">
-                                        ₹{service?.serviceDetails.packages[0]?.discountedPrice}
-                                    </span>
-                                    <span className="line-through text-gray-400 text-[18px]">
-                                        ₹ {service?.serviceDetails.packages[0]?.price}
-                                    </span>
-                                    <span className="text-[#D56839] text-[18px] font-medium">
-                                        {service?.serviceDetails.packages[0]?.discount}% OFF
-                                    </span>
+    ₹{packageToUse?.discountedPrice ?? "—"}
+</span>
+<span className="line-through text-gray-400 text-[18px]">
+    ₹ {packageToUse?.price ?? "—"}
+</span>
+<span className="text-[#D56839] text-[18px] font-medium">
+    {packageToUse?.discount ?? 0}% OFF
+</span>
                                 </div>
                             </div>
                         </div>
@@ -1289,15 +1289,15 @@ console.log("packageToUse:", packageToUse);
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-[20px]">
-                                    ₹{service?.serviceDetails.packages[0]?.discountedPrice}
-                                </span>
-                                <span className="line-through text-gray-400 text-[15px]">
-                                    ₹ {service?.serviceDetails.packages[0]?.price}
-                                </span>
-                                <span className="text-[#D56839] text-[15px] font-medium">
-                                    {service?.serviceDetails.packages[0]?.discount}% OFF
-                                </span>
+                                <span className="font-semibold text-[25px]">
+    ₹{packageToUse?.discountedPrice ?? "—"}
+</span>
+<span className="line-through text-gray-400 text-[18px]">
+    ₹ {packageToUse?.price ?? "—"}
+</span>
+<span className="text-[#D56839] text-[18px] font-medium">
+    {packageToUse?.discount ?? 0}% OFF
+</span>
                             </div>
                         </div>
                     </div>
@@ -1381,15 +1381,15 @@ console.log("packageToUse:", packageToUse);
                         </div>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="font-semibold text-[20px]">
-                            ₹{service?.serviceDetails.packages[0]?.discountedPrice}
-                        </span>
-                        <span className="line-through text-gray-400 text-[15px]">
-                            ₹ {service?.serviceDetails.packages[0]?.price}
-                        </span>
-                        <span className="text-[#D56839] text-[15px] font-medium">
-                            {service?.serviceDetails.packages[0]?.discount}% OFF
-                        </span>
+                        <span className="font-semibold text-[25px]">
+    ₹{packageToUse?.discountedPrice ?? "—"}
+</span>
+<span className="line-through text-gray-400 text-[18px]">
+    ₹ {packageToUse?.price ?? "—"}
+</span>
+<span className="text-[#D56839] text-[18px] font-medium">
+    {packageToUse?.discount ?? 0}% OFF
+</span>
                     </div>
                 </div>
 

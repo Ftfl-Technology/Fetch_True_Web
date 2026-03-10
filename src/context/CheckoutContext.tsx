@@ -214,24 +214,23 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
   };
 
   // Called on mount in DetailsStep — reads storage and validates serviceId matches
-  const loadPackage = (serviceId: string) => {
-    if (!serviceId) return;
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const stored: StoredPackage = JSON.parse(raw);
-      // Only restore if the stored package belongs to this service
-      if (stored.serviceId === serviceId) {
-        const { serviceId: _drop, ...pkg } = stored;
-        setSelectedPackageState(pkg);
-      } else {
-        // Different service — clear stale data
-        sessionStorage.removeItem(STORAGE_KEY);
-      }
-    } catch {
+ // checkout context
+const loadPackage = (serviceId: string) => {
+  if (!serviceId) return;
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const stored: StoredPackage = JSON.parse(raw);
+    if (stored.serviceId === serviceId) {
+      const { serviceId: _drop, ...pkg } = stored;
+      setSelectedPackageState(pkg); // safe
+    } else {
       sessionStorage.removeItem(STORAGE_KEY);
     }
-  };
+  } catch {
+    sessionStorage.removeItem(STORAGE_KEY);
+  }
+};
 
   const clearPackage = () => {
     setSelectedPackageState(null);
