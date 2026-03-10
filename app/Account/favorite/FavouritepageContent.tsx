@@ -255,7 +255,7 @@ export default function FavouritePageContent({ userId }: { userId: string }) {
       fetchFavourites(userId);
       getFavouriteProviders(userId);
     }
-  }, [userId, fetchFavourites, getFavouriteProviders]);
+  }, [userId]);
 
   if (error) {
     return <p className="text-red-500">{error}</p>;
