@@ -242,9 +242,13 @@ const handleSubmit = async (e: React.FormEvent) => {
             onClose();
         }
 
-    } catch (error: any) {
-        console.error('Error adding customer:', error);
-        setError(error.response?.data?.message || 'Error sending data. Please try again.');
+    } catch (error: unknown) {
+         if(error instanceof Error) {
+            setError(error.message);
+        }
+        else {           
+           setError('An unexpected error occurred');
+        }
     } finally {
         setLoading(false);
     }
