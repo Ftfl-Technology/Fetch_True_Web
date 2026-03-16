@@ -37,8 +37,7 @@ export default function RecommendedProvider({ moduleId, searchQuery }: SectionPr
     } = useRecommendedProviders();
 
     
-    const { getFavouriteProviders, addFavouriteProviders, removeFavouriteProviders, isFavourite } =
-        useFavouriteProviders();
+    const { getFavouriteProviders, addFavouriteProviders, removeFavouriteProviders, isFavourite } = useFavouriteProviders();
 
     const { user } = useAuth();
 
@@ -54,8 +53,6 @@ export default function RecommendedProvider({ moduleId, searchQuery }: SectionPr
 
     const handleToggleFavourite = async (serviceId: string) => {
         if (!userId) return;
-
-        console.log("Toggle Favourite Called for Service ID:", serviceId);
         if (isFavourite(serviceId)) {
             await removeFavouriteProviders(userId, serviceId);
         } else {

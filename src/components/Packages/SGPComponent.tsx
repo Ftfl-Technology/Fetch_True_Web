@@ -1,13 +1,49 @@
+import { useAuth } from "@/src/context/AuthContext";
+import { useWallet } from "@/src/context/WalletContext";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function SGPComponent() {
+  const { wallet, fetchWallet } = useWallet();
+  const { user } = useAuth();
+
+  const userId = user?._id || "";
+
+  useEffect(() => {
+    // fetchPackages();
+    fetchWallet(userId);
+  }, []);
+
   return (
     <>
       {/* Card */}
       <div className="bg-white rounded-2xl p-4 shadow-md mb-4">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+          {/* <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
             SGP
+          </div> */}
+          <div className="flex flex-col items-center">
+            {wallet?.userId?.packageActive ? (
+              // Show GP when package is active
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+                  GP
+                </div>
+                <div className="lg:text-[12px] text-blue-400 mt-1">
+                  Current Level
+                </div>
+              </div>
+            ) : (
+              // Show NON GP when package is not active
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center p-4 text-gray-600 font-bold text-md whitespace-normal">
+                  NON GP
+                </div>
+                <div className="lg:text-[12px] text-gray-400 mt-1">
+                  Current Level
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex-1">

@@ -402,6 +402,7 @@ import HelpCenter from "@/app/Account/helpCenter/page";
 // import RefundPolicy from "@/app/Account/refund/page";
 import DeleteAccountSection from "@/app/Account/delete/page";
 import { useTopRatedProviders } from "@/src/context/HomeTopRatedProvider";
+import { Provider as PopularProvider } from "@/src/context/PopularProviderContext";
 
 /*  TYPES  */
 // Sidebar-level sections
@@ -529,7 +530,7 @@ export default function ProviderDashboardLayout() {
 
             {/* ── Main area ── */}
             {/* <div className="flex-1 flex flex-col min-h-screen lg:ml-[260px]"> */}
-             <div className="flex-1 flex flex-col min-h-screen">
+            <div className="flex-1 flex flex-col min-h-screen">
 
                 {/* Mobile top bar */}
                 {/* <div className="flex items-center gap-3 p-4 bg-gray-200 sticky top-0 z-30 lg:hidden">
@@ -589,17 +590,99 @@ function ServiceSection() {
     const [activeCategory, setActiveCategory] = useState<string>("all");
     const [activeTab, setActiveTab] = useState<ServiceTab>("Service");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
 
     const providerName = searchParams.get("providerName");
+    const isPopular = searchParams.get("popular") === "true";
+    const isTrending = searchParams.get("trending") === "true";
+    const isRecommended = searchParams.get("recommended") === "true";
 
     const { providers } = useTopRatedProviders();
 
     const cover = providers.find(provider => provider._id === providerId)?.storeInfo.cover || "placeholder-image-url";
     const logo = providers.find(provider => provider._id === providerId)?.storeInfo.logo || "placeholder-logo-url";
+    console.log("Cover from TopRatedProviders context:", cover);
+    console.log("Logo from TopRatedProviders context:", logo);
+
+    const providerCover = matchedProvider?.storeInfo.cover || "placeholder-image-url";
+    const providerLogo = matchedProvider?.storeInfo.logo || "placeholder-logo-url";
+    console.log("Provider Cover:", providerCover);
+    console.log("Provider Logo:", providerLogo);
 
     const filteredServices = activeCategory === "all"
         ? subscribedServices
         : subscribedServices?.filter((s) => s.category?._id === activeCategory) ?? [];
+
+    const getLocation = () => {
+        // You can replace this with your actual location logic
+        return {
+            lat: 20.175618471885596,
+            lng: 72.73285952405311
+        };
+    };
+
+    useEffect(() => {
+        if (!providerId) return;
+
+        // Only fetch from APIs if special parameters are present
+        if (isPopular || isTrending || isRecommended) {
+            const fetchProviderData = async () => {
+                setLoading(true);
+                setError("");
+
+                try {
+                    const { lat, lng } = getLocation();
+                    let apiUrl = "";
+                    const params: Record<string, string | number> = { lat, lng };
+
+                    // Determine which API to call based on URL parameters
+                    if (isPopular) {
+                        console.log("Fetching popular providers...");
+                        apiUrl = "https://api.fetchtrue.com/api/provider/popular";
+                        params.moduleId = "6822e05ee8235364b35df1b1";
+                    } else if (isTrending) {
+                        console.log("Fetching trending providers...");
+                        apiUrl = "https://api.fetchtrue.com/api/provider/trending";
+                        params.moduleId = "6822e05ee8235364b35df1b1";
+                    } else if (isRecommended) {
+                        console.log("Fetching recommended providers...");
+                        apiUrl = "https://api.fetchtrue.com/api/provider/recommended";
+                        params.moduleId = "6822e05ee8235364b35df1b1";
+                    }
+
+                    const response = await axios.get(apiUrl, { params });
+
+                    // Handle the response based on its structure
+                    const providersData = response.data?.data || response.data || [];
+
+                    // Find the specific provider by ID
+                    const foundProvider = Array.isArray(providersData)
+                        ? providersData.find((p: Provider) => p._id === providerId)
+                        : null;
+
+                    setMatchedProvider(foundProvider || null);
+
+                    if (!foundProvider) {
+                        console.warn(`Provider with ID ${providerId} not found in the ${isPopular ? 'popular' : isTrending ? 'trending' : 'recommended'} list`);
+                    }
+
+                } catch (err: unknown) {
+                    console.error("Error fetching provider data:", err);
+                    setError(err instanceof Error ? err.message : "Failed to fetch provider data");
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchProviderData();
+        } else {
+            // No API call needed for regular providers
+            console.log("No special parameters, using data from TopRatedProviders context");
+            setMatchedProvider(null); // or you could find from providers if needed
+            setLoading(false);
+        }
+    }, [providerId, isPopular, isTrending, isRecommended]);
 
     useEffect(() => {
         if (providerId) {
@@ -608,19 +691,19 @@ function ServiceSection() {
         }
     }, [providerId]);
 
-    useEffect(() => {
-        const load = async () => {
-            try {
-                const res = await axios.get(
-                    `https://api.fetchtrue.com/api/provider/recommended?lat=20.175618471885596&lng=72.73285952405311`
-                );
-                setMatchedProvider(res.data.find((p: Provider) => p._id === providerId) ?? null);
-            } catch (err: unknown) {
-                setError(err instanceof Error ? err.message : "Something went wrong");
-            }
-        };
-        load();
-    }, [providerId]);
+    // useEffect(() => {
+    //     const load = async () => {
+    //         try {
+    //             const res = await axios.get(
+    //                 `https://api.fetchtrue.com/api/provider/recommended?lat=20.175618471885596&lng=72.73285952405311`
+    //             );
+    //             setMatchedProvider(res.data.find((p: Provider) => p._id === providerId) ?? null);
+    //         } catch (err: unknown) {
+    //             setError(err instanceof Error ? err.message : "Something went wrong");
+    //         }
+    //     };
+    //     load();
+    // }, [providerId]);
 
     const allCategories = [{ _id: "all", name: "All" }, ...(subscribeCategoryservices || [])];
 
@@ -670,22 +753,22 @@ function ServiceSection() {
     return (
         <div className="bg-white min-h-screen">
             <div className="w-full md:h-3 lg:h-15 bg-gray-200">
-                 <div className="p-4 font-semibold text-lg bg-gray-200 lg:ml-6 flex items-center  shrink-0">
-                        <button className="cursor-pointer" onClick={() => window.history.back()}>
-                            <ChevronLeft size={20} />
-                        </button>
-                        <span className="text-center">{providerName}</span>
+                <div className="p-4 font-semibold text-lg bg-gray-200 lg:ml-6 flex items-center  shrink-0">
+                    <button className="cursor-pointer" onClick={() => window.history.back()}>
+                        <ChevronLeft size={20} />
+                    </button>
+                    <span className="text-center">{providerName}</span>
 
-                        {/* <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
+                    {/* <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
                             <X size={20} />
                         </button> */}
-                    </div>
+                </div>
             </div>
             {/* Banner */}
             <div className="lg:w-[1500px] md:w-[750px] w-[300px] ml-2.5 md:ml-2.5 lg:ml-10 mt-4 md:mt-14 lg:mt-6 mx-auto md:h-[200px] rounded-lg lg:h-[350px] bg-gray-300 overflow-hidden">
                 <img
                     // src={subscribedServices?.[0]?.bannerImages?.[0] || "/default-banner.jpg"}
-                    src={cover}
+                    src={cover !== "placeholder-image-url" ? cover : providerCover}
                     alt="banner"
                     className="w-full h-full object-fit"
                 />
@@ -694,10 +777,27 @@ function ServiceSection() {
             {/* Provider info row */}
             <div className="lg:w-[1500px] mx-auto px-6 pt-5 flex justify-between items-center">
                 <div className="flex gap-3 items-center">
-                    <img
-                        src={logo}
+                    {/* <img
+                        // src={providerLogo}
+                        src={providerLogo || logo || "/placeholder-logo-url"}
+                        // src={logo !== "placeholder-image-url" ? logo : providerLogo}
                         className="w-12 h-12 rounded-full object-cover"
                         alt="Provider"
+                    /> */}
+                    <img
+                        src={providerLogo || logo || "/placeholder-logo.png"}
+                        alt="Provider Logo"
+                        className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+                        onError={(e) => {
+                            console.log("Image failed to load:", e.currentTarget.src);
+                            // Try fallback
+                            if (logo && logo !== "placeholder-logo-url") {
+                                e.currentTarget.src = logo;
+                            } else {
+                                e.currentTarget.src = "/placeholder-logo.png";
+                            }
+                        }}
+                        onLoad={() => console.log("Image loaded successfully")}
                     />
                     <div>
                         <h2 className="font-semibold">{providerName}</h2>

@@ -946,7 +946,7 @@ function PaymentSummary({
 
 /* ================= MAIN COMPONENT ================= */
 
-export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
+export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
 
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
@@ -1116,7 +1116,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                     <div className="col-span-4">
                         <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm lg:w-[479px] lg:h-[456px] p-2">
                             <div className="relative">
-                                <img src={imageUrl} alt="Service" className="lg:w-[455px] lg:h-[295px] object-cover" />
+                                <img src={imageUrl} alt="Service" className="lg:w-[455px] lg:h-[295px] object-fit" />
                                 {serviceCardData.trusted && (
                                     <span className="absolute top-2 left-2 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
                                 )}
@@ -1247,7 +1247,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                                             <img
                                                 src="/image/reviewcontact.jpg"
                                                 alt={selectedCustomer.fullName}
-                                                className="w-10 h-10 rounded-full object-cover"
+                                                className="w-10 h-10 rounded-full object-fit"
                                             />
                                             <div>
                                                 <p className="font-semibold">{selectedCustomer.fullName}</p>
@@ -1384,90 +1384,141 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                 TABLET VIEW (md only)
              */}
             <section className="hidden md:block lg:hidden px-6">
-                <div className="flex flex-col gap-6 mb-6">
+                {/* Service Provider - TOP */}
+                <div className="mb-6">
+                    <h2 className="text-[20px] font-semibold mb-3">Service Provider</h2>
+                    <div className="border rounded-xl p-4">
+                        {selectedProvider ? (
+                            <div className="flex items-start gap-3">
+                                {/* Logo */}
+                                <div className="flex-shrink-0">
+                                    <img
+                                        src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
+                                        alt={selectedProvider?.storeInfo?.storeName || "Provider"}
+                                        className="w-15 h-15 rounded-full object-cover border border-gray-200"
+                                        onError={(e) => {
+                                            e.currentTarget.src = "/image/default-provider.png";
+                                        }}
+                                    />
+                                </div>
 
-                    {/* SERVICE CARD - tablet */}
-                    <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm w-[300px] mx-auto p-2">
-                        <div className="relative">
-                            <img src={imageUrl} alt="Service" className="w-[300px] h-[200px] object-cover" />
-                            {serviceCardData.trusted && (
-                                <span className="absolute top-2 left-2  bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
-                            )}
-                            <div className="absolute bottom-2 right-2 whitespace-nowrap flex items-center justify-center bg-blue-600 w-[35px] h-[31px] text-white text-[10px] px-2 py-1 rounded-md">
-                                ⭐ {service?.averageRating ?? "—"}
+                                {/* Provider Details */}
+                                <div className="flex-1 space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-600">Name:</span>
+                                        <p className="text-sm font-semibold text-gray-800">
+                                            {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName || "N/A"}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-600">ID:</span>
+                                        <p className="text-sm text-gray-700">{selectedProvider?.providerId || "N/A"}</p>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-600">Phone:</span>
+                                        <p className="text-sm text-gray-700">{selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone || "N/A"}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex-shrink-0">
+                                    <Phone size={20} className="text-blue-500" />
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-sm text-gray-500 italic">No provider selected</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Main Content Row - Card + Form */}
+                <div className="flex flex-row gap-6">
+                    {/* LEFT: SERVICE CARD */}
+                    <div className="flex-shrink-0">
+                        <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm w-[300px] p-2">
+                            <div className="relative">
+                                <img src={imageUrl} alt="Service" className="w-[300px] h-[200px] object-fit" />
+                                {serviceCardData.trusted && (
+                                    <span className="absolute top-2 left-2 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
+                                )}
+                                <div className="absolute bottom-2 right-2 whitespace-nowrap flex items-center justify-center bg-blue-600 w-[35px] h-[31px] text-white text-[10px] px-2 py-1 rounded-md">
+                                    ⭐ {service?.averageRating ?? "—"}
+                                </div>
+                            </div>
+                            <div className="p-3 space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="font-semibold text-[15px]">{service?.serviceName}</h3>
+                                        <p className="text-[12px] text-gray-500">{service?.category.name}</p>
+                                    </div>
+                                    <div className="flex flex-col text-right">
+                                        <p className="text-[8px] text-[#4A2E82] font-medium whitespace-nowrap">-EARN UP TO-</p>
+                                        <span className="text-[#2CB140] text-[10px] text-center">{service?.franchiseDetails.commission}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-[25px]">
+                                        ₹{packageToUse?.discountedPrice ?? "—"}
+                                    </span>
+                                    <span className="line-through text-gray-400 text-[18px]">
+                                        ₹ {packageToUse?.price ?? "—"}
+                                    </span>
+                                    <span className="text-[#D56839] text-[18px] font-medium">
+                                        {packageToUse?.discount ?? 0}% OFF
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div className="p-3 space-y-2">
+                    </div>
+
+                    {/* RIGHT: WHO IS THIS SERVICE FOR + COUPON */}
+                    <div className="flex-1 space-y-6">
+                        {/* WHO IS THIS SERVICE FOR */}
+                        <div className="space-y-4">
+                            <h2 className="text-[16px] font-semibold">Who is this service for?</h2>
+
+                            <div className="border border-gray-300 rounded-xl p-4 space-y-3">
+                                <label className="flex items-center gap-2 text-[12px] font-medium cursor-pointer">
+                                    <input type="radio" name="serviceForTablet" checked={selected === "me"} onChange={() => setSelected("me")} />
+                                    This Service is for me
+                                </label>
+                                {selected === "me" && (
+                                    <div className="pl-6 text-[12px] space-y-2">
+                                        <p><strong>Name:</strong> {user?.fullName}</p>
+                                        <p><strong>Phone:</strong> {user?.mobileNumber}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="border border-gray-300 rounded-xl p-4 space-y-3">
+                                <label className="flex items-center gap-2 text-[12px] font-medium cursor-pointer">
+                                    <input type="radio" name="serviceForTablet" checked={selected === "customer"} onChange={() => setSelected("customer")} />
+                                    This Service is for my Customer
+                                </label>
+                                <div className="flex gap-3 pl-4">
+                                    <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg text-[12px] whitespace-nowrap" onClick={() => setOpenSidebar(true)}>
+                                        My Customer
+                                    </button>
+                                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-[12px] flex items-center gap-2" onClick={() => setOpenAddCustomers(true)}>
+                                        <PlusCircle className="w-3 h-3" /> Add New Customer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* COUPON */}
+                        <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-semibold text-[15px]">{service?.serviceName}</h3>
-                                    <p className="text-[12px] text-gray-500">{service?.category.name}</p>
+                                <h3 className="text-[12px] font-semibold text-black">Best Coupon For You</h3>
+                                <button onClick={() => setOpenCoupons(true)} className="text-blue-600 text-[12px] font-medium">All Coupons ›</button>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="flex items-center justify-center h-[44px] flex-1 border border-dashed border-gray-300 rounded-lg text-gray-500 font-semibold tracking-widest text-[12px]">
+                                    XXXXXX
                                 </div>
-                                <div className="flex flex-col text-right">
-                                    <p className="text-[8px] text-[#4A2E82] font-medium whitespace-nowrap">-EARN UP TO-</p>
-                                    <span className="text-[#2CB140] text-[10px] text-center">{service?.franchiseDetails.commission}</span>
-                                </div>
+                                <button disabled className="h-[44px] px-6 bg-gray-200 rounded-lg text-gray-500 text-[12px] cursor-not-allowed">Apply</button>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-[25px]">
-                                    ₹{packageToUse?.discountedPrice ?? "—"}
-                                </span>
-                                <span className="line-through text-gray-400 text-[18px]">
-                                    ₹ {packageToUse?.price ?? "—"}
-                                </span>
-                                <span className="text-[#D56839] text-[18px] font-medium">
-                                    {packageToUse?.discount ?? 0}% OFF
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* WHO IS THIS SERVICE FOR - tablet */}
-                    <div className="space-y-4">
-                        <h2 className="text-[16px] font-semibold">Who is this service for?</h2>
-
-                        <div className="border border-gray-300 rounded-xl p-4 space-y-3">
-                            <label className="flex items-center gap-2 text-[12px] font-medium cursor-pointer">
-                                <input type="radio" name="serviceForTablet" checked={selected === "me"} onChange={() => setSelected("me")} />
-                                This Service is for me
-                            </label>
-                            {selected === "me" && (
-                                <div className="pl-6 text-[12px] space-y-2">
-                                    <p><strong>Name:</strong>{user?.fullName}</p>
-                                    <p><strong>Phone:</strong> {user?.mobileNumber}</p>
-                                    {/* <p className="flex items-center gap-1"><MapPin size={12} /> {userData.address}</p>
-                                    <p className="text-gray-500">Note: {userData.note}</p> */}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="border border-gray-300 rounded-xl p-4 space-y-3">
-                            <label className="flex items-center gap-2 text-[12px] font-medium cursor-pointer">
-                                <input type="radio" name="serviceForTablet" checked={selected === "customer"} onChange={() => setSelected("customer")} />
-                                This Service is for my Customer
-                            </label>
-                            <div className="flex gap-3 pl-4">
-                                <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg text-[12px] whitespace-nowrap" onClick={() => setOpenSidebar(true)}>
-                                    My Customer
-                                </button>
-                                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-[12px] flex items-center gap-2" onClick={() => setOpenAddCustomers(true)}>
-                                    <PlusCircle className="w-3 h-3" /> Add New Customer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* COUPON - tablet */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-[12px] font-semibold text-black">Best Coupon For You</h3>
-                            <button onClick={() => setOpenCoupons(true)} className="text-blue-600 text-[12px] font-medium">All Coupons ›</button>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center h-[44px] flex-1 border border-dashed border-gray-300 rounded-lg text-gray-500 font-semibold tracking-widest text-[12px]">
-                                XXXXXX
-                            </div>
-                            <button disabled className="h-[44px] px-6 bg-gray-200 rounded-lg text-gray-500 text-[12px] cursor-not-allowed">Apply</button>
                         </div>
                     </div>
                 </div>
@@ -1482,7 +1533,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
             <section className="block md:hidden px-4 pb-28 space-y-6">
 
                 {/* SERVICE CARD - mobile */}
-                <div className="border rounded-xl p-3 shadow-sm relative">
+                <div className="border border-gray-400 rounded-xl p-3 shadow-sm relative">
                     <img src={imageUrl} className="w-full h-[200px] object-fit" alt="Service" />
                     {serviceCardData.trusted && (
                         <span className="absolute top-4 left-4 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">✔ Trusted</span>
@@ -1513,11 +1564,57 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                     </div>
                 </div>
 
+                 {/* Service Provider */}
+                <h2 className="text-[16px] font-semibold">Service Provider</h2>
+                <div className="border border-gray-400 rounded-xl p-6 space-y-3 -mt-4 inline-flex mb-5">
+                    {selectedProvider ? (
+                        <div className="flex items-start gap-3">
+                            {/* Logo */}
+                            <div className="flex-shrink-0">
+                                <img
+                                    src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
+                                    alt={selectedProvider?.storeInfo?.storeName || "Provider"}
+                                    className="w-15 h-15 rounded-full object-cover border border-gray-200"
+                                    onError={(e) => {
+                                        e.currentTarget.src = "/image/default-provider.png";
+                                    }}
+                                />
+                            </div>
+
+                            {/* Provider Details */}
+                            <div className="flex-1 space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-md font-medium text-gray-600">Name:</span>
+                                    <p className="text-md font-semibold text-gray-800">
+                                        {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName || "N/A"}
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="text-md font-medium text-gray-600">ID:</span>
+                                    <p className="text-md text-gray-700">{selectedProvider?.providerId || "N/A"}</p>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="text-md font-medium text-gray-600">Phone:</span>
+                                    <p className="text-md text-gray-700">{selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone || "N/A"}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col -ml-2 mt-2">
+                                <Phone size={24} />
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-lg text-gray-500 italic">No provider selected</p>
+                    )}
+                </div>
+
                 {/* WHO IS SERVICE FOR - mobile */}
                 <div className="space-y-4">
                     <h2 className="font-semibold text-[16px]">Who is this service for?</h2>
 
-                    <div className="border rounded-xl p-4">
+                    <div className="border border-gray-400 rounded-xl p-4">
                         <label className="flex gap-2 font-medium cursor-pointer">
                             <input type="radio" name="serviceForMobile" checked={selected === "me"} onChange={() => setSelected("me")} />
                             This Service is for me
@@ -1534,7 +1631,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                         )}
                     </div>
 
-                    <div className="border rounded-xl p-4 space-y-3">
+                    <div className="border border-gray-400 rounded-xl p-4 space-y-3">
                         <label className="flex gap-2 font-medium cursor-pointer">
                             <input type="radio" name="serviceForMobile" checked={selected === "customer"} onChange={() => setSelected("customer")} />
                             This Service is for my Customer
@@ -1551,7 +1648,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                 </div>
 
                 {/* COUPON - mobile */}
-                <div className="border rounded-xl p-4 space-y-3">
+                <div className="border border-gray-400 rounded-xl p-4 space-y-3">
                     <div className="flex justify-between items-center">
                         <h3 className="font-semibold text-sm">Best Coupon For You</h3>
                         <button onClick={() => setOpenCoupons(true)} className="text-blue-600 text-sm">All Coupons →</button>
@@ -1565,7 +1662,7 @@ export default function DetailsStep({ onNext, packageId  }: DetailsStepProps) {
                 </div>
 
                 {/* PAYMENT SUMMARY - mobile inline */}
-                <div className="border rounded-xl p-4 space-y-3 text-sm">
+                <div className="border border-gray-400 rounded-xl p-4 space-y-3 text-sm">
                     <h3 className="font-semibold">Payment Details</h3>
                     <Row label="Listing Price" value={`₹ ${packageToUse.price.toFixed(2)}`} />
                     <Row
