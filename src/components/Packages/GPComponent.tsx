@@ -24,7 +24,6 @@ export default function GPComponent({ setActiveTab }: GPComponentProps) {
     const { wallet, fetchWallet } = useWallet();
 
     const userId = user?._id || "";
-    console.log("User ID in GPComponent:", userId);
 
     useEffect(() => {
         fetchPackages();

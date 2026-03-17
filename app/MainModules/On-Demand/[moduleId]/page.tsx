@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useModule } from '@/src/context/CategoriesContext';
 import SearchBar from '@/src/components/SearchBar/Search';
+import OnDemandService from '@/src/components/OnDemandServiceComponents/OnDemandService';
 
 export default function OnDemandModulePage() {
 
@@ -50,10 +51,6 @@ export default function OnDemandModulePage() {
             sliderRef.current.scrollLeft = sliderRef.current.offsetWidth;
         }
     }, []);
-
-    const toSlug = (text: string) =>
-        text.toLowerCase().trim().replace(/\s+/g, "-");
-
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -280,36 +277,15 @@ export default function OnDemandModulePage() {
                 </h1>
 
                 {/* DESKTOP */}
-                {/* <div className="hidden md:block overflow-x-auto scrollbar-hide">
-                    <div className="grid grid-rows-2 grid-flow-col gap-2 max-w-8xl">
-                        {categories.map((item, index) => (
-                            <div key={index} onClick={() =>
-                                router.push(`/MainModules/OnDemand/${toSlug(item.name)}`)
-                            }
-                                className="flex flex-col items-center w-[120px]">
-
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="w-[73px] h-[73px] object-contain bg-[#FFF6EF] rounded-lg p-2"
-                                />
-                                <span className="mt-2 text-[12px] font-medium text-center">
-                                    {item.name}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>  */}
-                {/* DESKTOP – SWIPEABLE */}
                 <div
                     ref={scrollRef}
                     className="
-        hidden md:flex
-        overflow-x-auto
-        scrollbar-hide
-        cursor-pointer active:cursor-grabbing
-        select-none
-    "
+                        hidden md:flex
+                        overflow-x-auto
+                        scrollbar-hide
+                        cursor-pointer active:cursor-grabbing
+                        select-none
+                    "
                     onMouseDown={onMouseDown}
                     onMouseLeave={onMouseLeave}
                     onMouseUp={onMouseUp}
@@ -359,49 +335,6 @@ export default function OnDemandModulePage() {
                     </div>
                 </div>
 
-
-                {/* <div
-                    className="hidden md:grid md:grid-cols-4
-                                lg:flex lg:flex-wrap
-                                gap-5
-                                rounded-lg
-                                "
-                >
-
-                    {categories.map((item, index) => (
-                        <div
-                            key={index}
-                            onClick={() =>
-                                router.push(`/MainModules/On-Demand/${moduleId}/${toSlug(item.name)}`)
-                            }
-                            className="flex flex-col items-center "
-                        >
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-[170px] h-[150px] object-contain p-3 bg-[#FFF6EF] rounded-lg"
-                            />
-
-                            <span
-                                className="
-                                    mt-2
-                                    w-[170px]
-                                    text-[24px]
-                                    font-semibold
-                                    text-center
-                                    leading-tight
-                                    whitespace-normal
-                                    break-words
-                                "
-                            >
-                                {item.name}
-                            </span>
-
-
-                        </div>
-                    ))}
-                </div> */}
-
                 {/* MOBILE */}
                 <div
                     ref={sliderRef}
@@ -440,6 +373,7 @@ export default function OnDemandModulePage() {
                 <MostPopularProvider moduleId={moduleId} searchQuery={searchQuery} />
                 <TopTrending moduleId={moduleId} searchQuery={searchQuery} />
                 <WhyChooseUs moduleId={moduleId} />
+                <OnDemandService />
             </section>
         </>
     );
