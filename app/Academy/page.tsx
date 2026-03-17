@@ -113,23 +113,23 @@ export default function Academy() {
       color: "bg-indigo-500",
       link: "/Academy/training",
     },
-    {
-      title: "Quick Insights",
-      icon: <Lightbulb />,
-      color: "bg-orange-500",
-      link: "/academy/insights",
-    },
+    // {
+    //   title: "Quick Insights",
+    //   icon: <Lightbulb />,
+    //   color: "bg-orange-500",
+    //   link: "/academy/insights",
+    // },
     {
       title: "Live Webinar",
       icon: <Video />,
       color: "bg-purple-600",
-      link: "/academy/live-webinar",
+      link: "/Academy/live-webinar",
     },
     {
       title: "Recorded Webinar",
       icon: <ShieldCheck />,
       color: "bg-green-500",
-      link: "/academy/recorded-webinar",
+      link: "/Academy/recorded-webinar",
     },
     {
       title: "Podcast",
@@ -137,12 +137,12 @@ export default function Academy() {
       color: "bg-pink-500",
       link: "/academy/podcast",
     },
-    {
-      title: "Events",
-      icon: <Calendar />,
-      color: "bg-blue-500",
-      link: "/academy/events",
-    },
+    // {
+    //   title: "Events",
+    //   icon: <Calendar />,
+    //   color: "bg-blue-500",
+    //   link: "/academy/events",
+    // },
   ];
 
   return (

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import TrainingPage from "../page";
 import Link from "next/link";
 import { MdArrowBack } from "react-icons/md";
 
