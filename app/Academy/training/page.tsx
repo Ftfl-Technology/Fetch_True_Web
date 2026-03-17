@@ -36,7 +36,7 @@ export default function TrainingPage() {
 
               <img
                 src={cert.imageUrl}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 lg:h-50 object-full"
               />
 
               <div className="p-4">
