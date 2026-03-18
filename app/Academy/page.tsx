@@ -103,6 +103,8 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
+import { BsFacebook, BsInstagram, BsYoutube } from "react-icons/bs";
+import { FaFacebook } from "react-icons/fa6";
 
 export default function Academy() {
 
@@ -135,7 +137,8 @@ export default function Academy() {
       title: "Podcast",
       icon: <Mic />,
       color: "bg-pink-500",
-      link: "/academy/podcast",
+      link: "https://www.youtube.com/@FetchTrue/podcasts",
+
     },
     // {
     //   title: "Events",
@@ -208,16 +211,16 @@ export default function Academy() {
         </p>
 
         <div className="flex justify-center gap-4">
-          <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-            ▶
-          </div>
+          <Link href="https://www.youtube.com/@FetchTrue" className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+            <BsYoutube color="red"/>
+          </Link> 
 
-          <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
-            ◎
-          </div>
+          <Link href="https://www.instagram.com/fetchtrue" className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
+            <BsInstagram color="#FF27A1"/>
+          </Link>
 
           <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            f
+            <BsFacebook color="blue"/>
           </div>
         </div>
       </div>
