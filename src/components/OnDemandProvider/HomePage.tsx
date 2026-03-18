@@ -402,7 +402,7 @@ import HelpCenter from "@/app/Account/helpCenter/page";
 // import RefundPolicy from "@/app/Account/refund/page";
 import DeleteAccountSection from "@/app/Account/delete/page";
 import { useTopRatedProviders } from "@/src/context/HomeTopRatedProvider";
-import { Provider as PopularProvider } from "@/src/context/PopularProviderContext";
+
 
 /*  TYPES  */
 // Sidebar-level sections
