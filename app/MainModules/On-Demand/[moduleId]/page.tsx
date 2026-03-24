@@ -96,7 +96,7 @@ export default function OnDemandModulePage() {
 
     return (
         <>
-            {/* ================= HERO SECTION ================= */}
+            {/*  HERO SECTION  */}
             <section
                 className="relative hidden md:hidden lg:block w-screen lg:h-[662px]"
                 style={{
@@ -106,7 +106,7 @@ export default function OnDemandModulePage() {
                     backgroundPosition: 'center',
                 }}
             >
-                {/* SECOND IMAGE AS IMG (FIXED) */}
+                
                 <div className="absolute inset-0 ">
                     <div className="relative h-[700px] max-w-8xl">
                         <img
@@ -150,25 +150,11 @@ export default function OnDemandModulePage() {
                                 {/* RIGHT */}
                                 <div className="flex gap-6">
                                     <div className="relative w-[220px] md:w-[330px] lg:w-[520px]">
-                                        {/* <input
-                                            type="text"
-                                            placeholder="Search"
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
-                                        /> */}
                                         <SearchBar
                                             value={searchQuery}
                                             onChange={setSearchQuery}
                                             placeholder="Search"
                                         />
-                                        {/* <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                                            <img
-                                                src="/image/itsearch.png"
-                                                className="w-[20px] h-[18px]"
-                                                alt="Search"
-                                            />
-                                        </span> */}
                                     </div>
 
                                     <div className="bg-white rounded-full p-2 flex items-center justify-center">
@@ -187,7 +173,7 @@ export default function OnDemandModulePage() {
                 </div>
             </section>
 
-            {/* ================= NAVBAR MOBILE ================= */}
+            {/*  NAVBAR MOBILE  */}
             <section>
                 <div
                     className="
@@ -200,7 +186,7 @@ export default function OnDemandModulePage() {
                                 gap-3
                             "
                 >
-                    {/* ===== ROW 1: HEADER ===== */}
+                    {/* ROW 1: HEADER  */}
                     <div className="flex items-center justify-between">
                         {/* LEFT */}
                         <div className="flex items-center gap-3 p-8 min-w-0">
@@ -209,7 +195,7 @@ export default function OnDemandModulePage() {
                             </Link>
 
                             <h1 className="text-[16px] font-semibold truncate">
-                                {/* {formatSlugToTitle(slug)} */} On Demand Service
+                                 On Demand Service
                             </h1>
                         </div>
 
@@ -223,27 +209,14 @@ export default function OnDemandModulePage() {
                         </div>
                     </div>
 
-                    {/* ===== ROW 2: SEARCH ===== */}
+                    {/*  ROW 2: SEARCH  */}
                     <div className="relative w-[90%] md:w-[95%] mx-auto ml-6">
-                        {/* <input
-                            type="text"
-                            placeholder="Search"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
-                        /> */}
                         <SearchBar
                             value={searchQuery}
                             onChange={setSearchQuery}
                             placeholder="Search"
                         />
-                        {/* <span className="absolute left-4 top-1/2 -translate-y-1/2">
-                            <img
-                                src="/image/itsearch.png"
-                                className="w-[18px] h-[16px]"
-                                alt="Search"
-                            />
-                        </span> */}
+                     
                     </div>
                 </div>
             </section>
@@ -270,7 +243,7 @@ export default function OnDemandModulePage() {
             </div>
 
 
-            {/* ================= CATEGORY ================= */}
+            {/*  CATEGORY  */}
             <section className="relative w-full mt-10 p-4 lg:p-22 mb-8">
                 <h1 className="text-[16px] md:text-[24px] lg:text-[32px] font-semibold mb-5">
                     Category
@@ -373,7 +346,7 @@ export default function OnDemandModulePage() {
                 <MostPopularProvider moduleId={moduleId} searchQuery={searchQuery} />
                 <TopTrending moduleId={moduleId} searchQuery={searchQuery} />
                 <WhyChooseUs moduleId={moduleId} />
-                <OnDemandService />
+                <OnDemandService searchQuery={searchQuery}/>
             </section>
         </>
     );
