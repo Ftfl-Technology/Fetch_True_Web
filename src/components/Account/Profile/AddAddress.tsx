@@ -133,7 +133,7 @@ import { FiHome, FiBriefcase, FiMapPin } from "react-icons/fi";
 import { useUser } from "@/src/context/UserContext";
 
 export default function AddAddress() {
-  const { user, fetchUser, loading } = useUser();
+  const { user, fetchUser, updateProfile, loading } = useUser();
 
   const [addressType, setAddressType] = useState("Home");
 
@@ -186,6 +186,21 @@ export default function AddAddress() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSaveAddress = async () => {
+  if (!user?._id) return;
+
+  const payload = {
+    homeAddress: {
+      ...formData,
+      fullAddress: `${formData.houseNumber}, ${formData.landmark}, ${formData.city}, ${formData.state}, ${formData.country} - ${formData.pinCode}`,
+    },
+  };
+
+  await updateProfile(user._id, payload);
+
+  alert("Address updated successfully ✅");
+};
 
   if (loading) return <p>Loading address...</p>;
 
@@ -278,8 +293,10 @@ export default function AddAddress() {
         </div>
 
         {/* Save */}
-        <button className="bg-blue-600 text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition">
-          Save Address
+<button
+  onClick={handleSaveAddress}
+  className="bg-blue-600 text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition"
+>          Save Address
         </button>
       </div>
     </div>

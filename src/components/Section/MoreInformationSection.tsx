@@ -30,7 +30,7 @@ export default function MoreInformation({
 
         {/* Cards Container */}
         <div className="flex flex-col md:flex-row gap-5">
-          {cards.map((card, index) => {
+          {cards?.map((card, index) => {
             const isActive = index === activeIndex;
 
             return (

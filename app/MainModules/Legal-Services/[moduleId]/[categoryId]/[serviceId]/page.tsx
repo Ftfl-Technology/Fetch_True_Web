@@ -1147,7 +1147,7 @@ const images = service.bannerImages;
 
           {/* Key Values */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-        {service?.keyValues.map((item) => (
+        {service?.keyValues?.map((item) => (
           <div key={item._id} className="flex items-center gap-3">
             <img src={item.icon} className="w-4 h-4" />
             <div>
@@ -1330,7 +1330,7 @@ const images = service.bannerImages;
       <span className="absolute left-[24px] lg:left-[200px] top-1 bottom-1 w-px bg-[#D6D6D6]" />
 
       {/* Step */}
-      {service?.serviceDetails?.howItWorks.map((item) => (
+      {service?.serviceDetails?.howItWorks?.map((item) => (
         <div key={item._id} className="relative flex gap-8">
 
           {/* Dot on line */}
@@ -1380,7 +1380,7 @@ const images = service.bannerImages;
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-8 md:gap-y-10">
 
       {/* Left Column */}
-        {service?.serviceDetails?.assuredByFetchTrue.map((item, index) => (
+        {service?.serviceDetails?.assuredByFetchTrue?.map((item, index) => (
           <div key={index} className="flex items-start gap-4">
             <img
               src={item.icon}
@@ -1455,7 +1455,7 @@ const images = service.bannerImages;
           Perfect for individuals and small businesses
         </p>
 
-        {pkg.whatYouGet.map((item, i) => (
+        {pkg.whatYouGet?.map((item, i) => (
                     <li key={i} className="flex gap-2">
                       ✅ {item}
                     </li>
@@ -1483,7 +1483,7 @@ const images = service.bannerImages;
     </h2>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
 
-          {service?.serviceDetails?.weRequired.map((item) => (
+          {service?.serviceDetails?.weRequired?.map((item) => (
             <li key={item._id}>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{item.title}</span>
@@ -1514,7 +1514,7 @@ const images = service.bannerImages;
     {/* Content */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
 
-      {service?.serviceDetails?.weDeliver.map((item) => (
+      {service?.serviceDetails?.weDeliver?.map((item) => (
             <li key={item._id}>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{item.title}</span>
@@ -1534,7 +1534,7 @@ const images = service.bannerImages;
 
 
 <MoreInformation
-  cards={service?.serviceDetails?.moreInfo.map((item) => ({
+  cards={service?.serviceDetails?.moreInfo?.map((item) => ({
     title:item.title,
     description:item.description,
     image:item.image
@@ -1556,7 +1556,7 @@ const images = service.bannerImages;
 
 <FAQs
   title="FAQs"
-      items={service?.serviceDetails?.faq.map((item) => ({
+      items={service?.serviceDetails?.faq?.map((item) => ({
         question: item.question,
         answer: item.answer,
       }))}

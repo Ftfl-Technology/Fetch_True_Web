@@ -367,8 +367,8 @@ export default function BankKYC() {
     }
 
     try {
-      const res = await axios.put(
-        `https://api.fetchtrue.com/api/users/${user._id}/bank-kyc`,
+      const res = await axios.post(
+        `https://api.fetchtrue.com/api/wallet/add-beneficiary/${user._id}`,
         {
           accountNumber: formData.accountNumber,
           ifsc: formData.ifscCode,

@@ -175,7 +175,7 @@ export default function Academy() {
         </div>
 
         <img
-          src="/academy-banner.png"
+          src="/image/academy.png"
           alt="academy"
           className="w-48 hidden md:block"
         />

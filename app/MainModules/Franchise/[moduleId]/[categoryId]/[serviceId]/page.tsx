@@ -1309,6 +1309,8 @@ import { RatingDistribution, useReview } from "@/src/context/ReviewContext";
 import Link from "next/link";
 import { ChevronLeft, Share2 } from "lucide-react";
 import { useCheckout } from "@/src/context/CheckoutContext";
+import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
+import EarningModalUI from "@/src/components/Franchise/EarningModule";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1368,8 +1370,8 @@ const { moduleId, serviceId } = useParams<{
 const [activeImage, setActiveImage] = useState<string>("");
 const initialized = useRef(false);
 const { selectedPackage, setSelectedPackage } = useCheckout();
-
-
+const [openBreakup, setOpenBreakup] = useState(false);
+const [openEarning, setOpenEarning] = useState(false);
 const { service, loading, error, fetchServiceDetails } = useServiceDetails();
   const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
   const { reviewServices, fetchReviews } = useReview();
@@ -1582,9 +1584,12 @@ if (!service) {
 
     <p className="text-[20px] text-[#868686]">Lakhs</p>
 
-    <a className="text-[#6E26CB] text-[22px] cursor-pointer">
-      View Breakup
-    </a>
+    <a
+  onClick={() => setOpenBreakup(true)}
+  className="text-[#6E26CB] text-[22px] cursor-pointer"
+>
+  View Breakup
+</a>
 
     <div className="flex items-center gap-2 mt-2 lg:text-[22px] text-[#606060]">
       <RiFileList3Line size={36} /> EMI Options
@@ -1608,9 +1613,12 @@ if (!service) {
 
   <p className="text-[20px] text-[#868686]">Lakhs</p>
 
-  <a className="text-[#6E26CB] text-[22px] cursor-pointer">
-    View Breakup
-  </a>
+  <a
+  onClick={() => setOpenEarning(true)}
+  className="text-[#6E26CB] text-[22px] cursor-pointer"
+>
+  View Breakup
+</a>
 
   <button className="mt-3 flex items-center justify-center gap-2 border border-[#C7B6FF] text-[#6E26CB] py-3 rounded">
     <MdOutlineDownload /> Free Brochure
@@ -2494,6 +2502,15 @@ ${
       }))}
 />
       </div>
+
+
+ {openBreakup && (
+  <BreakupModalUI onClose={() => setOpenBreakup(false)} />
+)}
+
+{openEarning && (
+  <EarningModalUI onClose={() => setOpenEarning(false)} />
+)}
     </>
   );
 }

@@ -29,7 +29,7 @@ export default function FAQs({
 
         {/* FAQ List */}
         <div className="space-y-4">
-          {items.map((faq, index) => {
+          {items?.map((faq, index) => {
             const isOpen = activeIndex === index;
 
             return (
