@@ -535,10 +535,8 @@
 
 "use client";
 
-import { FaRupeeSign } from "react-icons/fa";
-import { MdLocationOn } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
-import { MdOutlineScreenSearchDesktop } from "react-icons/md";
+import { FaRupeeSign, FaUsers } from "react-icons/fa";
+import { MdLocationOn, MdOutlineScreenSearchDesktop } from "react-icons/md";
 
 /* ================= TYPES ================= */
 
@@ -552,14 +550,22 @@ export default function EarningModalUI({
   onClose,
 }: EarningModalUIProps) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[999]">
-
+    <div
+      className="fixed inset-0 bg-black/40 flex justify-center items-center z-[999]"
+      onClick={onClose} // close on backdrop click
+    >
       {/* Container */}
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg overflow-hidden">
-
+      <div
+        className="w-full max-w-sm bg-white rounded-xl shadow-lg overflow-hidden"
+        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+      >
         {/* Header */}
         <div className="flex items-center gap-2 px-4 py-3 border-b">
-          <button onClick={onClose} className="text-xl">
+          <button
+            onClick={onClose}
+            className="text-xl"
+            aria-label="Close modal"
+          >
             ←
           </button>
 
@@ -569,7 +575,6 @@ export default function EarningModalUI({
         </div>
 
         <div className="p-4 space-y-5">
-
           {/* Top Card */}
           <div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-xl p-4 flex justify-between items-center shadow">
             <div className="flex items-center gap-3">
@@ -600,7 +605,6 @@ export default function EarningModalUI({
               </span>
             </div>
 
-            {/* Labels */}
             <div className="flex justify-between text-xs text-gray-400 mb-1">
               <span>Rural</span>
               <span>Tier 2</span>
@@ -608,7 +612,6 @@ export default function EarningModalUI({
               <span>Metro</span>
             </div>
 
-            {/* Slider */}
             <div className="relative h-2 bg-gray-300 rounded-full">
               <div className="absolute h-2 bg-purple-600 rounded-full w-[70%]" />
             </div>
@@ -668,7 +671,6 @@ export default function EarningModalUI({
           <p className="text-xs text-gray-500 mt-4">
             • Figures vary based on market trends & local demands.
           </p>
-
         </div>
       </div>
     </div>
