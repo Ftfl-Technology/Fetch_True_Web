@@ -1891,7 +1891,7 @@ ${
       />
       )}
       
-      {openEarning && (
+      {/* {openEarning && (
         <EarningModalUI
           onClose={() => setOpenEarning(false)}
           earningRange={
@@ -1901,7 +1901,7 @@ ${
             service?.franchiseDetails?.monthlyEarnPotential?.[0]?.parameters
           }
         />
-      )}
+      )} */}
     </>
   );
 }
