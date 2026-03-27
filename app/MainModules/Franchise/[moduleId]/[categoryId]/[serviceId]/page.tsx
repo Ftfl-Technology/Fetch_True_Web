@@ -1756,15 +1756,15 @@ if (!service) {
            </section>
          
           {/* STATS */}
-          <section className="w-full flex justify-center mt-8 px-2">
-            <div className="flex flex-wrap gap-5 justify-center w-full max-w-[1400px]">
+          <section className="w-full flex justify-center mt-8 lg:px-2">
+            <div className="flex  gap-5 justify-center w-full max-w-[1400px]">
               {serviceDetails?.counter?.map((item, i) => {
                 const colors = ["#2563EB", "#16A34A", "#7C3AED"];
                 const bgs = ["#EEF4FF", "#ECFDF3", "#F5F3FF"];
                 return(
                 <div
                   key={item._id}
-                  className="w-full sm:w-[404px] h-[141px] rounded shadow flex flex-col justify-center items-center gap-2"
+                  className="w-full sm:w-[404px] h-[110px] lg:h-[141px] rounded shadow flex flex-col justify-center items-center gap-2"
                   style={{ background: bgs[i % bgs.length] }}
                 >
                   <p className="text-[28px] font-semibold" style={{ color: colors[i % colors.length] }}>
