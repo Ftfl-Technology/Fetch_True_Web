@@ -125,8 +125,8 @@ const filteredServices =
                       "N/A"
                     }
                     area={
-                      service.keyValues?.find((kv) => kv.key === "Area")
-                        ?.value || "N/A"
+                          service.franchiseDetails?.areaRequired || "N/A"
+
                     }
                    isFavourite={isFavourite(service._id)}
 

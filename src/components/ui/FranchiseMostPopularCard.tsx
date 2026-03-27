@@ -104,12 +104,12 @@ export default function FranchiseMostPopularCard({
 
           <div className="border-x border-white/30">
             <p className="font-semibold">{investment}</p>
-            <p className="opacity-80">Investment</p>
+            <p className="opacity-80">Investment Range</p>
           </div>
 
           <div>
             <p className="font-semibold">{area}</p>
-            <p className="opacity-80">Area</p>
+            <p className="opacity-80">Area Required</p>
           </div>
         </div>
       </div>

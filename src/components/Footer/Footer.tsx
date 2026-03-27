@@ -224,7 +224,7 @@ const COMPANY_INFO = {
   name: "Fetch True",
   address: [
     "FTFL Technology Pvt Ltd.",
-    "4th Floor, C307, Amora Chamber,",
+    "4th Floor, C307, Amanora Chamber,",
     "Amanora Mall, Hadapsar, Pune,",
     "Maharashtra 411028",
   ],
@@ -237,10 +237,10 @@ const FOOTER_LINK_SECTIONS = [
     title: "Quick Links",
     links: [
       { label: "Home", path: "/" },
-      { label: "Leads", path: "/leads" },
-      { label: "My Team", path: "/team" },
-      { label: "Offers", path: "/offers" },
-      { label: "Academy", path: "/academy" },
+      // { label: "Leads", path: "/leads" },
+      // { label: "My Team", path: "/team" },
+      { label: "Offers", path: "/Offers" },
+      { label: "Academy", path: "/Academy" },
     ],
   },
   {
@@ -256,20 +256,20 @@ const FOOTER_LINK_SECTIONS = [
   {
     title: "Modules & Services",
     links: [
-      { label: "Franchise", path: "/modules/franchise" },
-      { label: "Finance", path: "/modules/finance" },
-      { label: "Business", path: "/modules/business" },
-      { label: "AI Hub", path: "/modules/ai-hub" },
-      { label: "On Demand", path: "/modules/on-demand" },
+      { label: "Franchise", path: "/MainModules/Franchise" },
+      { label: "Finance", path: "/MainModules/finance" },
+      { label: "Business", path: "/MainModules/business" },
+      { label: "AI Hub", path: "/MainModules/ai-hub" },
+      { label: "On Demand", path: "/MainModules/on-demand" },
     ],
   },
   {
     title: "Modules & Services",
     links: [
-      { label: "IT Services", path: "/modules/it-services" },
-      { label: "Marketing", path: "/modules/marketing" },
-      { label: "Education", path: "/modules/education" },
-      { label: "Package", path: "/modules/package" },
+      { label: "IT Services", path: "/MainModules/it-services" },
+      { label: "Marketing", path: "/MainModules/marketing" },
+      { label: "Education", path: "/MainModules/education" },
+      { label: "Package", path: "/MainModules/package" },
     ],
   },
   {
@@ -374,7 +374,7 @@ export default function Footer() {
           </motion.a>
 
          
-          <motion.a
+          {/* <motion.a
             href="https://apps.apple.com/in/app/fetch-true/id1669248432"
             target="_blank"
             rel="noopener noreferrer"
@@ -386,7 +386,7 @@ export default function Footer() {
               <path d="M16.365 1.43c0 1.14-.418 2.088-1.254 2.842-.837.754-1.754 1.19-2.75 1.304-.028-.125-.042-.272-.042-.44 0-1.094.394-2.02 1.18-2.78.787-.76 1.71-1.15 2.766-1.15.032 0 .064.004.1.01v.214zM20.745 17.71c-.3.695-.66 1.332-1.085 1.91-.56.77-1.015 1.305-1.36 1.605-.54.495-1.12.75-1.75.764-.445.015-.983-.127-1.62-.426-.637-.3-1.223-.448-1.75-.448-.556 0-1.158.148-1.807.448-.65.3-1.178.45-1.585.45-.61-.027-1.2-.298-1.77-.81-.38-.334-.86-.895-1.445-1.685-.62-.843-1.127-1.82-1.52-2.93-.424-1.2-.635-2.36-.635-3.48 0-1.286.278-2.395.835-3.33.436-.75 1.02-1.34 1.75-1.77.73-.43 1.523-.653 2.38-.67.467-.013 1.08.15 1.84.49.758.337 1.245.506 1.46.506.162 0 .71-.205 1.64-.615.88-.38 1.62-.54 2.22-.48 1.64.133 2.878.78 3.71 1.94-1.47.9-2.208 2.152-2.21 3.75.002 1.25.465 2.29 1.39 3.12.412.39.87.69 1.37.9-.11.32-.245.65-.405.99z" />
             </svg>
             Apple Store
-          </motion.a>
+          </motion.a> */}
         </div>
       </div>
 

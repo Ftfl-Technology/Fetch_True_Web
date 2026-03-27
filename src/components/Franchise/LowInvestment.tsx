@@ -7,10 +7,16 @@ import { useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import { useFavourites } from "@/src/context/FavouriteContext";
+import { useAuth } from "@/src/context/AuthContext";
+import { FaBookmark } from "react-icons/fa";
+
 
 export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId:string,searchQuery:string}) {
 
   const { services,loading,fetchTopTrending } = useTopTrending();
+   const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+    useFavourites();
 
  const filteredServices =
   services?.filter((service) => {
@@ -23,6 +29,26 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
       service.category?.name?.toLowerCase().includes(q)
     );
   }) || [];
+
+  const { user } = useAuth();
+  
+    const userId = user?._id;
+
+    useEffect(() => {
+  if (userId) {
+    fetchFavourites(userId);
+  }
+}, [userId]);
+
+const handleToggleFavourite = async (serviceId: string) => {
+  if (!userId) return;
+
+  if (isFavourite(serviceId)) {
+    await removeFavourite(userId, serviceId);
+  } else {
+    await addFavourite(userId, serviceId);
+  }
+};
  
 
   useEffect(()=>{
@@ -66,15 +92,15 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
        {filteredServices.map((service) => {
 
   // ✅ keyValues se Profit Margin
-  const profitMargin = service.keyValues?.find(
-    (item) => item.key.toLowerCase().includes("profit")
-  );
+  // const profitMargin = service.keyValues?.find(
+  //   (item) => item.key.toLowerCase().includes("profit")
+  // );
   
 
   // ✅ keyValues se Total Outlet
-  const totalOutlet = service.keyValues?.find(
-    (item) => item.key.toLowerCase().includes("total outlet")
-  );
+  // const totalOutlet = service.keyValues?.find(
+  //   (item) => item.key.toLowerCase().includes("total outlet")
+  // );
 
   // ✅ franchiseDetails se Investment Range
   const investmentRange =
@@ -88,7 +114,7 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
             key={service._id}
             className=" bg-white
   min-w-[280px] sm:min-w-[320px] md:w-[353px]
-  h-[320px]
+  h-[290px]
   rounded-[20px]
   shadow-md
   overflow-hidden
@@ -100,7 +126,7 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
               <img
                 src={service.thumbnailImage}
                 alt={service.serviceName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fill"
               />
 
               {/* overlay */}
@@ -112,6 +138,27 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
   rounded-xl flex items-center justify-center">
                 <img src="/image/pizzahut.png" className="w-[60px]" />
               </div>
+
+               {/* BOOKMARK/Favourite */}
+                        
+                       <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleToggleFavourite(service._id);
+                }}
+                className="absolute top-2 right-2 bg-white  rounded-full p-1 shadow"
+                  
+              >
+                <FaBookmark 
+                            size={16}
+                            className={`transition ${
+                              isFavourite(service._id)
+  ? "text-red-500 fill-red-500"
+  : "text-gray-400"
+                            }`}
+                          />
+              </button>
 
               {/* TITLE */}
               <div className="absolute top-4 left-4 text-white">
@@ -160,51 +207,30 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
               {/* LOCATION + REVENUE */}
               
 
-                <div className="items-center justify-end flex">
-                  <p className="text-[#746969] text-[12px]">
-                    Monthly Earning :-
-                  </p>
-                  <p className="font-semibold text-[13px] md:text-[14px]">
-                     {monthlyEarning
-        ? `${monthlyEarning.range} ${monthlyEarning.parameters}`
-        : "--"}
-                  </p>
-              </div>
+               
 
-              {/* BOTTOM STATS */}
-              {/* <div className="grid grid-cols-3 text-center gap-3">
-                <div>
-                  <p className="font-semibold text-[12px]">70%</p>
-                  <p className="text-[10px] text-gray-500">
-                    Profit Margin
-                  </p>
-                </div>
 
-                <div className="border-x">
-                  <p className="font-semibold text-[12px]">
-                    10L – 20L
-                  </p>
-                  <p className="text-[10px] text-gray-500">
-                    Investment Range
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-semibold text-[12px]">100</p>
-                  <p className="text-[10px] text-gray-500">
-                    Total Outlet
-                  </p>
-                </div>
-              </div> */}
-              <div className="grid grid-cols-3 text-center gap-3 mt-5">
+              <div className="grid grid-cols-2 text-center gap-3 mt-5">
 
   {/* PROFIT MARGIN – keyValues */}
-  <div>
+  {/* <div>
     <p className="font-semibold text-[12px]">
       {profitMargin?.value ?? "--"}
     </p>
     <p className="text-[10px] text-gray-500">
       Profit Margin
+    </p>
+  </div> */}
+
+  {/* Monthly Earning – franchiseDetails */}
+  <div className="">
+    <p className="font-semibold text-[12px]">
+      {monthlyEarning
+        ? `${monthlyEarning.range} ${monthlyEarning.parameters}`
+        : "--"}
+    </p>
+    <p className="text-[10px] text-gray-500">
+      Monthly Earning
     </p>
   </div>
 
@@ -221,14 +247,14 @@ export default function LowInvestmentFranchises({moduleId,searchQuery}:{moduleId
   </div>
 
   {/* TOTAL OUTLET – keyValues */}
-  <div>
+  {/* <div>
     <p className="font-semibold text-[12px]">
       {totalOutlet?.value ?? "--"}
     </p>
     <p className="text-[10px] text-gray-500">
       Total Outlet
     </p>
-  </div>
+  </div> */}
 
 </div>
 

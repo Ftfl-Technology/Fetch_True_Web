@@ -237,7 +237,8 @@ const handleToggleFavourite = async (serviceId: string) => {
                 discount={`${discount ?? 0}%`}
                 monthly={`${monthly?.range} ${monthly?.parameters}`}
                 investment={`${investment?.range} ${investment?.parameters}`}
-                area="500–1000 Sq"
+                area={service.franchiseDetails?.areaRequired || "N/A"}
+
                 bg={bgColors[index % bgColors.length]}
                  isFavourite={isFavourite(service.serviceId)}
 

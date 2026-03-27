@@ -1311,6 +1311,8 @@ import { ChevronLeft, Share2 } from "lucide-react";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
 import EarningModalUI from "@/src/components/Franchise/EarningModule";
+import ConnectBar from "@/src/components/Section/ConnectBar";
+import { FaWhatsapp, FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1359,6 +1361,8 @@ const getColor = (rating: number): string => {
   return "#EF4444";
 };
 
+
+
 export default function DetailsAllPage() {
 
 const { moduleId, serviceId } = useParams<{
@@ -1375,6 +1379,45 @@ const [openEarning, setOpenEarning] = useState(false);
 const { service, loading, error, fetchServiceDetails } = useServiceDetails();
   const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
   const { reviewServices, fetchReviews } = useReview();
+
+  const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
 
   useEffect(() => {
   if (!serviceId) return;
@@ -1495,15 +1538,47 @@ if (!service) {
         Check out</button>
       </Link>
 
-      <button
-        className="bg-blue-600 hover:bg-blue-700 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
-      >
-        <Share2 size={16} />
-        Share
-      </button>
+  <button
+  onClick={() => handleSocialShare("whatsapp")}
+  className="bg-blue-600 hover:bg-blue-700 text-white
+             px-4 sm:px-5 py-2 rounded
+             flex items-center gap-2 text-[14px]"
+>
+  <Share2 size={16} />
+  Share
+</button>
     </div>
+    {/* <div className="flex gap-3">
+
+<button
+  onClick={() => handleSocialShare("whatsapp")}
+  className="bg-green-500 text-white p-2 rounded-full"
+>
+  <FaWhatsapp size={18} />
+</button>
+
+<button
+  onClick={() => handleSocialShare("facebook")}
+  className="bg-blue-600 text-white p-2 rounded-full"
+>
+  <FaFacebookF size={18} />
+</button>
+
+<button
+  onClick={() => handleSocialShare("twitter")}
+  className="bg-black text-white p-2 rounded-full"
+>
+  <FaTwitter size={18} />
+</button>
+
+<button
+  onClick={() => handleSocialShare("linkedin")}
+  className="bg-blue-800 text-white p-2 rounded-full"
+>
+  <FaLinkedinIn size={18} />
+</button>
+
+</div> */}
     </div>
   
 </section>
@@ -1597,15 +1672,26 @@ if (!service) {
   View Breakup
 </a>
 
-    <div className="flex items-center gap-2 mt-2 lg:text-[22px] text-[#606060]">
-      <RiFileList3Line size={36} /> EMI Options
+    {service?.serviceDetails?.emiavalable?.length > 0 && (
+  <div className="flex flex-col gap-2 mt-2 text-[#606060]">
+    <div className="flex items-center gap-2 lg:text-[22px]">
+      <RiFileList3Line size={36} />
+      EMI Options Available
     </div>
+
+    <ul className="list-disc ml-10 text-[16px]">
+      {service.serviceDetails.emiavalable.map((emi, index) => (
+        <li key={index}>{emi}</li>
+      ))}
+    </ul>
+  </div>
+)}
   </div>
 
   {/* Earning */}
   <div className="w-full lg:w-1/2 flex flex-col gap-2">
   <p className="text-[20px] lg:text-[28px] text-[#868686]">
-    Earning Potential
+    Monthly Earning Potential
   </p>
 
   <p className="text-[24px] lg:text-[32px] font-medium">
@@ -1626,9 +1712,16 @@ if (!service) {
   View Breakup
 </a>
 
-  <button className="mt-3 flex items-center justify-center gap-2 border border-[#C7B6FF] text-[#6E26CB] py-3 rounded">
+  {service?.serviceDetails?.brochureImage?.length > 0 && (
+  <a
+    href={service.serviceDetails.brochureImage[0]}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-3 flex items-center justify-center gap-2 border border-[#C7B6FF] text-[#6E26CB] py-3 rounded hover:bg-[#f6f1ff]"
+  >
     <MdOutlineDownload /> Free Brochure
-  </button>
+  </a>
+)}
 </div>
 
 
@@ -1723,6 +1816,19 @@ if (!service) {
           
             </div>
             )}
+
+          {/* Image */}
+          <div className="w-full max-w-[1440px] mx-auto my-12">
+            {service?.serviceDetails?.highlight?.[0] && (
+              <Image
+                src={service.serviceDetails.highlight[0]}
+                alt="highlight"
+                width={900}
+                height={500}
+                className="w-full h-auto rounded-[12px] object-cover"
+              />
+            )}
+          </div>
 
             <div
   className="
@@ -2506,6 +2612,14 @@ ${
         question: item.question,
         answer: item.answer,
       }))}
+/>
+
+<ConnectBar
+  title={service?.serviceDetails?.connectWith?.[0]?.name}
+      phoneLink={`tel:${service?.serviceDetails?.connectWith?.[0]?.mobileNo}`}
+      emailLink={`mailto:${service?.serviceDetails?.connectWith?.[0]?.email}`}
+      checkoutLink={`/checkout/${service?._id}`}
+      shareLink={`/service/${service?._id}`}
 />
       </div>
 
