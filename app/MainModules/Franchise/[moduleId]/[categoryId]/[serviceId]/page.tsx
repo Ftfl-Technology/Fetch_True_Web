@@ -2517,12 +2517,12 @@ ${
 />
 )}
 
-{openEarning && (
+{/* {openEarning && (
   <EarningModalUI
     onClose={() => setOpenEarning(false)}
    
   />
-)}
+)} */}
     </>
   );
 }
