@@ -235,13 +235,13 @@ export default function BreakupModalUI({
   /* ================= UI ================= */
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[999]">
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-end md:items-center z-[999] px-2 md:px-4">
 
-      <div className="w-full max-w-sm bg-white rounded-xl overflow-hidden shadow-lg">
+      <div className="w-full max-w-md md:max-w-2xl bg-white rounded-t-xl md:rounded-xl shadow-lg max-h-[95vh] flex flex-col">
 
         {/* Header */}
 
-        <div className="flex items-center gap-2 px-4 py-3 border-b">
+        <div className="flex items-center gap-2 px-4 py-3 border-b sticky top-0 bg-white z-10">
           <button onClick={onClose} className="text-xl">
             ←
           </button>
@@ -253,11 +253,11 @@ export default function BreakupModalUI({
 
         {/* Content */}
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 overflow-y-auto flex-1">
 
           {/* SERVICE INFO (Context se aa raha hai) */}
 
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-center flex-wrap">
 
             <img
               src={service?.thumbnailImage}
@@ -312,7 +312,7 @@ export default function BreakupModalUI({
 
             </div>
 
-            <div className="flex bg-gray-100 rounded-lg mt-2 text-sm overflow-hidden">
+            <div className="flex flex-wrap md:flex-nowrap bg-gray-100 rounded-lg mt-2 text-sm overflow-hidden">
 
               {investments.map((item) => (
 
@@ -405,7 +405,7 @@ export default function BreakupModalUI({
 
         {/* TOKEN CTA */}
 
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-3 font-medium">
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-3 font-medium sticky bottom-0">
 
           Secure your spot at just ₹
           {selectedInvestment.tokenAmount.toLocaleString()}

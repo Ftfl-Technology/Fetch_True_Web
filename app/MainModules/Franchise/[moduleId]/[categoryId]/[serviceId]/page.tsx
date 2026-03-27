@@ -1313,6 +1313,7 @@ import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
 import EarningModalUI from "@/src/components/Franchise/EarningModule";
 import ConnectBar from "@/src/components/Section/ConnectBar";
 import { FaWhatsapp, FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import TermsConditionsModal from "@/src/components/Section/termsandconditionPopup";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1376,6 +1377,7 @@ const initialized = useRef(false);
 const { selectedPackage, setSelectedPackage } = useCheckout();
 const [openBreakup, setOpenBreakup] = useState(false);
 const [openEarning, setOpenEarning] = useState(false);
+const [openTC, setOpenTC] = useState(false);
 const { service, loading, error, fetchServiceDetails } = useServiceDetails();
   const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
   const { reviewServices, fetchReviews } = useReview();
@@ -1508,83 +1510,77 @@ if (!service) {
   return (
     <>
 
-    <section className="">
-       <div className="w-full flex justify-between fixed bg-white/10 px-12 pt-5 z-20">
-    <Link
-      href={`/MainModules/Franchise/${moduleId}`}
-      
-    >
-      {/* <FiLayers size={20} /> */}
-      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[18px] hover:underline "><ChevronLeft size={20} className="cursor-pointer" />Service Details</span>
+   <section className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/90 border-b">
+
+  <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 px-4 sm:px-6 lg:px-12 py-3">
+
+    {/* LEFT : Back Navigation */}
+
+    <Link href={`/MainModules/Franchise/${moduleId}`}>
+      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[16px] sm:text-[18px] hover:underline">
+
+        <ChevronLeft size={20} className="cursor-pointer" />
+
+        Service Details
+
+      </span>
     </Link>
 
-     {/* RIGHT : Actions */}
-    <div className="flex items-center gap-3 mb-5 ">
 
-      <p className="bg-gray-300 p-2 rounded">Selected Package :-
- ₹{selectedPackageData?.price?.toLocaleString() || 0}
-</p>
+    {/* RIGHT : Actions */}
+
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+
+      <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
+
+        Selected Package :-
+        ₹{selectedPackageData?.price?.toLocaleString() || 0}
+
+      </p>
+
 
       <Link
         href={
-  selectedPackage?._id
-    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
-    : "#"
-}>
-       <button className="bg-green-500 hover:bg-green-600 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+          selectedPackage?._id
+            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            : "#"
+        }
       >
-        Check out</button>
+
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white
+                     px-4 sm:px-5 py-2 rounded
+                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
+        >
+
+          Check out
+
+        </button>
+
       </Link>
 
-  <button
-  onClick={() => handleSocialShare("whatsapp")}
-  className="bg-blue-600 hover:bg-blue-700 text-white
-             px-4 sm:px-5 py-2 rounded
-             flex items-center gap-2 text-[14px]"
->
-  <Share2 size={16} />
-  Share
-</button>
+
+      <button
+        onClick={() => handleSocialShare("whatsapp")}
+        className="bg-blue-600 hover:bg-blue-700 text-white
+                   px-4 sm:px-5 py-2 rounded
+                   flex items-center gap-2 text-[13px] sm:text-[14px]"
+      >
+
+        <Share2 size={16} />
+
+        Share
+
+      </button>
+
     </div>
-    {/* <div className="flex gap-3">
 
-<button
-  onClick={() => handleSocialShare("whatsapp")}
-  className="bg-green-500 text-white p-2 rounded-full"
->
-  <FaWhatsapp size={18} />
-</button>
+  </div>
 
-<button
-  onClick={() => handleSocialShare("facebook")}
-  className="bg-blue-600 text-white p-2 rounded-full"
->
-  <FaFacebookF size={18} />
-</button>
-
-<button
-  onClick={() => handleSocialShare("twitter")}
-  className="bg-black text-white p-2 rounded-full"
->
-  <FaTwitter size={18} />
-</button>
-
-<button
-  onClick={() => handleSocialShare("linkedin")}
-  className="bg-blue-800 text-white p-2 rounded-full"
->
-  <FaLinkedinIn size={18} />
-</button>
-
-</div> */}
-    </div>
-  
 </section>
       {/* PAGE WRAPPER */}
       <div className="bg-[#F4F4F4]">
-        <div className="bg-white px-3 sm:px-5 py-6">
+        <div className="bg-white px-3 sm:px-5 py-20">
           {/* <Link href={`/MainModules/Franchise/${moduleId}`}>
             <p className="text-black text-[18px] font-medium ms-3 lg:ms-12">Service Details</p>
           </Link> */}
@@ -1632,7 +1628,7 @@ if (!service) {
            <section className="w-full flex justify-center px-2">
              <div className="w-full max-w-[1400px] flex flex-col gap-6">
 
-               <div className="flex lg:flex-row justify-between gap-4">
+               <div className="lg:flex lg:flex-row justify-between gap-4">
                  <div>
                    <h1 className="text-[20px] lg:text-[32px] sm:text-[40px] font-semibold">
                      {serviceName}
@@ -1652,7 +1648,7 @@ if (!service) {
                <div className="flex lg:flex-row gap-6">
   {/* Investment */}
   <div className="w-full lg:w-1/2 flex flex-col gap-2">
-    <p className="text-[20px] lg:text-[28px] text-[#868686]">
+    <p className="text-[18px] lg:text-[28px] text-[#868686]">
       Investment range
     </p>
 
@@ -1663,34 +1659,40 @@ if (!service) {
         .join(" + ") || "N/A"}
     </p>
 
-    <p className="text-[20px] text-[#868686]">Lakhs</p>
+    <p className="text-[16px] lg:text-[20px] text-[#868686]">Lakhs</p>
 
     <a
   onClick={() => setOpenBreakup(true)}
-  className="text-[#6E26CB] text-[22px] cursor-pointer"
+  className="text-[#6E26CB] text-[16px] lg:text-[20px] cursor-pointer"
 >
   View Breakup
 </a>
 
-    {service?.serviceDetails?.emiavalable?.length > 0 && (
-  <div className="flex flex-col gap-2 mt-2 text-[#606060]">
-    <div className="flex items-center gap-2 lg:text-[22px]">
-      <RiFileList3Line size={36} />
-      EMI Options Available
+ <div className="flex items-center gap-2 text-[12px] lg:text-[22px]">
+      <RiFileList3Line size={20} />
+      {service?.serviceDetails?.emiavalable}
     </div>
 
-    <ul className="list-disc ml-10 text-[16px]">
+    {/* {service?.serviceDetails?.emiavalable?.length > 0 && (
+  <div className=" gap-2 mt-2 text-[#606060]">
+    <div className="flex items-center gap-2 text-[12px] lg:text-[22px]">
+      <RiFileList3Line size={36} />
+      {service?.serviceDetails?.emiavalable}
+    </div>
+
+    <ul className=" flex ml-10 text-[16px]">
+       <RiFileList3Line size={20} />
       {service.serviceDetails.emiavalable.map((emi, index) => (
         <li key={index}>{emi}</li>
       ))}
     </ul>
   </div>
-)}
+)} */}
   </div>
 
   {/* Earning */}
   <div className="w-full lg:w-1/2 flex flex-col gap-2">
-  <p className="text-[20px] lg:text-[28px] text-[#868686]">
+  <p className="text-[18px] lg:text-[28px] text-[#868686]">
     Monthly Earning Potential
   </p>
 
@@ -1703,11 +1705,11 @@ if (!service) {
       : "N/A"}
   </p>
 
-  <p className="text-[20px] text-[#868686]">Lakhs</p>
+  <p className="text-[16px] lg:text-[20px] text-[#868686]">Lakhs</p>
 
   <a
   onClick={() => setOpenEarning(true)}
-  className="text-[#6E26CB] text-[22px] cursor-pointer"
+  className="text-[#6E26CB] text-[16px] lg:text-[20px] cursor-pointer"
 >
   View Breakup
 </a>
@@ -1739,9 +1741,9 @@ if (!service) {
                    </p>
                  </div>
             
-  <span
+ <span
   className="cursor-pointer text-blue-600"
-
+  onClick={() => setOpenTC(true)}
 >
   T&C &gt;
 </span>
@@ -1779,11 +1781,11 @@ if (!service) {
 
 
         {/* BENEFITS */}
-          <section className="w-full flex justify-center mt-8 ps-4">
+          <section className="w-full flex justify-center mt-8 ps-4 mb-4">
   <div className="w-full max-w-[1400px] flex flex-col gap-6">
 
     {/* Title */}
-    <h2 className=" text-[30px] lg:text-[36px] font-semibold text-[#7C3AED]">
+    <h2 className=" text-[28px] lg:text-[34px] font-semibold text-[#7C3AED]">
       Benefits
     </h2>
 
@@ -1845,7 +1847,7 @@ if (!service) {
   {service.keyValues.map((item)=>(
   <div key={item._id} className="flex flex-col lg:gap-1">
     <div className="flex items-center gap-1">
-      <img src={item.icon} className="lg:w-[24px] lg:h-[24px]"/>
+      <img src={item.icon} className="w-[20px] lg:w-[24px] lg:h-[24px]"/>
       <p className=" lg:text-[24px] text-[#232323]">
         {item.key}
       </p>
@@ -2275,7 +2277,7 @@ ${
        {/* Agreement Details */}
        {service?.serviceDetails?.agreementDetails && (
        <div className="h-full">
-         <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-semibold text-[#34716C] mb-3 sm:mb-4">
+         <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-semibold text-[#6E26CB] mb-3 sm:mb-4">
            Agreement Details
          </h2>
          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 h-full">
@@ -2299,7 +2301,7 @@ ${
       {/* Training Details */}
       {service?.serviceDetails?.trainingDetails && (
       <div className="h-full">
-        <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-semibold text-[#34716C] mb-3 sm:mb-4">
+        <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-semibold text-[#6E26CB] mb-3 mt-8 lg:mt-0 sm:mb-4">
           Training Details
         </h2>
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 h-full">
@@ -2637,6 +2639,16 @@ ${
    
   />
 )}  */}
+
+{openTC && (
+  <TermsConditionsModal
+    onClose={() => setOpenTC(false)}
+    html={
+      service?.franchiseDetails?.termsAndConditions ||
+      "<p>No Terms & Conditions available</p>"
+    }
+  />
+)}
     </>
   );
 }
