@@ -1519,16 +1519,22 @@ if (!service) {
             <div className="w-full max-w-[1400px] flex flex-col items-center gap-5">
 
               <div className="relative w-full h-[260px] sm:h-[420px] lg:h-[710px] rounded overflow-hidden shadow">
-                <img
-                  src={activeImage}
-                  alt={service.serviceName}
-                  className="w-full h-full object-cover"
-                />
+               {activeImage ? (
+  <img
+    src={activeImage}
+    alt={service.serviceName}
+    className="w-full h-full object-cover"
+  />
+) : (
+  <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+    No Image Available
+  </div>
+)}
 
               </div>
 
               {/* THUMBNAILS */}
-              <div className="lg:absolute lg:top-135  w-full lg:w-[850px] bg-white rounded p-2 flex gap-2 overflow-x-auto no-scrollbar">
+              <div className="lg:absolute lg:top-135  w-full lg:w-[850px] bg-white/10 rounded p-2 flex gap-2 overflow-x-auto no-scrollbar">
                 {images.map((img, index) => (
                   <button
                     key={index}
@@ -1707,8 +1713,8 @@ if (!service) {
 
 
           {/* ABOUT */}
-          <section className="max-w-[1400px] mx-auto px-3 mt-8">
-            <h2 className="text-[#34716C] text-[24px] lg:text-[32px] font-medium mb-3">
+          <section className="max-w-[1400px] mx-auto px-3 lg:mt-10">
+            <h2 className="text-[#7C3AED] text-[24px] lg:text-[34px] font-semibold mb-3">
               About {serviceName}
             </h2>
             {service?.serviceDetails?.aboutUs && (
@@ -1779,7 +1785,7 @@ if (!service) {
                 <img
                   src={model.features[0].icon}
                   alt={model.title}
-                  className="w-[18px] h-[18px]"
+                  className="w-[40px] h-[40px]"
                 />
               )}
             </div>
@@ -1859,7 +1865,7 @@ if (!service) {
         className="w-[52px] h-[52px]"
       />
       <div>
-        <h3 className="text-[26px] font-semibold text-[#606060] mb-1">
+        <h3 className="text-[22px] font-semibold text-[#606060] mb-1">
           {item.title}
         </h3>
         <p className="text-[18px] text-[#606060]">
@@ -2505,11 +2511,17 @@ ${
 
 
  {openBreakup && (
-  <BreakupModalUI onClose={() => setOpenBreakup(false)} />
+  <BreakupModalUI
+  onClose={() => setOpenBreakup(false)}
+  serviceId={serviceId}
+/>
 )}
 
 {openEarning && (
-  <EarningModalUI onClose={() => setOpenEarning(false)} />
+  <EarningModalUI
+    onClose={() => setOpenEarning(false)}
+   
+  />
 )}
     </>
   );

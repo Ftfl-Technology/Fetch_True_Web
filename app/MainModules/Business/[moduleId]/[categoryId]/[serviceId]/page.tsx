@@ -1072,6 +1072,8 @@ import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useReview } from "@/src/context/ReviewContext";
 import Link from "next/link";
 import { useCheckout } from "@/src/context/CheckoutContext";
+import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
+import EarningModalUI from "@/src/components/Franchise/EarningModule";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1104,7 +1106,8 @@ export default function DetailsAllPage() {
     const { reviewServices, fetchReviews } = useReview();
     const initialized = useRef(false);
     const { selectedPackage, setSelectedPackage } = useCheckout();
-  
+  const [openBreakup, setOpenBreakup] = useState(false);
+const [openEarning, setOpenEarning] = useState(false);
   
   
       useEffect(() => {
@@ -1198,7 +1201,7 @@ const selectedPackageData = franchiseCards.find(
 <section className="">
        <div className="w-full flex justify-between fixed bg-white/10 px-12 pt-5 z-20">
     <Link
-      href={`/MainModules/Franchise/${moduleId}`}
+      href={`/MainModules/Business/${moduleId}`}
       
     >
       {/* <FiLayers size={20} /> */}
@@ -1319,9 +1322,12 @@ const selectedPackageData = franchiseCards.find(
       </p>
       <p className="text-[14px] text-[#9A9A9A]">Lakhs</p>
 
-      <a className="text-[14px] text-[#1D4ED8] mt-2 inline-block cursor-pointer">
-        View Breakup
-      </a>
+       <a
+  onClick={() => setOpenBreakup(true)}
+  className="text-[#6E26CB] text-[22px] cursor-pointer"
+>
+  View Breakup
+</a>
     </div>
 
     {/* Earning Potential */}
@@ -1336,9 +1342,12 @@ const selectedPackageData = franchiseCards.find(
       </p>
       <p className="text-[14px] text-[#9A9A9A]">Lakhs</p>
 
-      <a className="text-[14px] text-[#1D4ED8] mt-2 inline-block cursor-pointer">
-        View Breakup
-      </a>
+      <a
+  onClick={() => setOpenEarning(true)}
+  className="text-[#6E26CB] text-[22px] cursor-pointer"
+>
+  View Breakup
+</a>
     </div>
 
     {/* ROI */}
@@ -1874,6 +1883,25 @@ ${
 
 
       </div>
+
+      {openBreakup && (
+        <BreakupModalUI
+        onClose={() => setOpenBreakup(false)}
+        serviceId={serviceId}
+      />
+      )}
+      
+      {openEarning && (
+        <EarningModalUI
+          onClose={() => setOpenEarning(false)}
+          earningRange={
+            service?.franchiseDetails?.monthlyEarnPotential?.[0]?.range
+          }
+          areaType={
+            service?.franchiseDetails?.monthlyEarnPotential?.[0]?.parameters
+          }
+        />
+      )}
     </>
   );
 }
