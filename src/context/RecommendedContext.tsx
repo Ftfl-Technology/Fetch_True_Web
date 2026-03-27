@@ -37,6 +37,7 @@ interface FranchiseDetails {
   investmentRange: InvestmentRange[];
   monthlyEarnPotential: MonthlyEarnPotential[];
   franchiseModel: FranchiseModel[];
+  areaRequired:string;
 }
 
 
