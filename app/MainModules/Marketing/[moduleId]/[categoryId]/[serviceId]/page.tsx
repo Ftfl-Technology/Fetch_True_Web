@@ -510,7 +510,7 @@ const images = service.bannerImages;
      <section className="">
        <div className="w-full flex fixed justify-between px-12 pt-5 z-20 bg-white/10">
     <Link
-      href={`/MainModules/Legal-Services/${moduleId}`}
+      href={`/MainModules/Marketing/${moduleId}`}
       
     >
       {/* <FiLayers size={20} /> */}

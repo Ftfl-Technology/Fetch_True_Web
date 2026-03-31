@@ -1307,7 +1307,7 @@ import { useParams } from "next/navigation";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { RatingDistribution, useReview } from "@/src/context/ReviewContext";
 import Link from "next/link";
-import { ChevronLeft, Share2 } from "lucide-react";
+import { ChevronLeft, Share2, ShoppingCart } from "lucide-react";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
 import EarningModalUI from "@/src/components/Franchise/EarningModule";
@@ -1547,37 +1547,27 @@ if (!service) {
         }
       >
 
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white
-                     px-4 sm:px-5 py-2 rounded
-                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
-        >
-
-          Check out
-
-        </button>
+        <button className="flex items-center gap-2 bg-green-500 cursor-pointer hover:bg-green-600 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium">
+                                        <ShoppingCart className="w-[29px] h-[29px]" />
+                                        Check out
+                                    </button>
 
       </Link>
 
 
-      <button
-        onClick={() => handleSocialShare("whatsapp")}
-        className="bg-blue-600 hover:bg-blue-700 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[13px] sm:text-[14px]"
-      >
-
-        <Share2 size={16} />
-
-        Share
-
-      </button>
+      <button className="flex items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium">
+                                    <Share2 className="w-[29px] h-[29px]" />
+                                    Share
+                                </button>
 
     </div>
 
   </div>
 
 </section>
+
+
+
       {/* PAGE WRAPPER */}
       <div className="bg-[#F4F4F4]">
         <div className="bg-white px-3 sm:px-5 py-20">

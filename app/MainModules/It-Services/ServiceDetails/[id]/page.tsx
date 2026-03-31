@@ -461,6 +461,44 @@ const ServiceDetails = () => {
         available: p.isStoreOpen,
     }));
 
+      const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
 
     useEffect(() => {
         // If service ID changed (and it's not the first load)
@@ -527,10 +565,11 @@ const ServiceDetails = () => {
         <>
             <section className="relative w-full lg:p-8 p-0">
                 <div className="flex flex-col lg:flex-row gap-6 lg:p-4 w-full">
-
+                    
                     {/*  DESKTOP VERSION  */}
                     <div className="hidden lg:block w-full bg-white">
-                        <div className="flex items-center justify-between w-screen  px-8 pt-6 fixed top-0 z-50 bg-white -ml-14">
+                        <div className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/90 border-b">
+                        <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 px-4 sm:px-6 lg:px-12 py-3">
 
                             {/* SERVICE DETAILS */}
                             <div className="flex items-center gap-3 ml-30">
@@ -574,10 +613,11 @@ const ServiceDetails = () => {
                                 </button>
                             </div>
                         </div>
-
+                         </div>
+                                    {/* onClick={() => router.push(`/MainModules/It-Services/${itServicesId}`)}> */}
 
                         {/* ===== MAIN CONTENT ===== */}
-                        <div className="flex gap-6 p-8 max-w-[1400px] mx-auto mt-4">
+                        <div className="flex gap-6 p-8 max-w-[1400px] mx-auto mt-10">
 
                             {/* ===== LEFT: IMAGE ===== */}
                             <div className="w-[652px]">

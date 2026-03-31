@@ -83,15 +83,15 @@ if (loading) return null;
       <section className="w-full relative bg-[#2A67F4] h-[360px] overflow-visible">
 
         {/* ---------- BACKGROUND IMAGE ---------- */}
-        <div className="absolute inset-0 z-0">
+        {/* <div className="absolute inset-0 z-0">
           <img
             src={banners[0]?.image}
             alt="Marketing Hero"
             
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-[#2A67F4]/20" />
-        </div>
+          <div className="absolute inset-0" />
+        </div> */}
 
         {/* ---------- TOP BAR ---------- */}
         <div
