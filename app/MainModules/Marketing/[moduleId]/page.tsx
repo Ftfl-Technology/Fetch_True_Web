@@ -23,7 +23,7 @@ export default function MarketingHero() {
 
   const router = useRouter();
   
-     const { moduleId } = useParams<{ moduleId: string }>();
+     const { moduleId, categoryId } = useParams<{ moduleId: string; categoryId: string }>();
 
   const heroBanners = getBannersByPage("category").filter(
   (banner) =>
@@ -173,7 +173,7 @@ if (loading) return null;
         </section>
       </section>
           <CategoryModule/>
-      <RecommendedForYou moduleId={moduleId} searchQuery={searchQuery}/>
+      <RecommendedForYou moduleId={moduleId} categoryId={categoryId} searchQuery={searchQuery}/>
       <MostlyUsed moduleId={moduleId} searchQuery={searchQuery}/>
     <TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
     <WhyJustOurServices />
