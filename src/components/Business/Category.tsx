@@ -28,7 +28,7 @@ export default function Category(){
 
         return(
         <>
-           <section className="w-full bg-white  lg:py-12">
+           <section className="w-full bg-white pt-10  lg:pt-12">
   <div className="max-w-[1440px] mx-auto px-4">
 
     {/* TITLE */}

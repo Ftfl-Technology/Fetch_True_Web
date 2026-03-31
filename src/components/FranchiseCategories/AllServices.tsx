@@ -127,6 +127,11 @@ const filteredServices =
             filteredServices.map((service, index) => {
                     const fav = isFavourite(service._id);
 
+                    const investment =
+              service.franchiseDetails.investmentRange?.[0];
+            const monthly =
+              service.franchiseDetails.monthlyEarnPotential?.[0];
+
               return(
               <Link
                 key={service._id}
@@ -141,9 +146,9 @@ const filteredServices =
                   discount={`${
                     service.franchiseDetails?.franchiseModel?.[0]?.discount ?? 0
                   }%`}
-                  monthly={`${service.franchiseDetails?.monthlyEarnPotential?.[0]?.range ?? ""}`}
-                  investment={`${service.franchiseDetails?.investmentRange?.[0]?.range ?? ""}`}
-                  area="500–1000 Sq"
+                 monthly={`${monthly?.range} ${monthly?.parameters}`}
+                investment={`${investment?.range} ${investment?.parameters}`}
+                  area={service.franchiseDetails?.areaRequired || "N/A"}
                   bg={bgColors[index % bgColors.length]}
                   isFavourite={isFavourite(service._id)}
 
@@ -158,6 +163,10 @@ const filteredServices =
             <HorizontalScroll>
               {filteredServices.map((service, index) => {
                     const fav = isFavourite(service._id);
+                    const investment =
+              service.franchiseDetails.investmentRange?.[0];
+            const monthly =
+              service.franchiseDetails.monthlyEarnPotential?.[0];
 
                 return(
                 <Link
@@ -174,9 +183,9 @@ const filteredServices =
                       service.franchiseDetails?.franchiseModel?.[0]?.discount ??
                       0
                     }%`}
-                    monthly={`${service.franchiseDetails?.monthlyEarnPotential?.[0]?.range ?? ""}`}
-                    investment={`${service.franchiseDetails?.investmentRange?.[0]?.range ?? ""}`}
-                    area="500–1000 Sq"
+                    monthly={`${monthly?.range} ${monthly?.parameters}`}
+                investment={`${investment?.range} ${investment?.parameters}`}
+                  area={service.franchiseDetails?.areaRequired || "N/A"}
                     bg={bgColors[index % bgColors.length]}
                      isFavourite={isFavourite(service._id)}
 

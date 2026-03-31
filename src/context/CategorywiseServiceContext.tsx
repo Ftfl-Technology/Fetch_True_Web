@@ -61,6 +61,8 @@ export interface FranchiseDetails {
   franchiseModel: FranchiseModel[];
   extraSections?: any[];
   extraImages?: string[];
+    areaRequired:string;
+
 }
 
 export interface ServiceDetails {

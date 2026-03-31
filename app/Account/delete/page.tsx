@@ -2,6 +2,7 @@
 
 import { useUser } from "@/src/context/UserContext";
 import Image from "next/image";
+import Link from "next/link";
 import { FiTrash2 } from "react-icons/fi";
 
 export default function DeleteAccountSection() {
@@ -73,10 +74,6 @@ const handleDelete = async () => {
 
       {/* Buttons */}
       <div className="flex justify-end gap-4">
-        <button className="px-6 py-2 rounded-md border border-red-400 text-red-500 hover:bg-red-50">
-          Cancel
-        </button>
-
         <button className="px-6 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
         onClick={handleDelete}>
           Delete

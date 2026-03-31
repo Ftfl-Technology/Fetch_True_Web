@@ -121,6 +121,7 @@ const handleToggleFavourite = async (serviceId: string) => {
         {/* SCROLL AREA */}
         <div
           className="
+          
             bg-[#D9DDE6]
             pt-8 lg:pt-20
             pb-8 lg:pb-18
@@ -129,6 +130,7 @@ const handleToggleFavourite = async (serviceId: string) => {
             scrollbar-hide
             scroll-smooth
             rounded-tl-[36px]
+            w-full
           "
         >
           <div className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth">
@@ -163,6 +165,7 @@ const handleToggleFavourite = async (serviceId: string) => {
                   category={service.category?.name || ""}
                   earnpercent={earnpercent}
                   investment={investment}
+                    parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
                   earnings={earnings}
                   roi={roi}
                   rating={service.averageRating}

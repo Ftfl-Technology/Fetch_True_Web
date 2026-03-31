@@ -1074,6 +1074,7 @@ import Link from "next/link";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import BreakupModalUI from "@/src/components/Franchise/BreakupModule";
 import EarningModalUI from "@/src/components/Franchise/EarningModule";
+import TermsConditionsModal from "@/src/components/Section/termsandconditionPopup";
 
 const extractBenefits = (benefits: string[]): string[] => {
   if (!benefits?.length) return [];
@@ -1108,8 +1109,48 @@ export default function DetailsAllPage() {
     const { selectedPackage, setSelectedPackage } = useCheckout();
   const [openBreakup, setOpenBreakup] = useState(false);
 const [openEarning, setOpenEarning] = useState(false);
+const [openTC, setOpenTC] = useState(false);
+
   
-  
+    const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
+
       useEffect(() => {
     if (!serviceId) return;
   
@@ -1198,47 +1239,73 @@ const selectedPackageData = franchiseCards.find(
   return (
     <>
 
-<section className="">
-       <div className="w-full flex justify-between fixed bg-white/10 px-12 pt-5 z-20">
-    <Link
-      href={`/MainModules/Business/${moduleId}`}
-      
-    >
-      {/* <FiLayers size={20} /> */}
-      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[18px] hover:underline "><ChevronLeft size={20} className="cursor-pointer" />Service Details</span>
+<section className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/90 border-b">
+
+  <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 px-4 sm:px-6 lg:px-12 py-3">
+
+    {/* LEFT : Back Navigation */}
+
+    <Link href={`/MainModules/Business/${moduleId}`}>
+      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[16px] sm:text-[18px] hover:underline">
+
+        <ChevronLeft size={20} className="cursor-pointer" />
+
+        Service Details
+
+      </span>
     </Link>
 
-     {/* RIGHT : Actions */}
-    <div className="flex items-center gap-3 mb-5 ">
 
-      <p className="bg-gray-300 p-2 rounded">Selected Package :-
- ₹{selectedPackageData?.price?.toLocaleString() || 0}
-</p>
+    {/* RIGHT : Actions */}
+
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+
+      <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
+
+        Selected Package :-
+        ₹{selectedPackageData?.price?.toLocaleString() || 0}
+
+      </p>
+
 
       <Link
         href={
-  selectedPackage?._id
-    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
-    : "#"
-}>
-       <button className="bg-green-500 hover:bg-green-600 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+          selectedPackage?._id
+            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            : "#"
+        }
       >
-        Check out</button>
+
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white
+                     px-4 sm:px-5 py-2 rounded
+                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
+        >
+
+          Check out
+
+        </button>
+
       </Link>
 
+
       <button
+        onClick={() => handleSocialShare("whatsapp")}
         className="bg-blue-600 hover:bg-blue-700 text-white
                    px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+                   flex items-center gap-2 text-[13px] sm:text-[14px]"
       >
+
         <Share2 size={16} />
+
         Share
+
       </button>
+
     </div>
-    </div>
-  
+
+  </div>
+
 </section>
 
       {/* PAGE WRAPPER */}
@@ -1262,7 +1329,7 @@ const selectedPackageData = franchiseCards.find(
               </div>
 
               {/* THUMBNAILS */}
-              <div className="lg:absolute lg:top-135  w-full lg:w-[850px] bg-white rounded p-2 flex gap-2 overflow-x-auto no-scrollbar">
+              <div className="lg:absolute lg:top-135  w-full lg:w-[850px] bg-white/10 rounded p-2 flex gap-2 overflow-x-auto no-scrollbar">
                               {images.map((img, index) => (
                                 <button
                                   key={index}
@@ -1366,16 +1433,22 @@ const selectedPackageData = franchiseCards.find(
   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
 
     {/* EMI Options */}
-    <div className="flex items-center gap-2 text-[14px] text-[#555]">
+    <div className="flex items-center gap-2 text-[12px] lg:text-[22px]">
       <RiFileList3Line size={20} />
-      EMI Options
+      {service?.serviceDetails?.emiavalable}
     </div>
 
     {/* Free Brochure */}
-    <button className="flex w-[380px] items-center justify-center gap-2 border border-[#C7B6FF] text-[#1D4ED8] px-6 py-2 rounded-md text-[16px]">
-      <MdOutlineDownload />
-      Free Brochure
-    </button>
+      {service?.serviceDetails?.brochureImage?.length > 0 && (
+  <a
+    href={service.serviceDetails.brochureImage[0]}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-3 flex items-center justify-center gap-2 border border-[#C7B6FF] text-[#1D4ED8] p-3 rounded hover:bg-[#f6f1ff]"
+  >
+    <MdOutlineDownload /> Free Brochure
+  </a>
+)}
 
   </div>
 </div>
@@ -1398,9 +1471,12 @@ const selectedPackageData = franchiseCards.find(
     </p>
   </div>
 
-  <span className="cursor-pointer text-[#6E26CB] text-[14px] sm:text-[16px]">
-    T&amp;C &gt;
-  </span>
+  <span
+  className="cursor-pointer text-blue-600"
+  onClick={() => setOpenTC(true)}
+>
+  T&C &gt;
+</span>
 </div>
 
 
@@ -1416,7 +1492,7 @@ const selectedPackageData = franchiseCards.find(
   <div className="w-full max-w-[1400px] flex flex-col gap-6">
 
     {/* Title */}
-    <h2 className=" text-[30px] lg:text-[36px] font-semibold text-[#1D4699]">
+    <h2 className=" text-[28px] lg:text-[34px] font-semibold text-[#1D4699]">
       Benefits
     </h2>
 
@@ -1440,7 +1516,7 @@ const selectedPackageData = franchiseCards.find(
   <div className="max-w-[1400px] mx-auto px-4">
 
     {/* Title */}
-    <h2 className="text-[#1D4699] text-[22px] lg:text-[28px] font-semibold mb-4">
+    <h2 className="text-[#1D4699] text-[24px] lg:text-[34px]  font-semibold mb-4">
       About {serviceName}
     </h2>
 
@@ -1456,6 +1532,19 @@ const selectedPackageData = franchiseCards.find(
 
   </div>
 </section>
+
+ {/* Image */}
+          <div className="w-full max-w-[1440px] mx-auto my-12">
+            {service?.serviceDetails?.highlight?.[0] && (
+              <Image
+                src={service.serviceDetails.highlight[0]}
+                alt="highlight"
+                width={900}
+                height={500}
+                className="w-full h-auto rounded-[12px] object-cover"
+              />
+            )}
+          </div>
 
 
      
@@ -1553,7 +1642,7 @@ const selectedPackageData = franchiseCards.find(
             </li>
 
           </ul> */}
-          {service?.serviceDetails?.weDeliver.map((item) => (
+          {service?.serviceDetails?.weDeliver?.map((item) => (
             <li
               key={item._id}
               className=" flex items-start gap-3 text-[16px] sm:text-[18px] md:text-[20px] text-[#606060]"
@@ -1562,7 +1651,10 @@ const selectedPackageData = franchiseCards.find(
                 <LuCircleCheckBig />
 
               </span>
+              <div className="flex flex-col">
               {item.title}
+              {item.description && <p className="text-[14px] sm:text-[16px] text-[#606060] mt-2">{item.description}</p>}
+              </div>
             </li>
           ))}
         </div>
@@ -1584,7 +1676,10 @@ const selectedPackageData = franchiseCards.find(
                 <LuCircleCheckBig />
 
               </span>
+              <div className="flex flex-col">
               {item.title}
+              {item.description && <p className="text-[14px] sm:text-[16px] text-[#606060] mt-2">{item.description}</p>}
+              </div>
             </li>
           ))}
         </div>
@@ -1902,6 +1997,16 @@ ${
           }
         />
       )} */}
+
+      {openTC && (
+        <TermsConditionsModal
+          onClose={() => setOpenTC(false)}
+          html={
+            service?.franchiseDetails?.termsAndConditions ||
+            "<p>No Terms & Conditions available</p>"
+          }
+        />
+      )}
     </>
   );
 }

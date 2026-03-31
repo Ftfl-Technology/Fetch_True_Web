@@ -96,7 +96,10 @@ const filteredServices =
           <HorizontalScroll>
             {filteredServices.map((service) => {
                   const fav = isFavourite(service._id);
-
+                   const investment =
+              service.franchiseDetails.investmentRange?.[0];
+            const monthly =
+              service.franchiseDetails.monthlyEarnPotential?.[0];
 
               return (
                 <Link
@@ -114,19 +117,10 @@ const filteredServices =
                         ? `${service.franchiseDetails.franchiseModel[0].discount}%`
                         : "0%"
                     }
-                    monthly={
-                      service.franchiseDetails?.monthlyEarnPotential?.[0]?.range
-                    }
-                    parameter={
-                      service.franchiseDetails?.monthlyEarnPotential?.[0]?.parameters
-                    }
-                    investment={
-                      service.franchiseDetails?.investmentRange?.[0]?.range ||
-                      "N/A"
-                    }
+                    monthly={`${monthly?.range} ${monthly?.parameters}`}
+                investment={`${investment?.range} ${investment?.parameters}`}
                     area={
                           service.franchiseDetails?.areaRequired || "N/A"
-
                     }
                    isFavourite={isFavourite(service._id)}
 

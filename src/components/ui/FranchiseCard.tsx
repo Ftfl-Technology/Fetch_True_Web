@@ -13,7 +13,6 @@ interface RecommendedCardProps {
   earning: string;
   discount: string;
   monthly: string;
-  parameter:string;
   investment: string;
   area: string;
   bgImage?: string; 
@@ -30,7 +29,6 @@ export default function RecommendedCard({
   earning,
   discount,
   monthly,
-  parameter,
   investment,
   area,
   bgImage = "/image/recommendedrealestate.png",
@@ -118,12 +116,12 @@ export default function RecommendedCard({
           {/* STATS */}
           <div className="grid grid-cols-3 text-center mt-2">
             <div>
-              <p className="text-[14px] font-semibold">{monthly} {parameter}</p>
+              <p className="text-[14px] font-semibold">{monthly}</p>
               <p className="text-[12px] text-gray-400">Monthly Earning</p>
             </div>
 
             <div className="border-x border-[#BBBBBB]">
-              <p className="text-[14px] font-semibold">{investment} {parameter}</p>
+              <p className="text-[14px] font-semibold">{investment}</p>
               <p className="text-[12px] text-gray-400">Investment Range</p>
             </div>
 

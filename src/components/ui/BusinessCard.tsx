@@ -8,6 +8,7 @@ type BusinessCardProps = {
   category: string;
   earnpercent: string;
   investment: string;
+  parameter: string;
   earnings: string;
   roi: string;
   rating?: number;
@@ -24,6 +25,7 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
   category,
   earnpercent,
   investment,
+  parameter,
   earnings,
   roi,
   rating,
@@ -109,11 +111,11 @@ const BusinessCard: React.FC<BusinessCardProps> = ({
         <div className="grid grid-cols-3 text-center text-[12px] gap-2 mt-4">
           <div>
             <p className="text-[#868686]">Investment</p>
-            <p className="font-semibold text-[#1D4699]">{investment}</p>
+            <p className="font-semibold text-[#1D4699]">{investment} {parameter}</p>
           </div>
           <div>
             <p className="text-[#868686]">Earnings</p>
-            <p className="font-semibold text-[#1D4699]">{earnings}</p>
+            <p className="font-semibold text-[#1D4699]">{earnings} {parameter}</p>
           </div>
           <div>
             <p className="text-[#868686]">ROI</p>

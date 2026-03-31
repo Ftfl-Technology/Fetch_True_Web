@@ -178,6 +178,7 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory,s
               category={service.category?.name || ""}
               earnpercent={earnpercent}
               investment={investment}
+              parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
               earnings={earnings}
               roi={roi}
               rating={service.averageRating}
@@ -221,6 +222,7 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory,s
                 category={service.category?.name || ""}
                 earnpercent={earnpercent}
                 investment={investment}
+                parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
                 earnings={earnings}
                 roi={roi}
                 rating={service.averageRating}

@@ -122,6 +122,7 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
             scrollbar-hide
             scroll-smooth
             rounded-br-[36px]
+            w-full
           "
         >
           {/* FADED BACK TEXT */}
@@ -170,6 +171,7 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
                   category={service.category?.name || ""}
                   earnpercent={service.franchiseDetails?.commission}
                   investment={investment}
+                  parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
                   earnings={earnings}
                   roi={roi}
                   rating={service.averageRating}

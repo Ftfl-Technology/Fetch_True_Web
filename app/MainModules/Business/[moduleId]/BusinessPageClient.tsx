@@ -1073,7 +1073,7 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
 
     <>
 
-       <section className="w-full flex justify-center bg-white">
+       <section className="w-full flex justify-center absolute z-10">
       
       <div className="w-[1329px] h-[60px] flex items-center justify-between px-6">
         
@@ -1090,13 +1090,13 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
           </Link>
 
           {/* Back Arrow */}
-          <Link href="/">
+          {/* <Link href="/">
             <img
               src="/image/Vector (1).png"
               alt="Back"
               className="w-[18px] h-[18px] hidden lg:block"
             />
-          </Link>
+          </Link> */}
 
           {/* Page Title */}
           <h1 className="font-inter font-semibold text-[20px] leading-[30px] text-black">
@@ -1154,11 +1154,11 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
     </section>
 
 
-       <section className="relative w-full h-[420px] sm:h-[480px] md:h-[630px] overflow-hidden">
+       <section className="relative w-full h-[300px] sm:h-[480px] md:h-[600px] overflow-hidden">
       
       {/* BACKGROUND IMAGE */}
       <div
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat mt-30 lg:mt-30"
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat"
         style={{
           backgroundImage: banners?.[0]?.image
         ? `url(${banners[0].image})`
@@ -1170,7 +1170,7 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
       <div className="absolute inset-0 bg-white/50" />
 
       {/* CONTENT */}
-      <div className="relative z-10 flex items-center justify-center h-full bottom-40">
+      {/* <div className="relative z-10 flex items-center justify-center h-full bottom-40">
   <h1
     className="
       text-center
@@ -1196,7 +1196,7 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
     <br />
     EXPAND
   </h1>
-</div>
+</div> */}
 
 
        </section>
