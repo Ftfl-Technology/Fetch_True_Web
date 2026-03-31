@@ -1029,13 +1029,11 @@
 
 
 "use client";
-import AllServices from "@/src/components/Business/AllServices";
 import Category from "@/src/components/Business/Category";
 import HighDemand from "@/src/components/Business/HighDemand";
 import Recommended from "@/src/components/Business/Recommended";
 import TopRated from "@/src/components/Business/TopRated";
 import SearchBar from "@/src/components/SearchBar/Search";
-import BusinessCard from "@/src/components/ui/BusinessCard";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { useWhyChooseService } from "@/src/context/WhyJustOurServiceContext";
 import Link from "next/link";
@@ -1205,7 +1203,6 @@ export default function BusinessPageClient({ searchQuery,setSearchQuery }:any) {
 {/* category */}
 <Category />
 
-{/* <AllServices moduleId={moduleId} categoryId={categoryId}/> */}
 
 <Recommended moduleId={moduleId} searchQuery={searchQuery}/>
 
