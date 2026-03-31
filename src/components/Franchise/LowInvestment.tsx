@@ -193,7 +193,7 @@ const handleToggleFavourite = async (serviceId: string) => {
                 }
                 </span> */}
                 <span className="bg-blue-100 text-blue-700 text-[11px] px-3 py-1 rounded-full">
-                  Earn Up to {service.franchiseDetails.commission || "N/A"}
+                  Earn Up to {service.franchiseDetails?.commission || "N/A"}
                 </span>
               </div>
             </div>

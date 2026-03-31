@@ -38,6 +38,14 @@ const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(nu
       } = useSubCategory();
 
   
+      /* 🔥 FETCH SUB-CATEGORIES */
+
+     useEffect(() => {
+  if (moduleId) {
+    fetchCategoriesByModule(moduleId);
+  }
+}, [moduleId]);
+
   console.log("Category ID IN CLIENT subcategoryPage:", categoryId);
 
     // const { moduleId} = useParams();

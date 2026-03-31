@@ -898,11 +898,12 @@ import { useParams } from "next/navigation";
 import { useReview } from "@/src/context/ReviewContext";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useServiceProviders } from "@/src/context/ServicewiseProviderContext";
-import { Share2 } from "lucide-react";
+import { ChevronLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useCheckout } from "@/src/context/CheckoutContext";
+import TermsConditionsModal from "@/src/components/Section/termsandconditionPopup";
 
  const extractBenefits = (benefits: string[]): string[] => {
    if (!benefits?.length) return [];
@@ -978,7 +979,46 @@ export default function AIHubServiceDetailPage() {
         const { reviewServices, fetchReviews } = useReview();
         const initialized = useRef(false);
         const { selectedPackage, setSelectedPackage } = useCheckout();  
-        
+            const [openTC, setOpenTC] = useState(false);
+  
+              const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
         
                    useEffect(() => {
                   if (!serviceId) return;
@@ -1043,45 +1083,72 @@ const images = service.bannerImages;
   return (
      <section className="relative min-h-screen w-full overflow-hidden bg-[#D0E0E7DB] backdrop-blur-sm">
       
-<section className="fixed z-30">
-       <div className="w-full flex fixed justify-between px-12 pt-5 bg-white/10 z-20">
-    <Link
-      href={`/MainModules/AI-Hub/${moduleId}`}
-      
-    >
-      {/* <FiLayers size={20} /> */}
-      <span className="flex items-center gap-2 text-[#5B3527] font-medium text-[18px] hover:underline ">Service Details</span>
+<section className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/90 border-b">
+
+  <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 px-4 sm:px-6 lg:px-12 py-3">
+
+    {/* LEFT : Back Navigation */}
+
+    <Link href={`/MainModules/AI-Hub/${moduleId}`}>
+      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[16px] sm:text-[18px] hover:underline">
+
+        <ChevronLeft size={20} className="cursor-pointer" />
+
+        Service Details
+
+      </span>
     </Link>
 
-     {/* RIGHT : Actions */}
-    <div className="flex items-center gap-3 mb-5 ">
-<p>
-  ₹{selectedPackageData
-    ? Math.floor(Number(selectedPackageData.discountedPrice)).toLocaleString("en-IN")
-    : 0}
-</p>
+
+    {/* RIGHT : Actions */}
+
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+
+     
+ <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
+
+        Selected Package :-
+        ₹{selectedPackageData?.price?.toLocaleString() || 0}
+
+      </p>
+
       <Link
-        href={selectedPackage?._id
-    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
-    : "#"}>
-       <button className="bg-green-500 hover:bg-green-600 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+        href={
+          selectedPackage?._id
+            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            : "#"
+        }
       >
-        Check out</button>
+
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white
+                     px-4 sm:px-5 py-2 rounded
+                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
+        >
+
+          Check out
+
+        </button>
+
       </Link>
 
+
       <button
+        onClick={() => handleSocialShare("whatsapp")}
         className="bg-blue-600 hover:bg-blue-700 text-white
                    px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+                   flex items-center gap-2 text-[13px] sm:text-[14px]"
       >
+
         <Share2 size={16} />
+
         Share
+
       </button>
+
     </div>
-    
-    </div>
+
+  </div>
 
 </section>
 
@@ -1109,7 +1176,7 @@ const images = service.bannerImages;
 
       {/* CONTENT */}
       <section
-  className="relative w-full py-6 sm:py-8"
+  className="relative w-full pt-25"
   // style={{
   //   background: "linear-gradient(135deg, #E3EEF3 0%, #D8E8EE 100%)",
   // }}
@@ -1184,9 +1251,12 @@ const images = service.bannerImages;
           </p>
         </div>
 
-        <button className="text-[14px] font-medium flex items-center gap-1">
-          T&C <span className="text-[18px]">›</span>
-        </button>
+         <span
+  className="cursor-pointer"
+  onClick={() =>{console.log("T&C clicked"); setOpenTC(true)}}
+>
+  T&C &gt;
+</span>
       </div>
 
     </div>
@@ -1637,7 +1707,17 @@ const images = service.bannerImages;
 />
 
 
-
+{openTC && (
+  <TermsConditionsModal
+  
+    heading="Terms & Conditions"
+    onClose={() => setOpenTC(false)}
+    html={
+      service?.franchiseDetails?.termsAndConditions ||
+      "<p>No Terms & Conditions available</p>"
+    }
+  />
+)}
 
 
 

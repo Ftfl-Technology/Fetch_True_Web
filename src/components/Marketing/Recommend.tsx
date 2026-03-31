@@ -73,14 +73,16 @@ import { useRecommendedServices } from "@/src/context/RecommendedContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import { useAuth } from "@/src/context/AuthContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import Link from "next/link";
 
 interface Props {
   moduleId: string;
     searchQuery:string
+    categoryId:string;
 
 }
 
-export default function RecommendedForYou({ moduleId,searchQuery }: Props) {
+export default function RecommendedForYou({ moduleId,searchQuery,categoryId }: Props) {
   const {
     services,
     loading,
@@ -162,8 +164,9 @@ export default function RecommendedForYou({ moduleId,searchQuery }: Props) {
 
 
           return (
+            <Link key={service._id} href={`/MainModules/Marketing/${moduleId}/${categoryId}/${service._id}`}>
             <MarketingCard
-                key={service._id}
+               
               title={service.serviceName}
               category={service.category?.name}
               keyvalues={service.keyValues}
@@ -189,6 +192,7 @@ export default function RecommendedForYou({ moduleId,searchQuery }: Props) {
                    handleToggleFavourite(service._id)
                    }
                         />
+            </Link>
           );
         })}
         </HorizontalScroll>

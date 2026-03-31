@@ -124,7 +124,7 @@ const filteredServices =
                                     key={service._id}
                                 title={service.serviceName}
                                 category={service.category?.name}
-                                keyvalues={service.keyValues?.map(kv => kv.value)}
+                                keyvalues={service.keyValues}
                                 commission={service.franchiseDetails?.commission}
                                 price={service.serviceDetails?.packages?.[0]?.price || 0}
                                 discountedprice={service.serviceDetails?.packages?.[0]?.discountedPrice || 0}
@@ -162,7 +162,7 @@ const filteredServices =
                                     key={service._id}
                                 title={service.serviceName}
                                 category={service.category?.name}
-                                keyvalues={service.keyValues?.map(kv => kv.value)}
+                                keyvalues={service.keyValues}
                                 commission={service.franchiseDetails?.commission}
                                 price={service.serviceDetails?.packages?.[0]?.price || 0}
                                 discountedprice={service.serviceDetails?.packages?.[0]?.discountedPrice || 0}

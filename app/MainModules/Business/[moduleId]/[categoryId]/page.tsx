@@ -1,5 +1,4 @@
 "use client";
-import BusinessCard from "@/src/components/ui/BusinessCard";
 import { useEffect, useMemo, useState } from "react";
 import SubCategoryStrip from "@/src/components/Business/Subcategory";
 import { useParams } from "next/navigation";
@@ -9,9 +8,7 @@ import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import AllServices from "@/src/components/BusinessCategories/AllServices";
 import { useModule } from "@/src/context/CategoriesContext";
 import Link from "next/link";
-import Recommended from "@/src/components/BusinessCategories/Recommended";
-import MostPopular from "@/src/components/BusinessCategories/MostPopular";
-import TopTrending from "@/src/components/BusinessCategories/TopTrending";
+
 
 
 
@@ -164,14 +161,17 @@ const mappedServices = useMemo(() => {
 
     </div>
 
-    {/* RIGHT ICON */}
-    <img
-      src="/image/Vector (2).png"
-      alt="bookmark"
-      className="w-[20px] h-[20px] cursor-pointer"
-    />
+     {/* Bookmark Icon */}
+          <Link href="/Account/MyAccount?section=Favorite">
+          <img
+            src="/image/Vector (2).png"
+            alt="Bookmark"
+            className="w-[18.6px] h-[27.2px]"
+          />
+          </Link>
+        </div>
   </div>
-</div>
+
 
 
 

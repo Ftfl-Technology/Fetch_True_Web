@@ -347,7 +347,7 @@ import { Bookmark } from "lucide-react";
 import AllServices from "@/src/components/MarketingCategories/AllServices";
 
 export default function MarketingCategoriesDetailsPage() {
-  const { categories } = useModule();
+      const { categories,fetchCategoriesByModule } = useModule();
 
   const [currentCategory, setCurrentCategory] = useState<any>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
@@ -357,6 +357,12 @@ export default function MarketingCategoriesDetailsPage() {
     moduleId: string;
     categoryId: string;
   }>();
+
+     useEffect(() => {
+  if (moduleId) {
+    fetchCategoriesByModule(moduleId);
+  }
+}, [moduleId]);
 
   const { subCategories, error, fetchSubCategories } = useSubCategory();
 
