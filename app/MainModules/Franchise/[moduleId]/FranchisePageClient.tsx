@@ -9,7 +9,6 @@ import Link from "next/link";
 import WhyOurFranchise from "@/src/components/Franchise/WhyourFranchise";
 import Categories from "@/src/components/Franchise/Categories";
 import { useParams } from "next/navigation";
-import AllServices from "@/src/components/Franchise/AllServices";
 import { useCategoryBanner } from "@/src/context/CategoryBannerContext";
 import { useEffect } from "react";
 import SearchBar from "@/src/components/SearchBar/Search";
@@ -213,7 +212,6 @@ export default function FranchisePageClient({ searchQuery,setSearchQuery }:any) 
 
 
 <Categories/>
-{/* <AllServices moduleId={moduleId}/> */}
 <Recommended  moduleId={moduleId} searchQuery={searchQuery}/>
 <HighDemands moduleId={moduleId} searchQuery={searchQuery}/>
 {/* <TopGrowingFranchises /> */}
