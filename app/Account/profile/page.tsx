@@ -467,30 +467,32 @@ export default function ProfileSection() {
                   </p>
                 </div>
               </div>
-
-              <button className="mt-3 w-full md:w-[525px] bg-blue-600 text-white px-6 py-2 rounded-md text-sm">
-                Track Packages
-              </button>
+              
+              <Link href="/Packages">
+                <button className="mt-3 w-full md:w-[525px] bg-blue-600 text-white px-6 py-2 rounded-md text-sm">
+                  Track Packages
+                </button>
+              </Link>
             </div>
           </div>
 
           {/* Edit Button */}
-          <button className="border rounded-full p-2">
+          {/* <button className="border rounded-full p-2">
             <FiEdit2 />
-          </button>
+          </button> */}
         </div>
 
         {/* Right Cards */}
         <div className="flex flex-row lg:flex-col gap-4">
-          <Link href="/Packages" className="bg-blue-600 text-white rounded-lg px-5 py-4 w-[200px]">
+          {/* <Link href="/Packages" className="bg-blue-600 text-white rounded-lg px-5 py-4 w-[200px]">
             <p className="text-sm">Access your</p>
             <p className="font-semibold">package</p>
-          </Link>
+          </Link> */}
 
-          <div className="bg-yellow-400 rounded-lg px-5 py-4 w-[200px]">
+          {/* <div className="bg-yellow-400 rounded-lg px-5 py-4 w-[200px]">
             <p className="text-sm">Earn with</p>
             <p className="font-semibold">referrals</p>
-          </div>
+          </div> */}
         </div>
       </div>
 

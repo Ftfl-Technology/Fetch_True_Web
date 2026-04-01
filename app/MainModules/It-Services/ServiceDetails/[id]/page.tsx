@@ -462,7 +462,7 @@ const ServiceDetails = () => {
     }));
 
       const handleSocialShare = (platform: string) => {
-  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${itServicesId}/${serviceId}`;
 
   const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
 
@@ -607,10 +607,13 @@ const ServiceDetails = () => {
                                     </button>
                                 </Link>
 
-                                <button className="flex items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium">
-                                    <Share2 className="w-[29px] h-[29px]" />
-                                    Share
-                                </button>
+                                <button
+  onClick={() => handleSocialShare("whatsapp")}
+  className="flex items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md lg:text-[20px] font-medium"
+>
+  <Share2 className="w-[29px] h-[29px]" />
+  Share
+</button>
                             </div>
                         </div>
                          </div>
