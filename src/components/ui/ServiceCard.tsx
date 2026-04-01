@@ -118,8 +118,8 @@ export default function ServiceCard({
               <p className="text-[11px] text-[#393737]">Starting from</p>
               <p className="font-semibold flex  text-[20px] gap-1 text-[#232323]">
                 {/* <div> */}
-                <span className="text-[16px] text-[#868686] me-2"><s>{price}</s></span>
-                 <span>{discountedprice}</span>
+                <span className="text-[16px] text-[#868686] me-2"><s>₹{price}</s></span>
+                 <span>₹{discountedprice}</span>
                  {/* </div> */}
               </p>
             </div>

@@ -1591,9 +1591,9 @@ const images = service.bannerImages;
             <li key={item._id}>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{item.title}</span>
-                <span className="text-[11px] bg-[#F5E9D6] text-[#9B7B4A] px-2 py-[2px] rounded">
+                {/* <span className="text-[11px] bg-[#F5E9D6] text-[#9B7B4A] px-2 py-[2px] rounded">
                   Required
-                </span>
+                </span> */}
               </div>
               <p className="text-[14px] md:text-[16px] text-[#777] mt-1">
                 {item.description}
