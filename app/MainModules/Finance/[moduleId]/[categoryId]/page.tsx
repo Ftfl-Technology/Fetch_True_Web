@@ -14,6 +14,8 @@ import TopTrending from "@/src/components/FinanceCategories/TopTrending";
 import AllServices from "@/src/components/FinanceCategories/AllServices";
 import Link from "next/link";
 import { useModule } from "@/src/context/CategoriesContext";
+import { Bookmark } from "lucide-react";
+import SearchBar from "@/src/components/SearchBar/Search";
 
 // const tabs = [
 //   { id: "saving", label: "Saving", icon: "💰" },
@@ -37,6 +39,13 @@ const [currentCategory, setCurrentCategory] = useState<any>(null);
   categoryId: string;
 }>();
 
+  /* 🔥 FETCH SUB-CATEGORIES */
+
+     useEffect(() => {
+  if (moduleId) {
+    fetchCategoriesByModule(moduleId);
+  }
+}, [moduleId]);
 
 
   console.log("Category ID IN CLIENT:", categoryId);
@@ -91,7 +100,23 @@ const [currentCategory, setCurrentCategory] = useState<any>(null);
                    {currentCategory?.name}
               </h2>
             </div>
-            <img src="/image/vector (30).png" className="w-[25px] h-[25px]" />
+            {/* SEARCH */}
+                                    <div className="flex items-center gap-4 mr-10">
+                                        {/* SEARCH */}
+                                        <div className="hidden md:block relative w-[260px] lg:w-[280px]">
+                                             <SearchBar
+                                                                        value={searchQuery}
+                                                                        onChange={setSearchQuery}
+                                                                        placeholder="Search" 
+                                                                      />
+                                        </div>
+            
+                                        {/* BOOKMARK / LOCATION ICON */}
+                                        <Link href="/Account/MyAccount?section=Favorite">
+                        <Bookmark  className="w-8 h-8" color="#000"/>
+                        </Link>
+                                    </div>
+            {/* <img src="/image/vector (30).png" className="w-[25px] h-[25px]" /> */}
           </div>
         </div>
       </section>

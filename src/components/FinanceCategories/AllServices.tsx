@@ -33,7 +33,7 @@ export default function AllServices({ categoryId, moduleId,selectedSubCategory,s
 
     console.log("Top Legal API categoryId:", categoryId);
 
-          const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
+const { addFavourite, removeFavourite, isFavourite, fetchFavourites } =
               useFavourites();
             
               const { user } = useAuth();
@@ -141,7 +141,11 @@ if (filteredServices.length === 0)
                                            ?.toLowerCase()
                                            .replace(/\s+/g, "-")}
                                          detailslug={service._id}
-                           
+                             isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                                            />
               </Link>
             )})
@@ -172,7 +176,11 @@ if (filteredServices.length === 0)
                                                             ?.toLowerCase()
                                                             .replace(/\s+/g, "-")}
                                                           detailslug={service._id}
-                                            
+                                              isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
                                                             />
                 </Link>
               )})}

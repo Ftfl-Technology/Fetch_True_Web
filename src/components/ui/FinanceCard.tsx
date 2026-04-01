@@ -274,13 +274,14 @@ export default function FinanceCard({
        {keyvalues.length > 0 && (
   <div className="grid grid-cols-2 gap-4 text-[12px] ms-5 mt-5">
     {keyvalues.slice(0, 4).map((item: any, index: number) => (
-      <div key={item._id || index} className="flex items-start gap-2">
+      <div key={item._id || index} className="flex items-center gap-2">
+        <img src={item.icon} className="w-4 h-4" />
         <div>
          <p className="font-semibold text-[#606060] text-[14px]">
             {item.key}
            </p>
-        <p className="text-[#868686] text-[12px] pl-4">
-          {item.value}  {/* <-- render the string, not the object */}
+        <p className="text-[#868686] text-[12px] ">
+          {item.value} 
         </p>
         </div>
       </div>

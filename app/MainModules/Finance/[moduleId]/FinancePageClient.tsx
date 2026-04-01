@@ -106,16 +106,13 @@ export default function FinancePageClient({ searchQuery,setSearchQuery }:any) {
               </div>
 
               {/* Bookmark */}
-              <Link
-                href="/Account?section=Favorite"
-                className="flex items-center justify-center bg-white rounded-full p-2 w-[36px] h-[36px]"
-              >
-                <img
-                  src="/image/Vector (2).png"
-                  alt="Bookmark"
-                  className="w-[18.6px] h-[27.2px]"
-                />
-              </Link>
+             <Link href="/Account/MyAccount?section=Favorite" >
+            <img
+              src="/image/Vector (2).png"
+              className="w-[18px] h-[22px]"
+              alt="Bookmark"
+            />
+            </Link>
 
             </div>
           </div>
