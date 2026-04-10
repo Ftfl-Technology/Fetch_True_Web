@@ -1362,12 +1362,12 @@ const selectedPackageData = franchiseCards.find(
                   
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* <div className="flex items-center gap-2">
                   <FaStar color="#F5C518" size={24} />
                   <p className="text-[20px] sm:text-[24px]">
                     {service.averageRating?.toFixed(1)} ({service.totalReviews}+ reviews)
                   </p>
-                </div>
+                </div> */}
               </div>
 
               {/* INVESTMENT + EARNING */}
@@ -1399,7 +1399,7 @@ const selectedPackageData = franchiseCards.find(
 
     {/* Earning Potential */}
     <div className="bg-[#F5F5F5] rounded-lg p-6">
-      <p className="text-[16px] text-[#9A9A9A]">Earning Potential</p>
+      <p className="text-[16px] text-[#9A9A9A]">Monthly Earning Potential</p>
       <p className="text-[24px] font-medium mt-1">
         {service?.franchiseDetails?.monthlyEarnPotential?.length
       ? service.franchiseDetails.monthlyEarnPotential

@@ -8,7 +8,7 @@ import { useState, useRef, useEffect } from 'react';
 import WhyChooseUs from '@/src/components/Education/WhyChooseUs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
+import {  BookmarkIcon, ChevronLeft } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useModule } from '@/src/context/CategoriesContext';
 import { useBannerCategorySelection } from "@/src/context/BannerContext"
@@ -183,21 +183,7 @@ export default function EducationModulePage() {
                         <div className="flex items-center gap-4 mr-10">
                             {/* SEARCH */}
                             <div className="hidden md:block relative w-[260px] lg:w-[307px]">
-                                {/* <input
-                                    type="text"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="
-                                                      w-full
-                                                      rounded-lg bg-white
-                                                      border border-gray-300
-                                                      px-10 py-2
-                                                      text-sm
-                                                      outline-none
-                                                      focus:border-blue-500
-                                                  "
-                                /> */}
+                              
                                 <SearchBar
                                     value={searchQuery}
                                     onChange={setSearchQuery}
@@ -215,10 +201,9 @@ export default function EducationModulePage() {
                             </div>
 
                             {/* BOOKMARK / LOCATION ICON */}
-                            <img
-                                src="/image/EducationServicebookmark.png"
-                                className="w-[20px] cursor-pointer"
-                            />
+                           <Link href="/Account/MyAccount?section=Favorite">
+            <BookmarkIcon  className="w-8 h-8" color="#2818A3"/>
+            </Link>
                         </div>
 
 

@@ -1133,7 +1133,7 @@ const images = service.bannerImages;
       <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
 
         Selected Package :-
-        ₹{selectedPackageData?.price?.toLocaleString() || 0}
+        ₹{Math.floor(selectedPackageData?.discountedPrice || 0).toLocaleString()}
 
       </p>
 

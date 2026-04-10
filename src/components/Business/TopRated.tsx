@@ -158,12 +158,10 @@ const handleToggleFavourite = async (serviceId: string) => {
             {filteredServices.map((service) => {
                                 const fav = isFavourite(service._id);
 
-              const investment =
-                service.franchiseDetails?.investmentRange?.[0]?.range || "—";
-
-              const earnings =
-                service.franchiseDetails?.monthlyEarnPotential?.[0]?.range ||
-                "—";
+               const investment =
+              service.franchiseDetails.investmentRange?.[0];
+            const monthly =
+              service.franchiseDetails.monthlyEarnPotential?.[0];
 
               const roi = roiMap[service._id || "-"]
 
@@ -185,9 +183,8 @@ const handleToggleFavourite = async (serviceId: string) => {
                   title={service.serviceName}
                   category={service.category?.name || ""}
                   earnpercent={earnpercent}
-                  investment={investment}
-                  parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
-                  earnings={earnings}
+                  earnings={`${monthly?.range} ${monthly?.parameters}`}
+                investment={`${investment?.range} ${investment?.parameters}`}
                   roi={roi}
                   rating={service.averageRating}
                   trusted={true}

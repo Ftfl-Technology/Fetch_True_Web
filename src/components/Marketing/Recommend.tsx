@@ -159,8 +159,8 @@ export default function RecommendedForYou({ moduleId,searchQuery,categoryId }: P
       <div className="flex gap-4 overflow-x-auto scrollbar-hide">
         <HorizontalScroll>
         {filteredServices.map((service) => {
-          const firstPackage = service.serviceDetails?.packages?.[0];
-              const fav = isFavourite(service._id);
+          // const firstPackage = service.serviceDetails?.packages?.[0];
+          //     const fav = isFavourite(service._id);
 
 
           return (

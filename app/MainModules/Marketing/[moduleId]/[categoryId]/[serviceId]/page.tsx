@@ -358,12 +358,16 @@ import { useParams } from "next/navigation";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
 import { useFranchiseModel } from "@/src/context/FranchiseContext";
 import { useReview } from "@/src/context/ReviewContext";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useServiceProviders } from "@/src/context/ServicewiseProviderContext";
 import Link from "next/link";
 import { useCheckout } from "@/src/context/CheckoutContext";
+import TermsConditionsModal from "@/src/components/Section/termsandconditionPopup";
 
- const extractBenefits = (benefits: string[]): string[] => {
+
+
+
+const extractBenefits = (benefits: string[]): string[] => {
    if (!benefits?.length) return [];
  
    // SSR safety
@@ -414,13 +418,52 @@ const buildRatingBreakdown = (
    return "#EF4444";
  };
 
-export default function LegalDetailsPage() {
+export default function MarketingDetailsPage() {
 
    const { moduleId, serviceId } = useParams<{
       moduleId: string;
       serviceId: string;
     }>();
         const { providers,fetchProvidersByService } = useServiceProviders();
+
+          const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
 
 
 const mappedProviders = providers.map((p) => ({
@@ -437,6 +480,8 @@ const { selectedPackage, setSelectedPackage } = useCheckout();
       const { service, loading, error, fetchServiceDetails } = useServiceDetails();
         const { models, fetchFranchiseModels, franchiseloading } = useFranchiseModel();
         const { reviewServices, fetchReviews } = useReview();
+        const [openTC, setOpenTC] = useState(false);
+        
 
     
            useEffect(() => {
@@ -507,49 +552,77 @@ const images = service.bannerImages;
 
   return (
     <div className="bg-[#F4F4F4] w-full ">
-     <section className="">
-       <div className="w-full flex fixed justify-between px-12 pt-5 z-20 bg-white/10">
-    <Link
-      href={`/MainModules/Marketing/${moduleId}`}
-      
-    >
-      {/* <FiLayers size={20} /> */}
-      <span className="flex items-center gap-2 text-[#1b110d] font-medium text-[18px] hover:underline "><ChevronLeft size={20} className="cursor-pointer" />Service Details</span>
+
+     <section className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/90 border-b">
+
+  <div className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 px-4 sm:px-6 lg:px-12 py-3">
+
+    {/* LEFT : Back Navigation */}
+
+    <Link href={`/MainModules/Marketing/${moduleId}`}>
+      <span className="flex items-center gap-2 text-[#1a0b05] font-medium text-[16px] sm:text-[18px] hover:underline">
+
+        <ChevronLeft size={20} className="cursor-pointer" />
+
+        Service Details
+
+      </span>
     </Link>
 
-     {/* RIGHT : Actions */}
-    <div className="flex items-center gap-3 mb-5 ">
-<p className="bg-gray-300 p-2 rounded">Selected Package :-
-  ₹{selectedPackageData
-    ? Math.floor(Number(selectedPackageData.discountedPrice)).toLocaleString("en-IN")
-    : 0}
-</p>
+
+    {/* RIGHT : Actions */}
+
+    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
+
+      <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
+
+        Selected Package :-
+        ₹{Math.floor(selectedPackageData?.discountedPrice || 0).toLocaleString("en-IN")}
+
+      </p>
+
+
       <Link
-        href={selectedPackage?._id
-    ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
-    : "#"}>
-       <button className="bg-green-500 hover:bg-green-600 text-white
-                   px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+        href={
+          selectedPackage?._id
+            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            : "#"
+        }
       >
-        Check out</button>
+
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white
+                     px-4 sm:px-5 py-2 rounded
+                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
+        >
+
+          Check out
+
+        </button>
+
       </Link>
 
+
       <button
+        onClick={() => handleSocialShare("whatsapp")}
         className="bg-blue-600 hover:bg-blue-700 text-white
                    px-4 sm:px-5 py-2 rounded
-                   flex items-center gap-2 text-[14px]"
+                   flex items-center gap-2 text-[13px] sm:text-[14px]"
       >
+
         <Share2 size={16} />
+
         Share
+
       </button>
+
     </div>
-    
-    </div>
+
+  </div>
 
 </section>
 
-        <section className="py-6 sm:py-8 lg:py-10 lg:px-10">
+        <section className="py-10 sm:py-8 lg:pt-25 lg:pb-15 lg:px-10">
       <div className=" w-full  mx-auto bg-white rounded-[4px] p-4  lg:p-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
         
         {/* LEFT IMAGE */}
@@ -586,12 +659,30 @@ const images = service.bannerImages;
             </span>
           </div>
 
+          {/* Price */}
+      <div className="flex flex-wrap items-center  gap-6  rounded-lg px-4 py-3 mb-5">
+        <p className="text-[16px] sm:text-[18px] text-[#868686] gap-5 flex items-center">
+          Starting{" "} 
+          <span className="font-medium text-[20px] lg:text-[28px] text-[#232323]">
+             ₹{selectedPackage
+  ? Math.floor(Number(selectedPackage.discountedPrice)).toLocaleString("en-IN")
+  : 0}/
+          </span>
+          <span className="font-medium text-[20px] sm:text-[22px] text-[#868686] line-through">
+             ₹{selectedPackage
+  ? Math.floor(Number(selectedPackage.price)).toLocaleString("en-IN")
+  : 0}/
+          </span>
+          <span className="text-[16px] text-[#2164F4]">{selectedPackage?.discount}% OFF</span>
+        </p>
+      </div>
+
           {/* Key Values */}
           <div className="grid grid-cols-3 gap-4 mb-6">
         {service?.keyValues?.map((item) => (
-          <div key={item._id} className="flex items-center gap-3">
+          <div key={item._id} className="flex items-center gap-2 bg-[#2164F41A] p-2 rounded-[15px]">
             <img src={item.icon} className="w-4 h-4" />
-            <div>
+            <div className="">
               <p className="text-[13px] text-[#8B8B8B]">{item.key}</p>
               <p className="text-[14px] font-medium">{item.value}</p>
             </div>
@@ -599,60 +690,9 @@ const images = service.bannerImages;
         ))}
       </div>
 
-          {/* Cost + Time */}
-          <div className="flex  sm:flex-row gap-4 lg:gap-6 mb-6">
-            
-            {/* Cost */}
-            <div className="border border-[#BEBEBE] rounded-[8px] p-4 w-full sm:w-1/2 lg:w-[299px]">
-              <p className="text-[18px] lg:text-[20px] text-[#7A7A7A] mb-1">
-                Total Cost
-              </p>
-
-              <p className="text-[22px] lg:text-[26px] font-semibold text-[#1E1E1E]">
-                {/* ₹{service?.serviceDetails?.packages?.[0]?.discountedPrice} */}
-                ₹{selectedPackage
-  ? Math.floor(Number(selectedPackage.discountedPrice)).toLocaleString("en-IN")
-  : 0}
-              </p>
-
-              {/* <div className="flex items-center gap-2 mt-1">
-                <span className="line-through text-[#9E9E9E] text-[16px] lg:text-[18px]">
-                  ₹{service?.serviceDetails?.packages?.[0]?.price}
-                </span>
-                <span className="text-[12px] lg:text-[14px] text-white bg-[#BC9958] px-2 py-[2px] rounded">
-                  {service?.serviceDetails?.packages?.[0]?.discount}% OFF
-                </span>
-              </div> */}
-              {selectedPackage && (
-    <div className="flex items-center gap-2 mt-1">
-      <span className="line-through text-[#9E9E9E] text-[16px] lg:text-[18px]">
-        ₹{selectedPackage.price}
-      </span>
-      <span className="text-[12px] lg:text-[14px] text-white bg-[#BC9958] px-2 py-[2px] rounded">
-        {selectedPackage.discount}% OFF
-      </span>
-    </div>
-  )}
-            </div>
-
-            {/* Time */}
-            <div className="border border-[#D9D9D9] rounded-[6px] p-4 w-full sm:w-1/2 lg:w-[299px]">
-              <p className="text-[18px] lg:text-[20px] text-[#7A7A7A] mb-1">
-                Time Required
-              </p>
-
-              <p className="text-[22px] lg:text-[26px] font-semibold text-[#1E1E1E]">
-                {service?.serviceDetails?.timeRequired?.[0]?.range}
-              </p>
-
-              <p className="text-[14px] lg:text-[16px] text-[#7A7A7A]">
-                {service?.serviceDetails?.timeRequired?.[0]?.parameters}
-              </p>
-            </div>
-          </div>
 
           {/* Franchise Commission */}
-          <div className="w-full lg:w-[614px] border-2 border-[#5B3527] rounded-[12px] px-4 py-4 flex flex-col sm:flex-row justify-between gap-4">
+          <div className="w-full lg:w-[614px] border-t-4 bg-[#F0F1F3] border-[#2164F4] rounded-[12px] px-4 py-4 flex flex-col sm:flex-row justify-between gap-4">
             <div>
               <p className="text-[22px] lg:text-[28px] font-semibold text-[#1E1E1E]">
                 Franchise Commission
@@ -662,9 +702,12 @@ const images = service.bannerImages;
               </p>
             </div>
 
-            <button className="text-[#BC9958] text-[16px] lg:text-[20px] font-medium self-end">
-              T&C →
-            </button>
+             <span
+  className="cursor-pointer text-[#5B3527]"
+  onClick={() => setOpenTC(true)}
+>
+  T&C &gt;
+</span>
           </div>
 
         </div>
@@ -672,16 +715,16 @@ const images = service.bannerImages;
         </section>
 
          {/* BENEFITS */}
-                  <section className="w-full  mt-8 ps-4">
-                    <div className=" max-w-[1400px] flex flex-col gap-5">
-                      <div className="rounded-xl p-6 sm:p-8">
-                      <h2 className="text-[36px] text-[#5B3527] text-center font-medium">
+                  <section className="">
+                    <div className=" flex flex-col gap-5">
+                      <div className="rounded-xl ">
+                      <h2 className="text-[36px] text-[#2164F4] text-center font-medium">
                         Benefits
                       </h2>
         
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-15 gap-y-5 lg:ms-10">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-10 gap-y-5 max-w-[1440px]  mx-auto bg-white rounded-[24px] p-4  lg:p-8 border-t-4 border-[#2164F4] ps-4 ">
                         {extractBenefits(service?.serviceDetails?.benefits || []).map((item, index) => (
-                          <div key={index} className="flex items-center gap-3 lg:ms-15">
+                          <div key={index} className="flex items-center gap-3 lg:ms-10">
                           
                             <p className="text-[20px] lg:text-[22px] text-[#606060] font-medium">
                               {item}
@@ -694,15 +737,15 @@ const images = service.bannerImages;
                   </section>
         
                   {/* ABOUT */}
-                  <section className="max-w-[1400px] mx-auto px-4 sm:px-6 mt-12">
+                  <section className=" mx-auto px-4 sm:px-6 mt-12">
   {/* Title */}
-  <h2 className="text-[#5B3527] text-[28px] sm:text-[32px] font-medium mb-4 text-center">
+  <h2 className="text-[#2164F4] text-[28px] sm:text-[32px] font-medium mb-4 text-center">
     About Us
   </h2>
 
   {/* Paragraph */}
   {service?.serviceDetails?.aboutUs && (
-            <div className="text-[#868686] text-[18px] lg:text-[22px]"
+            <div className="text-[#868686] text-[18px] lg:text-[22px] max-w-[1440px]  mx-auto bg-white rounded-[24px] p-4  lg:p-8 border-t-4 border-[#2164F4] ps-4"
             dangerouslySetInnerHTML={{ __html: aboutHtml }}>
           
             </div>
@@ -726,21 +769,22 @@ const images = service.bannerImages;
       <div className="max-w-[1440px] mx-auto px-4">
         
         {/* Title */}
-        <h2 className="text-center text-[28px] md:text-[32px] font-medium text-[#5B3527] mb-12">
+        <h2 className="text-center text-[28px] md:text-[32px] font-medium text-[#2164F4] mb-12">
           Why Choose Us?
         </h2>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 ">
           {service?.serviceDetails?.whyChooseUs?.map((item, index) => (
-            <div key={item._id} className="border border-[#5B3527] rounded-[6px] p-6 text-center ">
-              <h3 className="text-[20px] font-medium mb-4">
-                {item.title}
-              </h3>
+            <div key={item._id} className=" border-t-4 border-[#2164F4] bg-white rounded-[10px] p-6 text-center ">
               <div className="mx-auto mb-4">
                 <img src={item.icon} alt={item.title} className="w-12 h-12 mx-auto" />
               </div>
-              <p className="text-[#8A8A8A] text-[18px] leading-[24px]">
+              <h3 className="text-[20px] lg:text-[24px] font-semibold text-[#606060] mb-4">
+                {item.title}
+              </h3>
+              
+              <p className="text-[#606060] text-[18px] leading-[24px]">
                 {item.description}
               </p>
             </div>
@@ -751,52 +795,69 @@ const images = service.bannerImages;
       </div>
                    </section>
 
-<section className="w-full py-10 ">
-  <div className="max-w-[760px] mx-auto px-4">
+    <section className="py-14 bg-[#f7f9fc]">
+  <div className="max-w-4xl mx-auto px-4">
 
     {/* Heading */}
-    <h2 className="text-center text-[26px] font-semibold text-[#5B3527] mb-2">
-      How it works?
+    <h2 className="text-center text-[28px] font-semibold text-[#2b5fd9] mb-12">
+      How It Works?
     </h2>
 
-    <p className="text-center text-[18px] text-[#868686]  mx-auto mb-12 leading-relaxed">
-      Follow our streamlined 7-step process to register your Limited Liability Partnership.
-      We handle everything from consultation to certificate delivery with complete transparency.
-    </p>
-
-    {/* Steps */}
-    <div className="relative pl-16 lg:pl-60 flex flex-col gap-10">
+    <div className="relative">
 
       {/* Vertical Line */}
-      <span className="absolute left-[24px] lg:left-[200px] top-1 bottom-1 w-px bg-[#D6D6D6]" />
+      <div className="absolute left-[38px] top-0 bottom-0 w-[2px] bg-blue-200"></div>
 
-      {/* Step */}
-      {service?.serviceDetails?.howItWorks?.map((item) => (
-        <div key={item._id} className="relative flex gap-8">
+      {/* Steps */}
+      <div className="space-y-12">
 
-          {/* Dot on line */}
-          <span className="absolute left-[-46px] top-[6px] w-3 h-3 rounded-full bg-[#C9A46A]" />
+        {service?.serviceDetails?.howItWorks?.map((item, index) => {
+          return (
+            <div
+              key={item._id}
+              className="flex items-start gap-6 relative"
+            >
 
-          {/* Content */}
-          <div>
-            {/* Icon */}
-            <div className="w-7 h-7 mb-2 flex items-center justify-center text-[#BC9958] text-[16px]">
-              <img src={item.icon} alt={item.title} />
+              {/* Icon Circle */}
+              <div className="relative z-10 flex items-center justify-center w-[76px] h-[76px] rounded-full border-2 border-blue-400 bg-white shadow-sm">
+                <img
+                  src={item.icon}
+                  alt={item.title}
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1">
+
+                {/* Header Row */}
+                <div className="flex items-center justify-between">
+
+                  <h3 className="text-[18px] font-semibold text-[#2d3748]">
+                    {item.title}
+                  </h3>
+
+                  <span className="text-[11px] bg-blue-500 text-white px-3 py-1 rounded-sm">
+                    STEP {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                </div>
+
+                {/* Description */}
+                <p className="text-[14px] text-gray-500 mt-2 leading-relaxed">
+                  {item.description}
+                </p>
+
+              </div>
+
             </div>
+          );
+        })}
 
-            {/* Title */}
-            <p className="text-[18px] font-medium text-[#868686] mb-1">
-              {item.title}
-            </p>
+      </div>
 
-            {/* Description */}
-            <p className="text-[14px] text-[#9A9A9A] max-w-[420px]">
-              {item.description}
-            </p>
-          </div>
-        </div>
-      ))}
     </div>
+
   </div>
 </section>
 
@@ -806,51 +867,119 @@ const images = service.bannerImages;
 
 
 
-                   <section className="w-full lg:w-[1440px] py-12 ms-0  lg:ms-12 mb-10 md:py-16 bg-[#5B3527] relative">
-  {/* INNER SHADOW */}
-  <div className="absolute inset-0 pointer-events-none shadow-[inset_0_6px_12px_rgba(0,0,0,0.25)]" />
+<section className="w-full bg-[#EEEFF3] py-16 relative">
 
-  <div className="relative max-w-[1347px] mx-auto px-4 text-white">
-    
-    {/* Title */}
-    <h2 className="text-center text-[22px] sm:text-[24px] md:text-[28px] font-semibold mb-10 md:mb-12">
+  {/* Inner Shadow */}
+  <div className="absolute inset-0 pointer-events-none shadow-[inset_2px_4px_24px_rgba(0,0,0,0.25)]" />
+
+  <div className="relative max-w-[1100px] mx-auto px-4">
+
+    {/* Heading */}
+    <h2 className="text-center text-[#2B5FD9] text-[28px] font-semibold mb-20">
       Assured By Fetch True
     </h2>
 
-    {/* Content Grid */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-16 gap-y-8 md:gap-y-10">
 
-      {/* Left Column */}
-        {service?.serviceDetails?.assuredByFetchTrue?.map((item, index) => (
-          <div key={index} className="flex items-start gap-4">
-            <img
-              src={item.icon}
-              className="w-[36px] h-[38px] sm:w-[42px] sm:h-[45px] md:w-[47px] md:h-[50px] text-[#BC9958]"
-              alt={item.title}
-            />
-            <div>
-              <h4 className="font-semibold text-[18px] sm:text-[20px] md:text-[24px]">
-                {item.title}
-              </h4>
-              <p className="text-[15px] sm:text-[16px] md:text-[20px] text-[#BEBEBE]">
-                {item.description}
-              </p>
-            </div>
+    {/* CENTER TIMELINE LINE */}
+    {/* <div className="absolute left-1/2 top-[120px] bottom-0 w-[2px] bg-[#D6DCEB] -translate-x-1/2" /> */}
+
+
+    <div className="relative flex flex-col gap-8">
+
+      {service?.serviceDetails?.assuredByFetchTrue?.map((item, index) => {
+
+        const isLeft = index % 2 === 0;
+
+        return (
+          <div
+            key={index}
+            className="relative flex w-full"
+          >
+
+            {/* LEFT SIDE CARD */}
+            {isLeft && (
+              <div className="relative w-1/2 flex justify-end">
+
+                <div className="relative bg-[#FAF7F3] border-t-4 border-[#2164F4] rounded-md shadow-md w-[420px] px-6 py-8">
+
+                  {/* DIAMOND */}
+                  <div className="absolute top-1/2 -translate-y-1/2 right-[-40px]
+                  w-[80px] h-[80px]
+                  bg-gradient-to-br from-[#FFFCF9] to-[#D8DEEE]
+                  rotate-45 flex items-center justify-center shadow-md z-10">
+
+                    <img
+                      src={item.icon}
+                      alt={item.title}
+                      className="rotate-[-45deg] w-[30px]"
+                    />
+
+                  </div>
+
+
+                  <h4 className="text-[18px] text-left font-semibold">
+                    {item.title}
+                  </h4>
+
+                  <p className="text-[14px] mt-2 text-left text-gray-600">
+                    {item.description}
+                  </p>
+
+                </div>
+
+              </div>
+            )}
+
+
+            {/* RIGHT SIDE CARD */}
+            {!isLeft && (
+              <div className="relative w-1/2 ml-auto flex justify-start">
+
+                <div className="relative bg-[#FAF7F3] border-t-4 border-[#2164F4] rounded-md shadow-md w-[420px] px-6 py-6">
+
+                  {/* DIAMOND */}
+                  <div className="absolute top-1/2 -translate-y-1/2 left-[-40px]
+                  w-[80px] h-[80px]
+                  bg-gradient-to-br from-[#FFFCF9] to-[#D8DEEE]
+                  rotate-45 flex items-center justify-center shadow-md z-10">
+
+                    <img
+                      src={item.icon}
+                      alt={item.title}
+                      className="rotate-[-45deg] w-[30px]"
+                    />
+
+                  </div>
+
+
+                  <h4 className="text-[18px] text-right font-semibold">
+                    {item.title}
+                  </h4>
+
+                  <p className="text-[14px] mt-2 text-right text-gray-600">
+                    {item.description}
+                  </p>
+
+                </div>
+
+              </div>
+            )}
+
           </div>
-        ))}
-
-   
+        );
+      })}
 
     </div>
+
   </div>
 </section>
 
 {/* packages */}
-<section className="w-full py-8 lg:py-10 ">
-  <div className="max-w-[1200px] mx-auto px-4">
-    
+<section className="w-full py-10 bg-[#f7f7f7]">
+  <div className="max-w-[1400px] mx-auto px-4">
+
     {/* Title */}
-    <h2 className="text-center text-[28px] sm:text-[32px] font-semibold text-[#5A3A1B] mb-12">
+    <h2 className="text-center text-[28px] sm:text-[32px] font-semibold text-[#2B5FD9] mb-12">
       Packages
     </h2>
 
@@ -859,117 +988,143 @@ const images = service.bannerImages;
       {service?.serviceDetails?.packages.map((pkg, index) => {
         const isPopular = index === 1;
         const isSelected = selectedPackage?._id === pkg._id;
+
         return (
-          
-          <div key={pkg._id}
-        onClick={() =>
-          setSelectedPackage(
-            {
-              _id: pkg._id,
-              name: pkg.name,
-              price: pkg.price,
-              discount: pkg.discount,
-              discountedPrice: pkg.discountedPrice,
-            },
-            serviceId
-          )
-        }
-        className={`cursor-pointer bg-white rounded-[12px] shadow-md p-6 sm:p-8 flex flex-col justify-between border-2 ${
-          isSelected ? "border-[#BC9958]" : "border-transparent"
-        }`}>
+          <div
+            key={pkg._id}
+            onClick={() =>
+              setSelectedPackage(
+                {
+                  _id: pkg._id,
+                  name: pkg.name,
+                  price: pkg.price,
+                  discount: pkg.discount,
+                  discountedPrice: pkg.discountedPrice,
+                },
+                serviceId
+              )
+            }
+            className={`relative cursor-pointer bg-white rounded-xl shadow-md p-6 flex flex-col border-t-4 transition ${
+              isSelected ? "border-[#2B5FD9]" : "border-transparent"
+            }`}
+          >
+
+            {/* Most Popular
             {isPopular && (
-                  <span className="absolute -mt-10 left-1/2 -translate-x-1/2 z-10  w-[90px] bg-[#C9A36A] text-white text-[12px] px-2  py-[2px] rounded-full">
-                    Most Popular
-                  </span>
-                )}
-        <div className="relative text-[#C9A36A] flex justify-items-start gap-2 text-[20px] font-semibold mb-1">
-          <span className="">₹{Math.floor(pkg.discountedPrice)} /</span>
-          <span className="text-[#868686] text-[16px]"><s>₹{pkg.price}</s></span>
-          <p className="bg-[#BC9958] text-[#FFFFFF] text-[14px]  font-normal p-[2px] rounded-[3px]">{pkg.discount}% OFF</p>
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C9A36A] text-white text-xs px-3 py-1 rounded-full">
+                Most Popular
+              </span>
+            )} */}
+
+            {/* Plan Name */}
+            <h3 className="text-lg font-semibold text-[#868686] text-center mb-4">
+              {pkg.name}
+            </h3>
+
+            {/* Price Box */}
+            <div className="border border-[#E5C9A8] rounded-md pt-3 text-center mb-6 w-[214px] mx-auto">
+              <p className="text-gray-400 text-sm line-through">
+                ₹{pkg.price} <span className="text-[#2164F4]">({pkg.discount}% Off)</span>
+              </p>
+
+              <h2 className="text-2xl font-bold text-[#232323]">
+                ₹{Math.floor(pkg.discountedPrice)}
+              </h2>
+
+              <p className="text-gray-400 text-sm mt-1">Onwards</p>
+            </div>
+
+            {/* Features */}
+            <div className="mb-6">
+              <p className="font-semibold text-gray-700 mb-3 text-center">
+                What You Get -
+              </p>
+
+              <ul className="space-y-2 text-sm text-gray-600 ">
+                {pkg.whatYouGet?.map((item, i) => (
+                  <li key={i} className="flex items-center justify-center gap-2">
+                    <span className="text-green-500">✔</span> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Button */}
+            {/* <button className="mt-auto w-full bg-[#5A3A1B] text-white py-2 rounded-md text-sm hover:opacity-90">
+              Get Started
+            </button> */}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+
+<section className="w-full bg-[#f3f3f3] py-10">
+  <div className="max-w-[1400px] mx-auto px-4">
+
+    {/* Grid Layout */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+      {/* LEFT CARD */}
+      <div>
+
+        {/* Heading */}
+        <div className="bg-[#2164F4] 
+        text-white text-center text-[22px] font-semibold 
+        py-3 rounded-xl shadow-md">
+          We Required
         </div>
 
-        <h3 className="text-[18px] font-semibold text-[#5A3A1B] mb-2 text-start">
-          {pkg.name}
-        </h3>
+        {/* Content Box */}
+        <div className="bg-white mt-3 rounded-xl shadow-md border-t-4 border-[#2164F4] p-6 space-y-5">
 
-        <p className="text-[14px] text-[#777] mb-6">
-          Perfect for individuals and small businesses
-        </p>
+          {service?.serviceDetails?.weRequired?.map((item, index) => (
+            <div key={index} className="flex items-start gap-3 text-gray-600 text-[17px]">
+              <span className="text-green-500 text-lg mt-[2px]">
+                ✓
+              </span>
+            {item.title}
 
-        {pkg.whatYouGet?.map((item, i) => (
-                    <li key={i} className="flex gap-2">
-                      ✅ {item}
-                    </li>
-                  ))}
-
-        <button className="w-full bg-[#5A3A1B] text-white py-2 rounded-[6px] text-[14px] mt-5">
-          Get Started
-        </button>
-      </div>
-        )
-      })}
-
-
-    </div>
-  </div>
-</section>
-
-
-<section className="w-full py-8 md:py-10">
-  <div className="max-w-[1200px] mx-auto px-4">
-
-    {/* Title */}
-    <h2 className="text-center text-[26px] sm:text-[26px] md:text-[32px] font-semibold text-[#5A3A1B] mb-8 md:mb-12">
-      Documents We Required
-    </h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-
-          {service?.serviceDetails?.weRequired?.map((item) => (
-            <li key={item._id}>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium">{item.title}</span>
-                <span className="text-[11px] bg-[#F5E9D6] text-[#9B7B4A] px-2 py-[2px] rounded">
-                  Required
-                </span>
-              </div>
-              <p className="text-[14px] md:text-[16px] text-[#777] mt-1">
-                {item.description}
-              </p>
-            </li>
+            </div>
           ))}
 
+        </div>
       </div>
-  </div>
-</section>
 
 
-<section className="w-full py-8 md:py-10">
-  <div className="max-w-[1200px] mx-auto px-4">
+      {/* RIGHT CARD */}
+      <div>
 
-    {/* Title */}
-    <h2 className="text-center text-[26px] sm:text-[26px] md:text-[32px] font-semibold text-[#5A3A1B] mb-6 md:mb-12">
-      We Deliver
-    </h2>
+        {/* Heading */}
+        <div className="bg-[#2164F4] 
+        text-white text-center text-[22px] font-semibold 
+        py-3 rounded-xl shadow-md">
+          We Deliver
+        </div>
 
+        {/* Content Box */}
+        <div className="bg-white mt-3 rounded-xl shadow-md border-t-4 border-[#2164F4] p-6 space-y-5">
 
-    {/* Content */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
+          {service?.serviceDetails?.weDeliver?.map((item, index) => (
+            <div key={index} className="flex items-start gap-3 text-gray-600 text-[17px]">
 
-      {service?.serviceDetails?.weDeliver?.map((item) => (
-            <li key={item._id}>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium">{item.title}</span>
-                <span className="text-[11px] bg-[#F5E9D6] text-[#9B7B4A] px-2 py-[2px] rounded">
-                  Required
-                </span>
-              </div>
-              <p className="text-[14px] md:text-[16px] text-[#777] mt-1">
-                {item.description}
-              </p>
-            </li>
+              {/* Check Icon */}
+              <span className="text-green-500 text-lg mt-[2px]">
+                ✓
+              </span>
+
+              {item.title}
+
+            </div>
           ))}
 
+        </div>
+      </div>
+
     </div>
+
   </div>
 </section>
 
@@ -978,23 +1133,25 @@ const images = service.bannerImages;
   cards={service?.serviceDetails?.moreInfo?.map((item) => ({
     title:item.title,
     description:item.description,
-    image:item.image
+    image:item.image,
+    
   }))}
 />
 
 <ChooseProvider
   title="Choose Provider"
-  buttonColor="bg-[#5B3527]"
+  buttonColor="bg-[#2164F4]"
   providers={mappedProviders}
 />
 
-
+<div className="max-w-[1400px] bg-white border-t-4 border-[#2164F4] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10  rounded-[12px] mt-8">
 <TermsConditions
   heading="Terms & Conditions"
   html={service?.serviceDetails?.termsAndConditions?.join("") || ""}
 />
+</div>
 
-
+<div className="max-w-[1400px]  border-t-4 border-[#2164F4] mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10  rounded-[12px] mt-8">
 <FAQs
   title="FAQs"
       items={service?.serviceDetails?.faq?.map((item) => ({
@@ -1002,15 +1159,17 @@ const images = service.bannerImages;
         answer: item.answer,
       }))}
 />
+</div>
+
 
 {reviewServices && (
-  <div className="max-w-[1400px]  mx-4 lg:mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10  rounded-[12px] mt-8">
+  <div className="max-w-[1400px]  mx-4 lg:mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-10  rounded-[12px] mt-8 border-t-4 border-[#2164F4]">
     <RatingsReviews
       title="Ratings & Reviews"
       subtitle="Complete overview of service experience."
       averageRating={reviewServices.averageRating}
       // totalRatings={reviewServices.totalReviews}
-      primaryColor="#BC9958"
+      primaryColor="#2164F4"
       breakdown={buildRatingBreakdown(
         reviewServices.ratingDistribution,
         reviewServices.totalReviews
@@ -1034,9 +1193,19 @@ const images = service.bannerImages;
       shareLink={`/service/${service?._id}`}
 />
 
-
+{openTC && (
+  <TermsConditionsModal
+    onClose={() => setOpenTC(false)}
+    html={
+      service?.franchiseDetails?.termsAndConditions ||
+      "<p>No Terms & Conditions available</p>"
+    }
+  />
+)}
 
                    
     </div>
   );
 }
+
+

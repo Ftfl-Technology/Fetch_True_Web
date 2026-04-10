@@ -1045,31 +1045,13 @@ export default function AIHubModulesPage() {
                             {/* Search Box */}
                             <div className='gap-8 flex'>
                                 <div className="relative w-full md:w-[330px] lg:w-[520px]">
-                                    {/* <input
-                                        type="text"
-                                        placeholder="Search"
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-
-                                        className="
-                                w-full
-                                rounded-full bg-white
-                                border border-gray-300
-                                px-10 py-2
-                                text-sm mr-[150px]
-                                outline-none
-                                focus:border-blue-500
-                                "
-                                    /> */}
+                              
                                     <SearchBar
                                                                     value={searchQuery}
                                                                     onChange={setSearchQuery}
                                                                     placeholder="Search"
                                                                 />
-                                    {/* search icon */}
-                                    {/* <span className="absolute left-3 top-1/2 -translate-y-3.5 text-gray-400">
-                                        <img src="/image/itsearch.png" alt="searchicon" className='w-[20.66px] h-[18.66px] text-[#009ABF]' />
-                                    </span> */}
+                                 
                                 </div>
 
                                 <div className='bg-white rounded-full justify-center md:p-2  flex'>
@@ -1096,9 +1078,7 @@ export default function AIHubModulesPage() {
 
                             {/* Overlay Content */}
                             <div className="absolute inset-0 z-10 p-6 md:p-2 text-white">
-                                {/* <div className="text-[46.14px] lg:text-[209.17px] text-center -ml-6 lg:-mt-10 md:ml-2 whitespace-nowrap text-gray-300 font-bold leading-none">
-                                AI HUB
-                            </div> */}
+                               
                                 <div
                                     className="text-[146.14px] lg:text-[209.17px] text-center -ml-6 lg:-mt-10 md:ml-2 whitespace-nowrap font-bold leading-none text-[#E2E9F1]"
                                     style={{
@@ -1120,11 +1100,7 @@ export default function AIHubModulesPage() {
                                     AI HUB
                                 </div>
 
-                                {/* <img
-                                src="/image/AIHubrobot.png"
-                                alt="Decode"
-                                className="w-[200px] object-cover md:w-[417px] md:h-[917px] md:-mt-[600px] -mt-25 absolute left-1/2 -translate-x-1/2"
-                            /> */}
+                            
                                 <img
                                     src="/image/AIHubrobot.png"
                                     alt="Decode"
@@ -1228,44 +1204,7 @@ export default function AIHubModulesPage() {
 
                 {/*  ================= MOBILE CATEGORY SWIPE =================  */}
                 <section className="md:hidden max-w-full mt-6">
-                    {/* <div
-                        ref={sliderRef}
-                        className="flex overflow-x-hidden snap-x snap-mandatory scroll-smooth"
-                     >
-                        {slides.map((slide, slideIndex) => (
-                            <div
-                                key={slideIndex}
-                                className="min-w-full snap-center"
-                            >
-                                <div className="grid grid-cols-3 gap-0">
-                                    {slide.map((item, i) => (
-                                        <div
-                                            key={i}
-                                            onClick={() =>
-                                                router.push(`/MainModules/AIHub/${(item._id)}`)
-                                            }
-                                            className="flex flex-col space-y-6 items-center text-center"
-                                        >
-                                            
-                                            <div className="w-[90px] h-[96px] flex items-center justify-center border border-[#A7DFFF] rounded-2xl bg-[#F6FCFF] p-1">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="w-full h-full object-contain"
-                                                />
-                                            </div>
-
-                                            
-                                            <span className="text-[12px] mb-4 leading-[16px] font-medium max-w-[96px]">
-                                                {item.name}
-                                            </span>
-                                        </div>
-
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div> */}
+                   
 
                     {slides.length > 0 && (
                         <div
@@ -1320,11 +1259,7 @@ export default function AIHubModulesPage() {
 
                 <Recommendation moduleId={moduleId} searchQuery={searchQuery}/>
                 <MostPopular moduleId={moduleId} searchQuery={searchQuery}/>
-                {/* <section className="bg-[#C9DEE9] w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mt-10">
-                    <div className="max-w-8xl mx-auto px-6 md:px-12 mb-6 lg:mb-12 py-8 md:py-12">
-                        <LiveSection />
-                    </div>
-                </section> */}
+                
                 <TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
 
                 <section className="bg-[#C9DEE9] w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mt-10">

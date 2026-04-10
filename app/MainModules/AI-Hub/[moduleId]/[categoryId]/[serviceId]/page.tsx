@@ -1108,7 +1108,7 @@ const images = service.bannerImages;
  <p className="bg-gray-200 text-gray-700 px-3 py-2 rounded text-[13px] sm:text-[14px] whitespace-nowrap">
 
         Selected Package :-
-        ₹{selectedPackageData?.price?.toLocaleString() || 0}
+        ₹{Math.floor(selectedPackageData?.discountedPrice || 0)}
 
       </p>
 
@@ -1214,9 +1214,9 @@ const images = service.bannerImages;
       </div>
 
       {/* Price */}
-      <div className="flex flex-wrap items-center gap-3 sm:gap-6 border border-[#BEBEBE] rounded-lg px-4 py-3 mb-5">
+      <div className="flex flex-wrap items-center gap-3 border border-[#BEBEBE] rounded-lg px-4 py-3 mb-5">
         <img src="/image/Vector (34).png" className="w-5 h-5" />
-        <p className="text-[16px] sm:text-[18px] text-[#868686]">
+        <p className="text-[16px] sm:text-[18px] text-[#868686] flex gap-3 items-center">
           Starting{" "} 
           <span className="font-medium text-[20px] sm:text-[22px] text-[#232323]">
              ₹{selectedPackage
@@ -1510,13 +1510,19 @@ const images = service.bannerImages;
           </div>
 
           <div className="bg-white/80 rounded-xl p-5 space-y-3">
-            {service?.serviceDetails?.weRequired.map((item) => (
-              <div key={item._id} className="flex gap-3 text-[#6F6F6F] text-[14px]">
-                <span className="text-green-500">✔</span>
-                <span>{item.title}</span>
-              </div>
-            ))}
-          </div>
+  {service?.serviceDetails?.weRequired.map((item) => (
+    <div key={item._id}>
+      <div className="flex gap-3 text-[#6F6F6F] text-[14px]">
+        <span className="text-green-500">✔</span>
+        <span className="font-semibold text-[18px]">{item.title}</span>
+      </div>
+
+      <p className="text-[14px] md:text-[16px] text-[#777] mt-1">
+        {item.description}
+      </p>
+    </div>
+  ))}
+</div>
         </div>
 
         {/* RIGHT */}
@@ -1526,13 +1532,19 @@ const images = service.bannerImages;
           </div>
 
           <div className="bg-white/80 rounded-xl p-5 space-y-3">
-            {service?.serviceDetails?.weDeliver.map((item) => (
-              <div key={item._id} className="flex gap-3 text-[#6F6F6F] text-[14px]">
-                <span className="text-green-500">✔</span>
-                <span>{item.title}</span>
-              </div>
-            ))}
-          </div>
+  {service?.serviceDetails?.weDeliver.map((item) => (
+    <div key={item._id}>
+      <div className="flex gap-3 text-[#6F6F6F] text-[14px]">
+        <span className="text-green-500">✔</span>
+        <span className="font-semibold text-[16px]">{item.title}</span>
+      </div>
+
+      <p className="text-[14px] md:text-[16px] text-[#777] mt-1">
+        {item.description}
+      </p>
+    </div>
+  ))}
+</div>
         </div>
 
       </div>
@@ -1682,7 +1694,7 @@ const images = service.bannerImages;
       subtitle="Complete overview of service experience."
       averageRating={reviewServices.averageRating}
       // totalRatings={reviewServices.totalReviews}
-      primaryColor="#BC9958"
+      primaryColor="#00A7C7"
       breakdown={buildRatingBreakdown(
         reviewServices.ratingDistribution,
         reviewServices.totalReviews

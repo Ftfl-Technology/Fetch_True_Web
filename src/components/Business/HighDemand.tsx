@@ -152,12 +152,10 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
             {filteredServices.map((service) => {
                                 const fav = isFavourite(service.serviceId);
 
-              const investment =
-                service.franchiseDetails?.investmentRange?.[0]?.range || "—";
-
-              const earnings =
-                service.franchiseDetails?.monthlyEarnPotential?.[0]?.range ||
-                "—";
+                   const investment =
+              service.franchiseDetails.investmentRange?.[0];
+            const monthly =
+              service.franchiseDetails.monthlyEarnPotential?.[0];
 
              const roi = roiMap[service.serviceId || "-"]
 
@@ -170,9 +168,8 @@ export default function HighDemand({ moduleId,searchQuery }: Props) {
                   title={service.serviceName}
                   category={service.category?.name || ""}
                   earnpercent={service.franchiseDetails?.commission}
-                  investment={investment}
-                  parameter={service.franchiseDetails?.investmentRange?.[0]?.parameters || ""}
-                  earnings={earnings}
+                  earnings={`${monthly?.range} ${monthly?.parameters}`}
+                investment={`${investment?.range} ${investment?.parameters}`}
                   roi={roi}
                   rating={service.averageRating}
                   trusted={true}
