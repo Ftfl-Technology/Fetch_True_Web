@@ -71,14 +71,16 @@ import { useTopTrending } from "@/src/context/TopTrendingContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import { useAuth } from "@/src/context/AuthContext";
 import HorizontalScroll from "../ui/HorizontalScroll";
+import Link from "next/link";
 
 interface Props {
   moduleId: string;
     searchQuery:string
+    categoryId:string;
 
 }
 
-export default function TopTrending({ moduleId,searchQuery }: Props) {
+export default function TopTrending({ moduleId,searchQuery,categoryId }: Props) {
   const {
     services,
     loading,
@@ -163,33 +165,35 @@ export default function TopTrending({ moduleId,searchQuery }: Props) {
         
         
                   return (
-                    <MarketingCard
-                        key={service._id}
-                      title={service.serviceName}
-                      category={service.category?.name}
-                      keyvalues={service.keyValues}
-                      commission={service.franchiseDetails?.commission}
-                      price={Math.round(service.serviceDetails?.packages?.[0]?.price || 0)}
-                      discountedprice={Math.round(service.serviceDetails?.packages?.[0]?.discountedPrice || 0)}
-                      discount={service.serviceDetails?.packages?.[0]?.discount || 0}
-                      rating={Math.round(service.averageRating || 0)}
-                      totalreviews={service.totalReviews}
-                      image={
-                        service.thumbnailImage ||
-                        service.category?.image ||
-                        "/image/defaultService.jpg"
-                      }
-                      slug={service.category?.name
-                        ?.toLowerCase()
-                        .replace(/\s+/g, "-")}
-                      detailslug={service._id}
-        
-                      isFavourite={isFavourite(service._id)}
-        
-                           onToggleFavourite={() =>
-                           handleToggleFavourite(service._id)
-                           }
-                                />
+                   <Link key={service._id} href={`/MainModules/Marketing/${moduleId}/${categoryId}/${service._id}`}>
+            <MarketingCard
+               
+              title={service.serviceName}
+              category={service.category?.name}
+              keyvalues={service.keyValues}
+              commission={service.franchiseDetails?.commission}
+              price={Math.round(service.serviceDetails?.packages?.[0]?.price || 0)}
+              discountedprice={Math.round(service.serviceDetails?.packages?.[0]?.discountedPrice || 0)}
+              discount={Math.round(service.serviceDetails?.packages?.[0]?.discount || 0)}
+              rating={Math.round(service.averageRating || 0)}
+              totalreviews={service.totalReviews}
+              image={
+                service.thumbnailImage ||
+                service.category?.image ||
+                "/image/defaultService.jpg"
+              }
+              slug={service.category?.name
+                ?.toLowerCase()
+                .replace(/\s+/g, "-")}
+              detailslug={service._id}
+
+              isFavourite={isFavourite(service._id)}
+
+                   onToggleFavourite={() =>
+                   handleToggleFavourite(service._id)
+                   }
+                        />
+            </Link>
                   );
                 })}
                 </HorizontalScroll>

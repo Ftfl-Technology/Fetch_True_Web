@@ -119,7 +119,7 @@ const filteredServices =
               return(
               <Link
                 key={service._id}
-                href={`/MainModules/Marketing/${moduleId}/${categoryId}/ServiceDetails/${service._id}?service=${encodeURIComponent(service.serviceName)}`}
+                href={`/MainModules/Marketing/${moduleId}/${categoryId}/${service._id}`}
               >
                 <MarketingCard  
                                     key={service._id}
@@ -157,7 +157,7 @@ const filteredServices =
               return(
               <Link
                 key={service._id}
-                href={`/MainModules/Marketing/${moduleId}/${categoryId}/ServiceDetails/${service._id}?service=${encodeURIComponent(service.serviceName)}`}
+                href={`/MainModules/Marketing/${moduleId}/${categoryId}/${service._id}`}
               >
                 <MarketingCard  
                                     key={service._id}

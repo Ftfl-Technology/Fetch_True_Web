@@ -158,7 +158,7 @@ export default function MarketingCard({
               <p className="text-[11px] text-[#393737]">Starting from</p>
               <p className="font-semibold flex  text-[20px] gap-1 text-[#232323]"> ₹{discountedprice}  </p>
               
-                <div className="flex">
+                <div className="flex gap-2">
                  <span className="text-[16px] text-[#868686] "><s>₹{price}</s></span>
                   <span className="text-[12px]"> ({discount}%off)</span>
                  </div>
