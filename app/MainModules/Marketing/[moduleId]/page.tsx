@@ -174,8 +174,8 @@ if (loading) return null;
       </section>
           <CategoryModule/>
       <RecommendedForYou moduleId={moduleId} categoryId={categoryId} searchQuery={searchQuery}/>
-      <MostlyUsed moduleId={moduleId} searchQuery={searchQuery}/>
-    <TopTrending moduleId={moduleId} searchQuery={searchQuery}/>
+      <MostlyUsed moduleId={moduleId} searchQuery={searchQuery} categoryId={categoryId} />
+    <TopTrending moduleId={moduleId} searchQuery={searchQuery} categoryId={categoryId}/>
     <WhyJustOurServices />
     <SuggestedProviders moduleId={moduleId}/>
     </div>
