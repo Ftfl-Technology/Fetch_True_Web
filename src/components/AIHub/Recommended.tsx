@@ -129,7 +129,6 @@ export default function Recommended({ moduleId, searchQuery }: RecommendedProps)
         );
     };
 
-    const FIXED_ICONS = ['⚡', '🧠', '🛠 '];
 
     const filteredServices =
         services?.filter((service) => {
@@ -164,6 +163,7 @@ export default function Recommended({ moduleId, searchQuery }: RecommendedProps)
                 service.keyValues?.map((item) => ({
                     id: item._id,
                     key: item.key,
+                    icon: item.icon,
                     label: item.value,
                 })) || [],
 
@@ -262,17 +262,16 @@ export default function Recommended({ moduleId, searchQuery }: RecommendedProps)
                                     <p className="font-semibold text-[10px] lg:text-[14px] lg:-mt-5">
                                         Setup & Time
                                     </p>
-                                    {p.keyValues.map((kv, index) => (
+                                    {p.keyValues.map((item) => (
                                         <div
-                                            key={kv.id}
+                                            key={item.id}
                                             className="flex flex-col text-[10px] lg:text-[14px] text-gray-700 leading-snug"
                                         >
-                                            <div className="flex flex-row space-x-1">
-                                                <span className="text-base w-5 text-center -mt-1">
-                                                    {FIXED_ICONS[index] || '•'}
-                                                </span>
-                                                <span className="font-medium">{kv.key}:</span>
-                                                <span className="text-gray-500">{kv.label}</span>
+                                            <div className="flex flex-row items-center space-x-1">
+                                                <img src={item.icon} className="w-4 h-4" />
+
+                                                <span className="font-medium">{item.key}:</span>
+                                                <span className="text-gray-500">{item.label}</span>
                                             </div>
                                         </div>
                                     ))}

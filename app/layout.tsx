@@ -51,6 +51,7 @@ import { BannerProvider } from "@/src/context/CarouselBannerContext";
 import { PackageProvider } from "@/src/context/PackageContext";
 import { FavouriteProvidersProvider } from "@/src/context/FavouriteProviderContext";
 import { AllServicesProvider } from "@/src/context/AllServicesContext";
+import GetUserLocation from "@/src/components/UserLocation/GetUserLocation";
 
 // export const metadata = {
 //   title: "Fetch True",
@@ -116,7 +117,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                                                                                                     <AllServicesProvider>
 
 
-
+<GetUserLocation/>
                                                                                                       <main>{children}</main>
                                                                                                     </AllServicesProvider>
                                                                                                   </PackageProvider>

@@ -1251,12 +1251,12 @@ const images = service.bannerImages;
           </p>
         </div>
 
-         <span
-  className="cursor-pointer"
-  onClick={() =>{console.log("T&C clicked"); setOpenTC(true)}}
+      <span
+  className="cursor-pointer text-blue-600 font-medium "
+  onClick={() => setOpenTC(true)}
 >
   T&C &gt;
-</span>
+</span> 
       </div>
 
     </div>

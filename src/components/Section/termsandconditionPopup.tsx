@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface TermsConditionsModalProps {
   onClose: () => void;
@@ -26,9 +27,9 @@ export default function TermsConditionsModal({
     };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
       onClick={onClose}
     >
       <div
@@ -57,6 +58,8 @@ export default function TermsConditionsModal({
           />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
+
   );
 }

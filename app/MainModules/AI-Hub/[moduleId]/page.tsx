@@ -1177,7 +1177,7 @@ export default function AIHubModulesPage() {
 
                 {/* ================= DESKTOP (UNCHANGED) ================= */}
 
-                <div className="hidden md:flex flex-wrap gap-10 rounded-lg">
+                <div className="hidden md:flex flex-wrap  rounded-lg">
                     {categories.map((item, index) => (
                         <div
                             key={index}
@@ -1189,10 +1189,9 @@ export default function AIHubModulesPage() {
                             <img
                                 src={item.image}
                                 alt={item.name}
-                                className="w-[133px] h-[143px] border border-[#A7DFFF] bg-white/50 rounded-2xl object-cover"
                             />
 
-                            <span className="mt-2 md:text-[18px] lg:text-[24px] font-medium text-center leading-tight break-words line-clamp-3 max-w-[250px]">
+                            <span className="mt-2 md:text-[16px] lg:text-[20px] font-medium text-center  break-words line-clamp-3 max-w-[250px]">
                                 {item.name}
                             </span>
                         </div>
@@ -1226,7 +1225,6 @@ export default function AIHubModulesPage() {
                                                     <img
                                                         src={item.image}
                                                         alt={item.name}
-                                                        className="w-full h-full object-contain"
                                                     />
                                                 </div>
 
