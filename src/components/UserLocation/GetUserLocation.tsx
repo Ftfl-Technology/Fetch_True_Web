@@ -32,9 +32,9 @@ export default function GetUserLocation() {
         console.log("Latitude:", latitude);
         console.log("Longitude:", longitude);
 
-        // Save location locally
-        localStorage.setItem("userLat", latitude);
-        localStorage.setItem("userLng", longitude);
+        // Save location locally (convert number → string)
+        localStorage.setItem("userLat", latitude.toString());
+        localStorage.setItem("userLng", longitude.toString());
 
       },
 
