@@ -66,13 +66,13 @@ export default function WhyChooseUs({ moduleId }: props) {
             "
           >
             {/* ICON */}
-            <div className="flex items-center justify-center w-14 h-14 md:w-20 md:h-20 rounded-xl bg-[#EEEEEE]">
+            <div className="flex items-center justify-center  rounded-xl">
               {/* <img
                 src="/image/eduwcu.png"
                 alt="checkicon"
                 className="object-contain w-[29px] md:w-[45px]"
               /> */}
-              <img src={item.icon} alt="Icon" width={32.22} height={32.22} />
+              <img src={item.icon} alt="Icon" width={60} height={60} />
             </div>
 
             {/* TEXT */}

@@ -590,7 +590,7 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
             {/* SWIPEABLE CARDS */}
             <div
                 ref={containerRef}
-                className="flex gap-4 md:gap-6 overflow-x-auto  snap-x snap-mandatory no-scrollbar"
+                className="flex gap-0 md:gap-6 overflow-x-auto  snap-x snap-mandatory no-scrollbar"
             >
                 {mappedServices.length > 0 ? (
                     mappedServices.map((item, index) => (
@@ -602,7 +602,7 @@ export default function MostPopular({ moduleId, searchQuery }: SectionProps) {
                                 }
                                 className="
                                 relative snap-center flex-shrink-0
-                                w-[285px] min-h-[271px]
+                                w-[300px] min-h-[271px]
                                 sm:w-[70vw] h-[330px]
                                 md:w-[331px] md:h-[392px] lg:h-[361px] lg:w-[352px]
                                 overflow-hidden cursor-pointer

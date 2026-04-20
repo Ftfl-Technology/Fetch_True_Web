@@ -267,9 +267,7 @@ export default function AISolutions() {
 
         {/* Search Box */}
         <div className="w-full block md:hidden flex justify-center">
-          {/* <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-            <img src="/image/itsearch.png" alt="searchicon" className='w-[20.66px] h-[20.66px] text-[#009ABF]' />
-          </span> */}
+       
           <span className="absolute left-2 top-[215px] -translate-y-1/2 pointer-events-none">
             <img
               src="/image/itsearch.png"
