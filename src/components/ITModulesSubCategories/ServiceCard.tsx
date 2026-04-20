@@ -2,11 +2,12 @@
 
 import { Bookmark, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { UnifiedService } from "@/app/MainModules/Education/[moduleId]/[categoryId]/page";
+// import { UnifiedService } from "@/app/MainModules/Education/[moduleId]/[categoryId]/page";
 import { useEffect } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import { CiBookmark } from "react-icons/ci";
+import { UnifiedService } from "@/app/MainModules/It-Services/[moduleId]/[categoryId]/page";
 
 /* ---------- SVG BACKGROUND ---------- */
 const CardBg = () => (
