@@ -346,7 +346,7 @@ import { useEffect, useState } from "react";
 import { Bookmark } from "lucide-react";
 import AllServices from "@/src/components/MarketingCategories/AllServices";
 
-export default function MarketingCategoriesDetailsPage() {
+export default function EducationCategoriesDetailsPage() {
       const { categories,fetchCategoriesByModule } = useModule();
 
   const [currentCategory, setCurrentCategory] = useState<any>(null);
