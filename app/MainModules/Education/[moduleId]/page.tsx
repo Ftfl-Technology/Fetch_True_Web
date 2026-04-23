@@ -154,14 +154,7 @@ export default function EducationModulePage() {
                 placeholder="Search"
               />
 
-              <span className="absolute left-3 top-1/2 -translate-y-1/2">
 
-                <img
-                  src="/image/itsearch.png"
-                  className="w-[18px]"
-                />
-
-              </span>
 
             </div>
 

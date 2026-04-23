@@ -359,7 +359,7 @@ import HighInDemand from '@/src/components/ITModules/HighInDemand';
 import MostlyUsed from '@/src/components/ITModules/MostlyUsed';
 import Recommendation from '@/src/components/ITModules/Recommendation';
 import WhyChooseUs from '@/src/components/ITModules/WhyChooseUs';
-import { ChevronLeft } from 'lucide-react';
+import { BookmarkIcon, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -398,12 +398,7 @@ export default function ITModulesPage() {
         })) || [];
 
 
-    // const BannerData = [
-    //     { title: 'Smart IT Services', subTitle: 'From daily tech support to advanced digital transformation', bgpath: '/image/ITModulebg.png', path: '/image/decode.png' },
-    //     { title: 'Smart IT Services', subTitle: 'From daily tech support to advanced digital transformation', bgpath: '/image/ITModulebg.png', path: '/image/decode.png' },
-    //     { title: 'Smart IT Services', subTitle: 'From daily tech support to advanced digital transformation', bgpath: '/image/ITModulebg.png', path: '/image/decode.png' },
-    //     { title: 'Smart IT Services', subTitle: 'From daily tech support to advanced digital transformation', bgpath: '/image/ITModulebg.png', path: '/image/decode.png' },
-    // ];
+
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
@@ -471,37 +466,18 @@ export default function ITModulesPage() {
                         <div className="flex items-center gap-4">
                             {/* SEARCH */}
                             <div className="hidden md:block relative w-[260px] lg:w-[307px]">
-                                <input
-                                    type="text"
-                                    placeholder="Search"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="
-                                        w-full
-                                        rounded-full bg-white
-                                        border border-gray-300
-                                        px-10 py-2
-                                        text-sm
-                                        outline-none
-                                        focus:border-blue-500
-                                    "
-                                />
-
-                                {/* search icon */}
-                                <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                                    <img
-                                        src="/image/itsearch.png"
-                                        alt="searchicon"
-                                        className="w-[18px] h-[18px]"
-                                    />
-                                </span>
+                                <SearchBar
+                                               value={searchQuery}
+                                               onChange={setSearchQuery}
+                                               placeholder="Search"
+                                             />
                             </div>
 
-                            {/* BOOKMARK / LOCATION ICON */}
-                            <img
-                                src="/image/it-service-bookmark.png"
-                                className="w-[20px] cursor-pointer"
-                            />
+                           <Link href="/Account/MyAccount?section=Favorite">
+
+              <BookmarkIcon className="w-8 h-8 text-[#17152c]" />
+
+            </Link>
                         </div>
 
 
@@ -537,35 +513,21 @@ export default function ITModulesPage() {
 
                             {/* RIGHT */}
                             <div className="flex items-center justify-center bg-white w-8 h-8 rounded-full shrink-0">
-                                <img
-                                    src="/image/it-service-bookmark.png"
-                                    className="w-[14px] h-[14px]"
-                                    alt="Bookmark"
-                                />
+                                <Link href="/Account/MyAccount?section=Favorite">
+
+              <BookmarkIcon className="w-8 h-8 text-[#17152c]" />
+
+            </Link>
                             </div>
                         </div>
 
                         {/* ===== ROW 2: SEARCH ===== */}
                         <div className="relative w-[90%] md:w-[95%] mx-auto ml-6">
-                            {/* <input
-                                type="text"
-                                placeholder="Search"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full rounded-full bg-white border border-gray-300 px-10 py-2 text-sm outline-none"
-                            /> */}
-                            <SearchBar
-                                value={searchQuery}
-                                onChange={setSearchQuery}
-                                placeholder="Search"
-                            />
-                            {/* <span className="absolute left-4 top-1/2 -translate-y-1/2">
-                                <img
-                                    src="/image/itsearch.png"
-                                    className="w-[18px] h-[16px]"
-                                    alt="Search"
-                                />
-                            </span> */}
+                           <SearchBar
+                                               value={searchQuery}
+                                               onChange={setSearchQuery}
+                                               placeholder="Search"
+                                             />
                         </div>
                     </div>
                 </section>
