@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { CiBookmark } from "react-icons/ci";
 import { useAuth } from "@/src/context/AuthContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
+import { FaBookmark } from "react-icons/fa6";
 
 type TopTrendingProps = {
     moduleId: string;
@@ -220,9 +221,16 @@ export default function TopTrending({ moduleId, searchQuery }: TopTrendingProps)
                                         e.stopPropagation();
                                         handleToggleFavourite(p.id);
                                     }}
-                                    className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center                                                                                                     ${isFavourite(p.id) ? "bg-red-500" : "bg-black"}`}
-                                >
-                                    <CiBookmark size={14} color="#fff" />
+                                    className={`
+                                                                                  absolute top-2 right-2 bg-white  rounded-full p-1 shadow
+                                                                                   transition ${isFavourite(p.id)
+                                                                                     ? "text-red-500 fill-red-500"
+                                                                                     : "text-gray-400"
+                                                                                   }
+                                                                                 `}
+                                                                               >
+                                                                       
+                                                                                 <FaBookmark size={14} color="" />
                                 </button>
                             </div>
 

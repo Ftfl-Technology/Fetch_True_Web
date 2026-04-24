@@ -9,6 +9,7 @@ import { UnifiedService } from "@/app/MainModules/AI-Hub/[moduleId]/[categoryId]
 import { useAuth } from "@/src/context/AuthContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import Link from "next/link";
+import { FaBookmark } from "react-icons/fa";
 
 
 interface Props {
@@ -113,23 +114,15 @@ export default function ServiceCard({
 
           }}
           className={`
-            absolute
-            top-6
-            right-6
-            w-[24px]
-            h-[24px]
-            rounded-full
-            flex
-            items-center
-            justify-center
-            ${isFavourite(service.id)
-              ? "bg-red-500"
-              : "bg-black"
+           absolute top-2 right-2 bg-white  rounded-full p-1 shadow
+            transition ${isFavourite(service.id)
+              ? "text-red-500 fill-red-500"
+              : "text-gray-400"
             }
           `}
         >
 
-          <CiBookmark size={14} color="#fff" />
+          <FaBookmark size={14} color="" />
 
         </button>
 

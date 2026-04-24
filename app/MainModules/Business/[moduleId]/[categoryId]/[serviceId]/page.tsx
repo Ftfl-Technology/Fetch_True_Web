@@ -1407,7 +1407,7 @@ const selectedPackageData = franchiseCards.find(
           .join(" + ")
       : "N/A"}
       </p>
-      <p className="text-[14px] text-[#9A9A9A]">Lakhs</p>
+      <p className="text-[14px] text-[#9A9A9A]">{service?.franchiseDetails?.monthlyEarnPotential?.[0]?.parameters}</p>
 
       <a
   onClick={() => setOpenEarning(true)}

@@ -1054,13 +1054,13 @@ export default function AIHubModulesPage() {
                                  
                                 </div>
 
-                                <div className='bg-white rounded-full justify-center md:p-2  flex'>
-                                    <img
-                                        src="/image/AIBookmark.png"
-                                        className="w-[18px] h-[22px] md:w-[20px] md:h-[20px] lg:w-[30px] lg:h-[30px] lg:p-1 object-fit"
-                                        alt="Bookmark"
-                                    />
-                                </div>
+                                <Link href="/Account/MyAccount?section=Favorite">
+          <img
+            src="/image/Vector (2).png"
+            alt="Bookmark"
+            className="w-[18.6px] h-[27.2px]"
+          />
+          </Link>
                             </div>
                         </div>
                     </div>

@@ -190,7 +190,6 @@ export default function Recommendation({ categoryId, moduleId }: Props) {
                                     {/* Discount */}
                                     <span className="absolute top-6 right-18 bg-green-400 text-black text-xs font-semibold px-2 py-1 rounded-lg">
                                         Discount 25%
-                                        {/* {item.discount} */}
                                     </span>
 
                                     {/* Bookmark */}

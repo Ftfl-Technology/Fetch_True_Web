@@ -373,6 +373,7 @@ import { useRecommendedServices } from "@/src/context/RecommendedContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import { useAuth } from "@/src/context/AuthContext";
 import { CiBookmark } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa6";
 
 type SectionProps = {
     moduleId?: string;
@@ -544,10 +545,16 @@ export default function Recommendation({ moduleId, searchQuery }: SectionProps) 
                                             e.stopPropagation();
                                             handleToggleFavourite(item.id);
                                         }}
-                                        className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
-                                            ${isFavourite(item.id) ? "bg-red-500" : "bg-black"}`}
-                                    >
-                                        <CiBookmark size={14} color="#fff" />
+                                       className={`
+                                                 absolute top-5 right-5 bg-white  rounded-full p-1 shadow
+                                                  transition ${isFavourite(item.id)
+                                                    ? "text-red-500 fill-red-500"
+                                                    : "text-gray-400"
+                                                  }
+                                                `}
+                                              >
+                                      
+                                                <FaBookmark size={14} color="" />
                                     </button>
                                 </div>
 

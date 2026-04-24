@@ -8,6 +8,7 @@ import { useAuth } from "@/src/context/AuthContext";
 import { useFavourites } from "@/src/context/FavouriteContext";
 import { CiBookmark } from "react-icons/ci";
 import { UnifiedService } from "@/app/MainModules/It-Services/[moduleId]/[categoryId]/page";
+import { FaBookmark } from "react-icons/fa6";
 
 /* ---------- SVG BACKGROUND ---------- */
 const CardBg = () => (
@@ -107,10 +108,16 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
                             e.stopPropagation();
                             handleToggleFavourite(service.id);
                         }}
-                        className={`absolute top-6 right-6 w-[24px] h-[24px] rounded-full flex items-center justify-center
-                                                                                                    ${isFavourite(service.id) ? "bg-red-500" : "bg-black"}`}
-                    >
-                        <CiBookmark size={14} color="#fff" />
+                       className={`
+                                  absolute top-5 right-5 bg-white  rounded-full p-1 shadow
+                                   transition ${isFavourite(service.id)
+                                     ? "text-red-500 fill-red-500"
+                                     : "text-gray-400"
+                                   }
+                                 `}
+                               >
+                       
+                                 <FaBookmark size={14} color="" />
                     </button>
                 </div>
 
