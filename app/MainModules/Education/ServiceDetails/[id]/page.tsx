@@ -18,11 +18,12 @@ import { ChevronLeft, Share2, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { Eye, Pencil } from "lucide-react";
 import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useReview } from "@/src/context/ReviewContext";
 import { useCheckout } from "@/src/context/CheckoutContext";
 import { useModule } from "@/src/context/ModuleContext";
+import TermsConditionsModal from "@/src/components/Section/termsandconditionPopup";
 
 
 type CourseInfo = {
@@ -54,6 +55,47 @@ export default function ServiceDetails() {
     const router = useRouter();
     const { modules } = useModule();
     const serviceId = params.id as string;
+        const [openTC, setOpenTC] = useState(false);
+    
+
+     const handleSocialShare = (platform: string) => {
+  const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
+
+  const text = `Check this amazing franchise opportunity: ${service?.serviceName}`;
+
+  let url = "";
+
+  switch (platform) {
+    case "whatsapp":
+      url = `https://wa.me/?text=${encodeURIComponent(
+        text + " " + shareUrl
+      )}`;
+      break;
+
+    case "facebook":
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    case "twitter":
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(shareUrl)}`;
+      break;
+
+    case "linkedin":
+      url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        shareUrl
+      )}`;
+      break;
+
+    default:
+      return;
+  }
+
+  window.open(url, "_blank");
+};
 
 
     useEffect(() => {
@@ -97,17 +139,39 @@ export default function ServiceDetails() {
 
                         {/* RIGHT */}
                         <div className="flex items-center gap-3 mr-15 mt-2">
-                            <Link href="/MainModules/Checkout">
-                                <button className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-[20px] font-medium">
-                                    <ShoppingCart className="w-[29px] h-[29px]" />
-                                    Check out
-                                </button>
-                            </Link>
+                            {/* <Link
+        href={
+          ?._id
+            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            : "#"
+        }
+      > */}
 
-                            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-[20px] font-medium">
-                                <Share2 className="w-[29px] h-[29px]" />
-                                Share
-                            </button>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white
+                     px-4 sm:px-5 py-2 rounded
+                     flex items-center gap-2 text-[13px] sm:text-[14px] whitespace-nowrap"
+        >
+
+          Check out
+
+        </button>
+
+      {/* </Link> */}
+
+
+      <button
+        onClick={() => handleSocialShare("whatsapp")}
+        className="bg-blue-600 hover:bg-blue-700 text-white
+                   px-4 sm:px-5 py-2 rounded
+                   flex items-center gap-2 text-[13px] sm:text-[14px]"
+      >
+
+        <Share2 size={16} />
+
+        Share
+
+      </button>
                         </div>
                     </div>
 
@@ -367,12 +431,15 @@ export default function ServiceDetails() {
                             <div>
                                 <p className="text-sm font-medium">Franchise Commission</p>
                                 <p className="text-green-600 font-semibold">
-                                    {service?.franchiseDetails?.commission}
+                                 Earn Up to   {service?.franchiseDetails?.commission}
                                 </p>
                             </div>
-                            <button className="flex items-center gap-1 text-sm">
-                                T&amp;C <span className="text-lg">›</span>
-                            </button>
+                            <span
+  className="cursor-pointer text-[#2FA44F]"
+  onClick={() => setOpenTC(true)}
+>
+  T&C &gt;
+</span>
                         </div>
                     </div>
                 </div>
@@ -395,6 +462,16 @@ export default function ServiceDetails() {
                 <RatingsReviews reviews={reviewServices} />
                 <ConnectWith connectWith={service?.serviceDetails?.connectWith || []} />
             </section>
+
+            {openTC && (
+              <TermsConditionsModal
+                onClose={() => setOpenTC(false)}
+                html={
+                  service?.franchiseDetails?.termsAndConditions ||
+                  "<p>No Terms & Conditions available</p>"
+                }
+              />
+            )}
         </>
 
     );
