@@ -1663,21 +1663,7 @@ if (!service) {
       {service?.serviceDetails?.emiavalable}
     </div>
 
-    {/* {service?.serviceDetails?.emiavalable?.length > 0 && (
-  <div className=" gap-2 mt-2 text-[#606060]">
-    <div className="flex items-center gap-2 text-[12px] lg:text-[22px]">
-      <RiFileList3Line size={36} />
-      {service?.serviceDetails?.emiavalable}
-    </div>
-
-    <ul className=" flex ml-10 text-[16px]">
-       <RiFileList3Line size={20} />
-      {service.serviceDetails.emiavalable.map((emi, index) => (
-        <li key={index}>{emi}</li>
-      ))}
-    </ul>
-  </div>
-)} */}
+   
   </div>
 
   {/* Earning */}
