@@ -87,7 +87,7 @@ export default function ServiceCard({ service }: { service: UnifiedService }) {
               }}
              className={`
                                                                        absolute top-5 right-5 bg-white  rounded-full p-1 shadow
-                                                                        transition ${isFavourite(item.id)
+                                                                        transition ${isFavourite(service.id)
                                                                           ? "text-red-500 fill-red-500"
                                                                           : "text-gray-400"
                                                                         }

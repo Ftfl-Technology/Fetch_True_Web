@@ -51,6 +51,7 @@ export default function ServiceDetails() {
 
      const { moduleId } = useParams<{
         moduleId: string;
+        serviceId: string;
       }>();
 
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
