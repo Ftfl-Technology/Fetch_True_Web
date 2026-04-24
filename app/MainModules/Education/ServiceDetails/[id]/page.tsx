@@ -49,6 +49,10 @@ interface Module {
 
 export default function ServiceDetails() {
 
+     const { moduleId } = useParams<{
+        moduleId: string;
+      }>();
+
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
     const params = useParams();
