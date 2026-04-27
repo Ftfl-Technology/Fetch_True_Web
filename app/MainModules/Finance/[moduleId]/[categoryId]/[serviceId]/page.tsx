@@ -693,6 +693,8 @@ import { ChevronLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useServiceProviders } from "@/src/context/ServicewiseProviderContext";
+import ChooseProvider from "@/src/components/MarketingServiceDetails/ChooseProvider";
 
  const extractBenefits = (benefits: string[]): string[] => {
    if (!benefits?.length) return [];
@@ -758,6 +760,20 @@ export default function FinanceDetailPage() {
     const initialized = useRef(false);
     const { selectedPackage, setSelectedPackage } = useCheckout();
     const [openTC, setOpenTC] = useState(false);
+       const { providers,fetchProvidersByService } = useServiceProviders();
+            const [selectedProvider, setSelectedProvider] = useState<any>(null);
+            console.log("Selected Provider in ServiceDetails:", selectedProvider);
+
+                const mappedProviders = providers.map((p) => ({
+        _id: p._id,
+        providerId: p.providerId,
+        logo: p.storeInfo?.logo || "/image/default-provider.png",
+        name: p.storeInfo?.storeName || p.fullName,
+        rating: p.averageRating || 0,
+        reviews: p.totalReviews || 0,
+        promoted: Boolean(p.isPromoted),
+        available: p.isStoreOpen,
+    }));
     
   const handleSocialShare = (platform: string) => {
   const shareUrl = `${window.location.origin}/MainModules/Franchise/${moduleId}/${serviceId}`;
@@ -802,7 +818,9 @@ export default function FinanceDetailPage() {
     
       fetchServiceDetails(serviceId);
       fetchFranchiseModels(serviceId);
-      fetchReviews(serviceId)
+      fetchReviews(serviceId);
+              fetchProvidersByService(serviceId);
+
     }, [serviceId]);
     
     
@@ -899,7 +917,7 @@ const images = service.bannerImages;
       <Link
         href={
           selectedPackage?._id
-            ? `/MainModules/Checkout?serviceId=${serviceId}&packageId=${selectedPackage._id}`
+            ? `/MainModules/Checkout?serviceId=${serviceId}&providerId=${selectedProvider?._id}&packageId=${selectedPackage._id}`
             : "#"
         }
       >

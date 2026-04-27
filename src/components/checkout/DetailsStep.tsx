@@ -1,787 +1,4 @@
-// 'use client';
 
-// import { MapPin, Phone, PlusCircle } from "lucide-react";
-// import Link from "next/link";
-// import { useEffect, useState } from "react";
-// import { FaWhatsapp } from "react-icons/fa";
-// import CustomerList from "./CustomerList";
-// import CouponsDialog from "./CouponsDialog";
-// import { useCheckout } from "@/src/context/CheckoutContext";
-// import { useParams, useSearchParams } from "next/navigation";
-// import { useServiceDetails } from "@/src/context/ServiceDetailsContext";
-// import AddCustomerDialog from "./AddCustomerForm";
-// import { useCommission } from "@/src/context/PlatformFeeContext";
-// import { useReview } from "@/src/context/ReviewContext";
-
-// /* ================= MOCK DATA ================= */
-
-// const serviceCardData = {
-//     image: "/image/checkoutcard.png",
-//     trusted: true,
-//     rating: "4.9",
-//     title: "Property Buying & Selling",
-//     category: "Agricultural",
-//     stats: [
-//         { label: "Investment", value: "₹ 10L-5L" },
-//         { label: "Earnings", value: "1.5-3L/M" },
-//         { label: "ROI", value: "25-30%" }
-//     ],
-//     rewardText: "₹15%"
-// };
-
-// const userData = {
-//     name: "Suhani Shaha",
-//     phone: "789578990",
-//     address: "Flat no.3, Sky Building, Pune",
-//     note: "Customer Requested urgent Service"
-// };
-
-// type PaymentData = {
-//     listingPrice: number;
-//     serviceDiscount: number;
-//     couponDiscount: number;
-//     gst: number;
-//     platformFee: number;
-//     assuranceFee: number;
-//     grandTotal: number;
-// };
-
-// type CheckoutData = {
-//     selectedUser: string;
-//     paymentData: PaymentData;
-// };
-
-
-// type DetailsStepProps = {
-//     data: CheckoutData | null;
-//     onNext: (data: CheckoutData) => void;
-// };
-
-// export default function DetailsStep({ onNext }: DetailsStepProps) {
-
-//     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
-//     const { reviewServices, fetchReviews } = useReview();
-//     const params = useParams();
-//     const serviceId = params.id as string;
-
-//     const [selected, setSelected] = useState("me");
-//     const [openSidebar, setOpenSidebar] = useState(false);
-//     const [openCoupons, setOpenCoupons] = useState(false);
-//     const [openAddCustomers, setOpenAddCustomers] = useState(false);
-//     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
-//     const [showError, setShowError] = useState(false);
-
-//     const { selectedPackage } = useCheckout();
-//     const { services, fetchCommission } = useCommission()
-//     const basicPackage = service?.serviceDetails.packages?.[0];
-
-//     const packageToUse = selectedPackage ?? basicPackage;
-
-//     // const searchParams = useSearchParams();
-//     // const servicesId = searchParams.get('id'); 
-//     const param = useParams();
-//     const servicesId = param.id as string;
-
-//     useEffect(() => {
-//         if (!servicesId) return;
-//         fetchServiceDetails(servicesId);
-//         fetchReviews(serviceId)
-//     }, [servicesId]);
-
-
-
-//     useEffect(() => {
-//         if (!serviceId) return;
-
-//         fetchServiceDetails(serviceId);
-//     }, [serviceId]);
-
-//     useEffect(() => {
-//         fetchCommission()
-//     }, [])
-
-//     const commission = services?.[0];
-
-
-
-
-//     const paymentData = {
-//         listingPrice: 1000,
-//         serviceDiscount: 99.45,
-//         couponDiscount: 800,
-//         gst: 144,
-//         platformFee: 20,
-//         assuranceFee: 10,
-//         grandTotal: 974
-//     };
-
-
-
-//     const handleProceed = () => {
-//         if (!isTermsAccepted) {
-//             setShowError(true);
-//             return;
-//         }
-//         onNext({
-//             selectedUser: selected,
-//             paymentData,
-//         });
-//     };
-
-//     if (!packageToUse) return null;
-
-//     if (loading) return <p className="text-[12px] md:text-[24px] text-center mt-15">Loading...</p>;
-//     if (error) return <p>{error}</p>;
-
-
-//     // ===== PAYMENT CALCULATION =====
-//     const listingPrice = packageToUse.price;
-
-//     const serviceDiscount = packageToUse.discount;
-//     const priceAfterServiceDiscount = listingPrice - serviceDiscount;
-
-//     const couponDiscount = paymentData.couponDiscount;
-
-//     const priceAfterCoupon =
-//         priceAfterServiceDiscount - couponDiscount;
-
-//     // GST (18%)
-//     const gstPercent = service?.gst ?? 18;
-//     const gstAmount = (priceAfterCoupon * gstPercent) / 100;
-
-//     // Platform fee (API)
-//     const platformFee = commission?.platformFee ?? 0;
-
-//     // Assurity fee (10%)
-//     const ASSURITY_PERCENT = 10;
-//     // const assuranceFee = (priceAfterCoupon * ASSURITY_PERCENT) / 100;
-
-
-//     const assuranceFee = commission?.assurityfee ?? 0;
-
-
-//     // ✅ FINAL GRAND TOTAL
-//     const grandTotal =
-//         priceAfterCoupon + gstAmount + platformFee + assuranceFee;
-
-
-//     return (
-//         <>
-//             {/* DESKTOP VIEW */}
-//             <section className="max-w-[1400px] hidden md:block lg:block mx-auto">
-//                 {/*  MAIN GRID  */}
-//                 <div className="grid grid-cols-12 gap-12 mb-15">
-
-//                     {/*  LEFT CARD  */}
-//                     <div className="col-span-4">
-//                         <div className="border border-gray-200 rounded-xl overflow-hidden  shadow-sm md:w-[300px] md:h-[350px] lg:w-[479px] lg:h-[456px] p-2 lg:ml-0 md:ml-10">
-
-//                             <div className="relative">
-//                                 <img src={serviceCardData.image} className="md:w-[300px] md:h-[200px] lg:w-[455px] lg:h-[295px] object-fit" />
-
-//                                 {serviceCardData.trusted && (
-//                                     <span className="absolute -top-0 left-0 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">
-//                                         ✔ Trusted
-//                                     </span>
-//                                 )}
-
-//                                 <div className="absolute md:-right-1 md:bottom-2 lg:bottom-1 lg:right-2 flex md:flex-row  md:items-center lg:items-center lg:justify-center bg-blue-600 md:w-[47px] md:h-[31px] lg:w-[67px] lg:h-[43px] text-white md:text-[10px] lg:text-[14px] px-2 py-1 rounded-md">
-//                                     ⭐ {reviewServices?.averageRating}
-//                                 </div>
-//                             </div>
-
-//                             <div className="p-4 space-y-3">
-//                                 <div className="flex items-center justify-between">
-//                                     <div>
-//                                         <h3 className="font-semibold md:text-[15px] lg:text-[20px]">
-//                                             {service?.serviceName}
-//                                         </h3>
-
-//                                         <p className="lg:text-[16px] md:text-[12px] text-gray-500">
-//                                             {serviceCardData.category}
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex flex-col">
-//                                         <p className="lg:text-[10px] md:text-[8px] text-[#4A2E82] font-medium whitespace-normal breakwords">
-//                                             -EARN UP TO-
-
-//                                         </p>
-//                                         <span className="text-[#2CB140] lg:text-[14px] md:text-[10px] text-center"> {serviceCardData.rewardText}</span>
-//                                     </div>
-//                                 </div>
-
-
-//                                 <div className="grid grid-cols-3 text-center md:text-[12px] lg:text-[16px] mt-4">
-//                                     {serviceCardData.stats.map((item, i) => (
-//                                         <div
-//                                             key={i}
-//                                             className="relative px-3"
-//                                         >
-//                                             {/* Divider */}
-//                                             {i !== serviceCardData.stats.length - 1 && (
-//                                                 <span className="absolute top-1/2 right-0 -translate-y-1/2 h-10 w-[2px] bg-gray-300" />
-//                                             )}
-
-//                                             <p className="text-gray-500">{item.label}</p>
-//                                             <p className="text-[#1D4699] font-semibold">{item.value}</p>
-//                                         </div>
-//                                     ))}
-//                                 </div>
-
-
-
-//                             </div>
-//                         </div>
-//                     </div>
-
-//                     {/* ===== RIGHT PANEL ===== */}
-//                     <div className="col-span-6 space-y-6 md:ml-25 lg:ml-18">
-
-//                         <h2 className="lg:text-[20px] font-semibold">
-//                             Who is this service for?
-//                         </h2>
-
-//                         {/* ===== OPTION 1 ===== */}
-
-//                         <div className="border border-gray-300 rounded-xl p-4 space-y-3">
-//                             {/* RADIO */}
-//                             <label className="flex items-center gap-2 md:text-[12px] lg:text-[16px] font-medium cursor-pointer">
-//                                 <input
-//                                     type="radio"
-//                                     name="serviceFor"
-//                                     checked={selected === "me"}
-//                                     onChange={() => setSelected("me")}
-//                                 />
-//                                 This Service is for me
-//                             </label>
-
-//                             {/* REVEAL CONTENT */}
-//                             {selected === "me" && (
-//                                 <div className="pl-6 md:text-[12px] lg:text-[16px] space-y-2">
-
-
-//                                     <div className="flex items-center whitespace-nowrap gap-2">
-//                                         <p><strong>Name:</strong> {userData.name}</p>
-//                                         <div className="md:ml-12 lg:ml-22 flex flex-row gap-2">
-//                                             <Phone size={14} />
-//                                             <FaWhatsapp className="text-green-500" />
-//                                         </div>
-//                                     </div>
-//                                     <strong>Phone:</strong> {userData.phone}
-
-
-//                                     <p className="flex items-center gap-1">
-//                                         <MapPin size={14} /> {userData.address}
-//                                     </p>
-
-//                                     <p className="text-gray-500 md:text-[10px] lg:text-[14px]">
-//                                         Note: {userData.note}
-//                                     </p>
-//                                 </div>
-//                             )}
-//                         </div>
-
-//                         {/* ===== OPTION 2 ===== */}
-//                         <div className="border border-gray-300  rounded-xl p-4 space-y-4">
-//                             <label className="flex items-center gap-2 md:text-[12px] lg:text-[16px] font-medium">
-//                                 <input type="radio" readOnly />
-//                                 This Service is for my Customer
-//                             </label>
-
-
-//                             <div className="flex gap-4 lg:pl-6">
-//                                 <button
-//                                     className="
-//                                     border border-blue-600 text-blue-600
-//                                     px-4 py-2 rounded-lg
-//                                     md:text-[12px] whitespace-nowrap
-//                                     lg:text-[14px]
-//                                     "
-//                                     onClick={() => setOpenSidebar(true)}
-//                                 >
-//                                     My Customer
-//                                 </button>
-
-
-//                                 <button
-//                                     className="
-//                                             bg-blue-600 text-white
-//                                             px-4 py-2 rounded-lg cursor-pointer
-//                                             md:text-[12px] flex flex-row items-center
-//                                             lg:text-[14px] gap-2
-//                                         "
-//                                     onClick={() => setOpenAddCustomers(true)}
-//                                 >
-//                                     <PlusCircle className="w-4 h-4 flex shrink-0" />Add New Customer
-//                                 </button>
-
-//                             </div>
-
-//                         </div>
-
-//                         {/* ===== COUPON ===== */}
-//                         <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
-//                             {/* Header */}
-//                             <div className="flex items-center justify-between">
-//                                 <h3 className="md:text-[12px] lg:text-[16px] font-semibold text-black">
-//                                     Best Coupon For You
-//                                 </h3>
-
-//                                 <button
-//                                     onClick={() => setOpenCoupons(true)}
-//                                     className="flex items-center gap-1 text-[14px] text-blue-600 font-medium cursor-pointer"
-//                                 >
-//                                     All Coupons
-//                                     <span className="text-[18px] leading-none">›</span>
-//                                 </button>
-
-//                             </div>
-
-//                             {/* Coupon Input Row */}
-//                             <div className="flex items-center justify-between gap-4">
-//                                 {/* Coupon Box */}
-//                                 <div className="flex items-center justify-center h-[48px] w-[160px] border border-dashed border-gray-300 rounded-lg text-gray-500 font-semibold tracking-widest">
-//                                     XXXXXX
-//                                 </div>
-
-//                                 {/* Apply Button */}
-//                                 <button
-//                                     disabled
-//                                     className="h-[48px] px-8 rounded-lg bg-gray-200 text-gray-500 font-medium cursor-not-allowed"
-//                                 >
-//                                     Apply
-//                                 </button>
-//                             </div>
-//                         </div>
-
-
-//                     </div>
-//                 </div>
-//             </section>
-
-//             {openCoupons && (
-//                 <CouponsDialog
-
-//                     onClose={() => setOpenCoupons(false)}
-//                 />
-//             )}
-
-//             {openAddCustomers && (
-//                 <AddCustomerDialog
-//                     onClose={() => setOpenAddCustomers(false)}
-//                 />
-//             )}
-
-//             {openSidebar && (
-//                 <div
-//                     onClick={() => setOpenSidebar(false)}
-//                     className="fixed inset-0 bg-black/40 z-40"
-//                 />
-//             )}
-
-//             {/* SIDEBAR */}
-//             <div
-//                 className={`
-//           fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50
-//           transform transition-transform duration-300 ease-in-out
-//           ${openSidebar ? 'translate-x-0' : 'translate-x-full'}
-//         `}
-//             >
-//                 <CustomerList onClose={() => setOpenSidebar(false)} />
-//             </div>
-
-//             <section className="hidden md:hidden lg:block md:w-[650px] lg:w-[1400px] mx-auto bg-white rounded-xl border border-gray-200 mb-10 p-6 space-y-6">
-
-//                 {/* ===== PAYMENT DETAILS ===== */}
-//                 <div className="space-y-4">
-//                     <h3 className="md:text-[12px] lg:text-[16px] font-semibold text-black">
-//                         Payment Details
-//                     </h3>
-
-//                     <div className="space-y-3 md:text-[12px] lg:text-[16px]">
-//                         <Row label="Listing Price" value={`₹ ${packageToUse.price.toFixed(2)}`} />
-
-//                         <Row
-//                             label="Service Discount (0%)"
-//                             value={`- ₹ ${packageToUse.discount.toFixed(2)}`}
-//                             valueClass="text-red-500"
-//                         />
-
-//                         <Row label="Price After Discount" value={`- ₹ ${packageToUse.discountedPrice.toFixed(2)}`} />
-
-//                         <Row
-//                             label="Coupon Discount (50%)"
-//                             value={`- ₹ ${paymentData.couponDiscount.toFixed(2)}`}
-//                             valueClass="text-red-500"
-//                         />
-
-//                         <Row
-//                             label="Service GST (18%)"
-//                             value={`+ ₹ ${service?.gst}`}
-//                             valueClass="text-green-600"
-//                         />
-
-//                         <Row
-//                             label="Platform Fee (20)"
-//                             value={`+ ₹ ${platformFee.toFixed(2)}`}
-//                             valueClass="text-green-600"
-//                         />
-
-//                         <Row
-//                             label="Fetch True Assurity Charges (10%)"
-//                             value={`+ ₹ ${assuranceFee.toFixed(2)}`}
-//                             valueClass="text-green-600"
-//                         />
-//                     </div>
-//                 </div>
-
-//                 {/* ===== GRAND TOTAL ===== */}
-//                 <div className="flex items-center justify-between bg-blue-50 px-4 py-3 rounded-lg">
-//                     <p className="text-blue-600 font-semibold md;text-[15px] lg:text-[20px]">
-//                         Grand Total
-//                     </p>
-//                     <p className="text-blue-600 font-semibold md;text-[15px] lg:text-[20px]">
-//                         ₹ {paymentData.grandTotal}
-//                     </p>
-//                 </div>
-
-//                 {/* ===== TERMS & PAY ===== */}
-//                 <div className="flex items-center justify-between pt-4">
-//                     <label className="flex items-center gap-3 md:text-[15px] lg:text-[20px] text-gray-700">
-//                         <input type="checkbox"
-//                             className="w-5 h-5 border-gray-400 rounded"
-//                             checked={isTermsAccepted}
-//                             onChange={(e) => {
-//                                 setIsTermsAccepted(e.target.checked);
-//                                 setShowError(false);
-//                             }}
-//                         />
-//                         I Agree with the terms & Condition.
-//                     </label>
-
-//                     {/* <button className="bg-blue-600 text-white px-10 py-3 rounded-lg md:text-[15px] lg:text-[20px] font-medium cursor-pointer"
-//                         onClick={handleProceed}>
-//                         Proceed To Pay
-//                     </button> */}
-//                     <button
-//                         disabled={!isTermsAccepted}
-//                         className={`px-10 py-3 rounded-lg md:text-[15px] lg:text-[20px] font-medium
-//                   ${isTermsAccepted
-//                                 ? "bg-blue-600 text-white cursor-pointer"
-//                                 : "bg-gray-400 text-white cursor-not-allowed"}
-//                   `}
-//                         onClick={handleProceed}
-//                     >
-//                         Proceed To Pay
-//                     </button>
-
-//                 </div>
-
-
-//                 {showError && (
-//                     <p className="text-red-500 text-sm md:text-[13px] lg:text-[15px]">
-//                         Please accept the Terms & Conditions to proceed.
-//                     </p>
-//                 )}
-//             </section>
-
-//             {/* ======================================================
-//                 MOBILE VIEW 
-//             ====================================================== */}
-//             <section className="block md:hidden lg:hidden px-4 pb-28 space-y-6">
-
-//                 {/* SERVICE CARD */}
-//                 <div className="border rounded-xl p-3 shadow-sm">
-//                     <img
-//                         src={serviceCardData.image}
-//                         className="w-full h-[200px] object-contain"
-//                     />
-//                     {serviceCardData.trusted && (
-//                         <span className="absolute top-63 left-6 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-md">
-//                             ✔ Trusted
-//                         </span>
-//                     )}
-
-//                     <div className="absolute bottom-55 right-6 flex md:flex-row items-center lg:justify-center bg-blue-600 w-[47px] h-[28px] text-white text-[10px]  px-2 py-1 rounded-md">
-//                         ⭐ {serviceCardData.rating}
-//                     </div>
-
-//                     <div className="mt-3 flex justify-between">
-//                         <div>
-//                             <h3 className="font-semibold text-[16px]">
-//                                 {serviceCardData.title}
-//                             </h3>
-//                             <p className="text-gray-500 text-sm">
-//                                 {serviceCardData.category}
-//                             </p>
-//                         </div>
-
-//                         <div className="text-right">
-//                             <p className="text-[10px] text-[#4A2E82]">-EARN UP TO-</p>
-//                             <p className="text-[#2CB140] text-sm font-semibold">
-//                                 {serviceCardData.rewardText}
-//                             </p>
-//                         </div>
-//                     </div>
-
-//                     <div className="grid grid-cols-3 text-center text-sm mt-4">
-//                         {serviceCardData.stats.map((item, i) => (
-//                             <div key={i}>
-//                                 <p className="text-gray-500">{item.label}</p>
-//                                 <p className="font-semibold text-[#1D4699]">
-//                                     {item.value}
-//                                 </p>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-
-//                 {/* WHO IS SERVICE FOR */}
-//                 <div className="space-y-4">
-//                     <h2 className="font-semibold text-[16px]">
-//                         Who is this service for?
-//                     </h2>
-
-//                     {/* FOR ME */}
-//                     <div className="border rounded-xl p-4">
-//                         <label className="flex gap-2 font-medium">
-//                             <input
-//                                 type="radio"
-//                                 checked={selected === "me"}
-//                                 onChange={() => setSelected("me")}
-//                             />
-//                             This Service is for me
-//                         </label>
-
-//                         {selected === "me" && (
-//                             <div className="mt-3 space-y-2 text-sm">
-//                                 <p><strong>Name:</strong> {userData.name}</p>
-//                                 <p className="flex items-center gap-2">
-//                                     <Phone size={14} />
-//                                     {userData.phone}
-//                                     <FaWhatsapp className="text-green-500" />
-//                                 </p>
-//                                 <p className="flex items-center gap-1">
-//                                     <MapPin size={14} /> {userData.address}
-//                                 </p>
-//                                 <p className="text-gray-500">
-//                                     Note: {userData.note}
-//                                 </p>
-//                             </div>
-//                         )}
-//                     </div>
-
-//                     {/* FOR CUSTOMER */}
-//                     <div className="border rounded-xl p-4 space-y-3">
-//                         <label className="flex gap-2 font-medium">
-//                             <input type="radio" readOnly />
-//                             This Service is for my Customer
-//                         </label>
-
-//                         <div className="flex flex-col gap-3">
-//                             <button
-//                                 onClick={() => setOpenSidebar(true)}
-//                                 className="border border-blue-600 text-blue-600 py-2 rounded-lg"
-//                             >
-//                                 My Customer
-//                             </button>
-
-//                             <Link href="/MainModules/Checkout/AddNewCustomer">
-//                                 <button className="bg-blue-600 text-white py-2 flex flex-row items-center gap-4 rounded-lg w-full">
-//                                     {/* + Add New Customer */}
-//                                     <PlusCircle className="w-4 h-4 ml-6" />  Add New Customer
-//                                 </button>
-//                             </Link>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 {/* COUPON */}
-//                 <div className="border rounded-xl p-4 space-y-3">
-//                     <div className="flex justify-between items-center">
-//                         <h3 className="font-semibold text-sm">
-//                             Best Coupon For You
-//                         </h3>
-//                         <button
-//                             onClick={() => setOpenCoupons(true)}
-//                             className="text-blue-600 text-sm"
-//                         >
-//                             All Coupons →
-//                         </button>
-//                     </div>
-
-//                     <div className="flex gap-3">
-//                         <div className="flex-1 h-[44px] border border-dashed rounded-lg flex items-center justify-center">
-//                             XXXXXX
-//                         </div>
-//                         <button
-//                             disabled
-//                             className="px-6 bg-gray-200 rounded-lg text-gray-500"
-//                         >
-//                             Apply
-//                         </button>
-//                     </div>
-//                 </div>
-
-//                 {/* PAYMENT SUMMARY */}
-//                 <div className="border rounded-xl p-4 space-y-3">
-//                     <div className="flex justify-between text-sm">
-//                         <span>Total</span>
-//                         <span className="font-semibold">
-//                             ₹ {paymentData.grandTotal}
-//                         </span>
-//                     </div>
-//                 </div>
-//             </section>
-
-
-//             <section className="md:block lg:hidden md:w-[650px] lg:w-[1400px] mx-auto bg-white rounded-xl border border-gray-200 mb-10 p-6 space-y-6">
-
-//                 {/* ===== PAYMENT DETAILS ===== */}
-//                 <div className="space-y-4">
-//                     <h3 className="md:text-[12px] lg:text-[16px] font-semibold text-black">
-//                         Payment Details
-//                     </h3>
-
-//                     <div className="space-y-3 md:text-[12px] lg:text-[16px]">
-//                         <Row label="Listing Price" value={`₹ ${paymentData.listingPrice.toFixed(2)}`} />
-
-//                         <Row
-//                             label="Service Discount (0%)"
-//                             value={`- ₹ ${paymentData.serviceDiscount.toFixed(2)}`}
-//                             valueClass="text-red-500"
-//                         />
-
-//                         {/* <Row label="Price After Discount" value="₹ 0.00" /> */}
-//                         <Row label="Price After Discount" value={`- ₹ ${packageToUse.discountedPrice.toFixed(2)}`} />
-
-//                         <Row
-//                             label="Coupon Discount (50%)"
-//                             value={`- ₹ ${paymentData.couponDiscount.toFixed(2)}`}
-//                             valueClass="text-red-500"
-//                         />
-
-//                         <Row
-//                             label="Service GST (18%)"
-//                             // value={`+ ₹ ${paymentData.gst.toFixed(2)}`}
-//                             value={`+ ₹ ${paymentData.gst.toFixed(2)}`}
-//                             valueClass="text-green-600"
-//                         />
-
-//                         <Row
-//                             label="Platform Fee (20)"
-//                             value={`+ ₹ ${platformFee.toFixed(2)}`}
-//                             valueClass="text-green-600"
-//                         />
-
-//                         <Row
-//                             label="Fetch True Assurity Charges (10%)"
-//                             value={`+ ₹ ${assuranceFee.toFixed(2)}`}
-//                             valueClass="text-green-600"
-//                         />
-//                     </div>
-//                 </div>
-
-//                 {/* ===== GRAND TOTAL ===== */}
-//                 <div className="flex items-center justify-between bg-blue-50 px-4 py-3 rounded-lg">
-//                     <p className="text-blue-600 font-semibold md:text-[15px] lg:text-[20px]">
-//                         Grand Total
-//                     </p>
-//                     <p className="text-blue-600 font-semibold md;text-[15px] lg:text-[20px]">
-//                         ₹ {paymentData.grandTotal}
-//                     </p>
-//                 </div>
-
-//                 {/* ===== TERMS & PAY ===== */}
-//                 <div className="flex flex-col pt-4 gap-6">
-//                     <label className="flex items-center gap-3 md:text-[15px] text-[15px] text-gray-700">
-//                         <input
-//                             type="checkbox"
-//                             className="w-5 h-5 border-gray-400 rounded"
-//                             checked={isTermsAccepted}
-//                             onChange={(e) => {
-//                                 setIsTermsAccepted(e.target.checked);
-//                                 setShowError(false);
-//                             }}
-//                         />
-
-//                         I Agree with the terms & Condition.
-//                     </label>
-
-//                     {/* <button className="bg-blue-600 text-white md:px-10 px-6 py-3 rounded-lg md:text-[15px] text-[12px] font-medium cursor-pointer whitespace-nowrap"
-//                         onClick={() => handleProceed()}>
-//                         Proceed To Pay
-//                     </button> */}
-//                     <button
-//                         disabled={!isTermsAccepted}
-//                         className={`px-10 py-3 rounded-lg md:text-[15px] lg:text-[20px] font-medium
-//                   ${isTermsAccepted
-//                                 ? "bg-blue-600 text-white cursor-pointer"
-//                                 : "bg-gray-400 text-white cursor-not-allowed"}
-//                   `}
-//                         onClick={handleProceed}
-//                     >
-//                         Proceed To Pay
-//                     </button>
-//                 </div>
-//             </section>
-
-//             {/* ======================================================
-//                 COUPONS DIALOG
-//             ====================================================== */}
-//             {openCoupons && (
-//                 <CouponsDialog
-//                     onClose={() => setOpenCoupons(false)}
-//                 />
-//             )}
-
-//             {/* ======================================================
-//                 CUSTOMER SIDEBAR
-//             ====================================================== */}
-//             {openSidebar && (
-//                 <div
-//                     onClick={() => setOpenSidebar(false)}
-//                     className="fixed inset-0 bg-black/40 z-40"
-//                 />
-//             )}
-
-//             <div
-//                 className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50 transition-transform
-//                 ${openSidebar ? 'translate-x-0' : 'translate-x-full'}`}
-//             >
-//                 <CustomerList onClose={() => setOpenSidebar(false)} />
-//             </div>
-
-
-//         </>
-//     );
-// }
-
-
-
-// function Row({
-//     label,
-//     value,
-//     valueClass = "text-black"
-// }: {
-//     label: string
-//     value: string
-//     valueClass?: string
-// }) {
-//     return (
-//         <>
-//             <div className="relative w-full">
-//                 <div className="flex items-center justify-between text-gray-500">
-//                     <p>{label}</p>
-//                     <p className={`font-medium ${valueClass}`}>
-//                         {value}
-//                     </p>
-//                 </div>
-//             </div>
-//         </>
-//     )
-// }
 
 
 
@@ -946,8 +163,7 @@ function PaymentSummary({
 
 /* ================= MAIN COMPONENT ================= */
 
-export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
-
+export default function DetailsStep({ serviceId, packageId, onNext }: DetailsStepProps){
     const { service, loading, error, fetchServiceDetails } = useServiceDetails();
     const { reviewServices, fetchReviews } = useReview();
     const { providers, fetchProvidersByService } = useServiceProviders();
@@ -958,8 +174,7 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
     const [couponDiscount, setCouponDiscount] = useState(0);
 
     const searchParams = useSearchParams();
-    const serviceId = searchParams.get("id") ?? "";
-    const providerId = searchParams.get("providerId");
+const providerId = searchParams.get("providerId");
 
 
     const [selected, setSelected] = useState<"me" | "customer">("me");
@@ -973,24 +188,44 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
     const { services, fetchCommission } = useCommission();
     const { user } = useAuth();
 
+    console.log("providerId:", providerId);
+console.log("providers:", providers);
+
 
     const imageUrl = service?.thumbnailImage;
 
-    useEffect(() => {
-        if (!serviceId) return;
-        loadPackage(serviceId);
-        fetchServiceDetails(serviceId);
-        fetchProvidersByService(serviceId);
-        fetchReviews(serviceId);
-    }, [serviceId]);
+   useEffect(() => {
+    if (!serviceId) return;
 
-    useEffect(() => {
-        fetchCommission();
-    }, []);
+    const init = async () => {
+        await fetchServiceDetails(serviceId);
+        await fetchProvidersByService(serviceId);
+        await fetchReviews(serviceId);
+        await fetchCommission();
+    };
+
+    init();
+}, [serviceId]);
+
+useEffect(() => {
+    if (!service || !packageId) return;
+
+    const packages = service?.serviceDetails?.packages || [];
+
+    const matched = packages.find(
+        (pkg: any) => String(pkg._id) === String(packageId)
+    );
+
+    if (matched) {
+    loadPackage(serviceId, matched); // or setSelectedPackage(matched)
+}
+}, [service, packageId]);
 
 
-    const selectedProvider = providers.find((p) => p._id === providerId) ?? null;
-    console.log("Selected Provider:", selectedProvider);
+const selectedProvider =
+  providers.find((p) => String(p._id) === String(providerId)) ||
+  providers[0] ||   // fallback if providerId missing
+  null;    console.log("Selected Provider:", selectedProvider);
 
     const commission = services?.[0];
     const packages = service?.serviceDetails?.packages || [];
@@ -1010,7 +245,6 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
 
         if (coupon.discountAmountType === "Percentage") {
             const discountAmount = (priceAfterServiceDiscount * coupon.amount) / 100;
-            // return coupon.maxDiscount ? Math.min(discountAmount, coupon.maxDiscount) : discountAmount;
             return discountAmount;
         } else {
             return coupon.amount;
@@ -1060,15 +294,7 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
         });
     };
 
-    // ── GUARD 1: wait for hydration + API fetch
-    // if (!hydrated || loading) {
-    //     return (
-    //         <div className="flex flex-col items-center justify-center mt-20 gap-3">
-    //             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-    //             <p className="text-gray-500 text-sm">Loading...</p>
-    //         </div>
-    //     );
-    // }
+
 
     // ── GUARD 2: API error
     if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
@@ -1135,17 +361,7 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                                         <span className="text-[#2CB140] lg:text-[15px] text-center">{service?.franchiseDetails.commission}</span>
                                     </div>
                                 </div>
-                                {/* <div className="grid grid-cols-3 text-center lg:text-[16px] mt-4">
-                                    {serviceCardData.stats.map((item, i) => (
-                                        <div key={i} className="relative px-3">
-                                            {i !== serviceCardData.stats.length - 1 && (
-                                                <span className="absolute top-1/2 right-0 -translate-y-1/2 h-10 w-[2px] bg-gray-300" />
-                                            )}
-                                            <p className="text-gray-500">{item.label}</p>
-                                            <p className="text-[#1D4699] font-semibold">{item.value}</p>
-                                        </div>
-                                    ))}
-                                </div> */}
+                            
                                 <div className="flex items-center gap-2">
                                     <span className="font-semibold text-[25px]">
                                         ₹{packageToUse?.discountedPrice ?? "—"}
@@ -1189,21 +405,7 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                             )}
                         </div>
 
-                        {/* FOR CUSTOMER */}
-                        {/* <div className="border border-gray-300 rounded-xl p-4 space-y-4">
-                            <label className="flex items-center gap-2 lg:text-[16px] font-medium cursor-pointer">
-                                <input type="radio" name="serviceFor" checked={selected === "customer"} onChange={() => setSelected("customer")} />
-                                This Service is for my Customer
-                            </label>
-                            <div className="flex gap-4 lg:pl-6">
-                                <button className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg lg:text-[14px] whitespace-nowrap hover:bg-blue-50 transition-colors" onClick={() => setOpenSidebar(true)}>
-                                    My Customer
-                                </button>
-                                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer lg:text-[14px] flex flex-row items-center gap-2 hover:bg-blue-700 transition-colors" onClick={() => setOpenAddCustomers(true)}>
-                                    <PlusCircle className="w-4 h-4 shrink-0" /> Add New Customer
-                                </button>
-                            </div>
-                        </div> */}
+                      
                         {/* FOR CUSTOMER */}
                         <div className="border border-gray-300 rounded-xl p-4 space-y-4">
                             <label className="flex items-center gap-2 lg:text-[16px] font-medium cursor-pointer">
@@ -1256,8 +458,6 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                                         </div>
 
 
-                                        {/* <p><span className="font-medium">Email:</span> {selectedCustomer.email}</p>
-                <p><span className="font-medium">Address:</span> {selectedCustomer.address}</p> */}
 
                                         {customerNote && (
                                             <p className="text-gray-500 italic">
@@ -1269,21 +469,7 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                             )}
                         </div>
 
-                        {/* COUPON */}
-                        {/* <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
-                            <div className="flex items-center justify-between">
-                                <h3 className="lg:text-[16px] font-semibold text-black">Best Coupon For You</h3>
-                                <button onClick={() => setOpenCoupons(true)} className="flex items-center gap-1 text-[14px] text-blue-600 font-medium cursor-pointer hover:underline">
-                                    All Coupons <span className="text-[18px] leading-none">›</span>
-                                </button>
-                            </div>
-                            <div className="flex items-center justify-between gap-4">
-                                <div className="flex items-center justify-center h-[48px] w-[160px] border border-dashed border-gray-300 rounded-lg text-gray-500 font-semibold tracking-widest">
-                                    XXXXXX
-                                </div>
-                                <button disabled className="h-[48px] px-8 rounded-lg bg-gray-200 text-gray-500 font-medium cursor-not-allowed">Apply</button>
-                            </div>
-                        </div> */}
+                       
                         {/* COUPON */}
                         <div className="w-full max-w-[520px] bg-white rounded-xl border border-gray-200 p-4 space-y-4">
                             <div className="flex items-center justify-between">
@@ -1328,52 +514,51 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                 </div>
 
                 {/* Service Provider */}
-                <h2 className="text-[20px] font-semibold">Service Provider</h2>
-                <div className="border rounded-xl p-4 space-y-3 inline-flex mb-10">
+                {selectedProvider && (
+  <>
+    <h2 className="text-[20px] font-semibold">Service Provider</h2>
 
+    <div className="border rounded-xl p-4 space-y-3 inline-flex mb-10">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <img
+            src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
+            alt={selectedProvider?.storeInfo?.storeName || "Provider"}
+            className="w-15 h-15 rounded-full object-cover border border-gray-200"
+            onError={(e) => {
+              e.currentTarget.src = "/image/default-provider.png";
+            }}
+          />
+        </div>
 
-                    {selectedProvider ? (
-                        <div className="flex items-start gap-3">
-                            {/* Logo */}
-                            <div className="flex-shrink-0">
-                                <img
-                                    src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
-                                    alt={selectedProvider?.storeInfo?.storeName || "Provider"}
-                                    className="w-15 h-15 rounded-full object-cover border border-gray-200"
-                                    onError={(e) => {
-                                        e.currentTarget.src = "/image/default-provider.png";
-                                    }}
-                                />
-                            </div>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Name:</span>
+            <p className="text-lg font-semibold text-gray-800">
+              {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName}
+            </p>
+          </div>
 
-                            {/* Provider Details */}
-                            <div className="flex-1 space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg font-medium text-gray-600">Name:</span>
-                                    <p className="text-lg font-semibold text-gray-800">
-                                        {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName || "N/A"}
-                                    </p>
-                                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">ID:</span>
+            <p className="text-lg text-gray-700">{selectedProvider?.providerId}</p>
+          </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg font-medium text-gray-600">ID:</span>
-                                    <p className="text-lg text-gray-700">{selectedProvider?.providerId || "N/A"}</p>
-                                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Phone:</span>
+            <p className="text-lg text-gray-700">
+              {selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone}
+            </p>
+          </div>
+        </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg font-medium text-gray-600">Phone:</span>
-                                    <p className="text-lg text-gray-700">{selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone || "N/A"}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col ml-10 mr-4 mt-2">
-                                <Phone size={24} />
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-lg text-gray-500 italic">No provider selected</p>
-                    )}
-                </div>
+        <div className="flex flex-col ml-10 mr-4 mt-2">
+          <Phone size={24} />
+        </div>
+      </div>
+    </div>
+  </>
+)}
 
             </section>
 
@@ -1385,52 +570,51 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
              */}
             <section className="hidden md:block lg:hidden px-6">
                 {/* Service Provider - TOP */}
-                <div className="mb-6">
-                    <h2 className="text-[20px] font-semibold mb-3">Service Provider</h2>
-                    <div className="border rounded-xl p-4">
-                        {selectedProvider ? (
-                            <div className="flex items-start gap-3">
-                                {/* Logo */}
-                                <div className="flex-shrink-0">
-                                    <img
-                                        src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
-                                        alt={selectedProvider?.storeInfo?.storeName || "Provider"}
-                                        className="w-15 h-15 rounded-full object-cover border border-gray-200"
-                                        onError={(e) => {
-                                            e.currentTarget.src = "/image/default-provider.png";
-                                        }}
-                                    />
-                                </div>
+                {selectedProvider && (
+  <>
+    <h2 className="text-[20px] font-semibold">Service Provider</h2>
 
-                                {/* Provider Details */}
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-600">Name:</span>
-                                        <p className="text-sm font-semibold text-gray-800">
-                                            {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName || "N/A"}
-                                        </p>
-                                    </div>
+    <div className="border rounded-xl p-4 space-y-3 inline-flex mb-10">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <img
+            src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
+            alt={selectedProvider?.storeInfo?.storeName || "Provider"}
+            className="w-15 h-15 rounded-full object-cover border border-gray-200"
+            onError={(e) => {
+              e.currentTarget.src = "/image/default-provider.png";
+            }}
+          />
+        </div>
 
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-600">ID:</span>
-                                        <p className="text-sm text-gray-700">{selectedProvider?.providerId || "N/A"}</p>
-                                    </div>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Name:</span>
+            <p className="text-lg font-semibold text-gray-800">
+              {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName}
+            </p>
+          </div>
 
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-medium text-gray-600">Phone:</span>
-                                        <p className="text-sm text-gray-700">{selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone || "N/A"}</p>
-                                    </div>
-                                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">ID:</span>
+            <p className="text-lg text-gray-700">{selectedProvider?.providerId}</p>
+          </div>
 
-                                <div className="flex-shrink-0">
-                                    <Phone size={20} className="text-blue-500" />
-                                </div>
-                            </div>
-                        ) : (
-                            <p className="text-sm text-gray-500 italic">No provider selected</p>
-                        )}
-                    </div>
-                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Phone:</span>
+            <p className="text-lg text-gray-700">
+              {selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col ml-10 mr-4 mt-2">
+          <Phone size={24} />
+        </div>
+      </div>
+    </div>
+  </>
+)}
 
                 {/* Main Content Row - Card + Form */}
                 <div className="flex flex-row gap-6">
@@ -1565,50 +749,51 @@ export default function DetailsStep({ onNext, packageId }: DetailsStepProps) {
                 </div>
 
                  {/* Service Provider */}
-                <h2 className="text-[16px] font-semibold">Service Provider</h2>
-                <div className="border border-gray-400 rounded-xl p-6 space-y-3 -mt-4 inline-flex mb-5">
-                    {selectedProvider ? (
-                        <div className="flex items-start gap-3">
-                            {/* Logo */}
-                            <div className="flex-shrink-0">
-                                <img
-                                    src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
-                                    alt={selectedProvider?.storeInfo?.storeName || "Provider"}
-                                    className="w-15 h-15 rounded-full object-cover border border-gray-200"
-                                    onError={(e) => {
-                                        e.currentTarget.src = "/image/default-provider.png";
-                                    }}
-                                />
-                            </div>
+                {selectedProvider && (
+  <>
+    <h2 className="text-[20px] font-semibold">Service Provider</h2>
 
-                            {/* Provider Details */}
-                            <div className="flex-1 space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-md font-medium text-gray-600">Name:</span>
-                                    <p className="text-md font-semibold text-gray-800">
-                                        {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName || "N/A"}
-                                    </p>
-                                </div>
+    <div className="border rounded-xl p-4 space-y-3 inline-flex mb-10">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <img
+            src={selectedProvider?.storeInfo?.logo || "/image/default-provider.png"}
+            alt={selectedProvider?.storeInfo?.storeName || "Provider"}
+            className="w-15 h-15 rounded-full object-cover border border-gray-200"
+            onError={(e) => {
+              e.currentTarget.src = "/image/default-provider.png";
+            }}
+          />
+        </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-md font-medium text-gray-600">ID:</span>
-                                    <p className="text-md text-gray-700">{selectedProvider?.providerId || "N/A"}</p>
-                                </div>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Name:</span>
+            <p className="text-lg font-semibold text-gray-800">
+              {selectedProvider?.storeInfo?.storeName || selectedProvider?.fullName}
+            </p>
+          </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-md font-medium text-gray-600">Phone:</span>
-                                    <p className="text-md text-gray-700">{selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone || "N/A"}</p>
-                                </div>
-                            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">ID:</span>
+            <p className="text-lg text-gray-700">{selectedProvider?.providerId}</p>
+          </div>
 
-                            <div className="flex flex-col -ml-2 mt-2">
-                                <Phone size={24} />
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-lg text-gray-500 italic">No provider selected</p>
-                    )}
-                </div>
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-medium text-gray-600">Phone:</span>
+            <p className="text-lg text-gray-700">
+              {selectedProvider?.phoneNo || selectedProvider?.storeInfo?.storePhone}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col ml-10 mr-4 mt-2">
+          <Phone size={24} />
+        </div>
+      </div>
+    </div>
+  </>
+)}
 
                 {/* WHO IS SERVICE FOR - mobile */}
                 <div className="space-y-4">
