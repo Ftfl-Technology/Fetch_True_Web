@@ -217,7 +217,7 @@ useEffect(() => {
     );
 
     if (matched) {
-    loadPackage(serviceId, matched); // or setSelectedPackage(matched)
+    loadPackage(serviceId); // or setSelectedPackage(matched)
 }
 }, [service, packageId]);
 
