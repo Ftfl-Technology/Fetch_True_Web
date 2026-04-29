@@ -268,8 +268,23 @@ export default function FavouritePageContent({ userId }: { userId: string }) {
     await removeFavouriteProviders(userId,providerId);
   };
 
+  if (!userId) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Please login to view your favourites
+      </h2>
+      <p className="text-sm text-gray-500 mt-2">
+        You need to sign in to access your favourite services and providers.
+      </p>
+    </div>
+  );
+}
+
   return (
     <div className="p-4 lg:p-6">
+
+      
 
       {/* Header */}
       <div className="flex items-center justify-around gap-6 mb-6 border-b pb-2">

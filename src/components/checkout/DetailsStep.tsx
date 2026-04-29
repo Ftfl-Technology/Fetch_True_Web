@@ -217,14 +217,14 @@ useEffect(() => {
     );
 
     if (matched) {
-    loadPackage(serviceId); // or setSelectedPackage(matched)
+    loadPackage(serviceId); 
 }
 }, [service, packageId]);
 
 
 const selectedProvider =
   providers.find((p) => String(p._id) === String(providerId)) ||
-  providers[0] ||   // fallback if providerId missing
+  providers[0] ||   
   null;    console.log("Selected Provider:", selectedProvider);
 
     const commission = services?.[0];

@@ -137,6 +137,7 @@ useEffect(() => {
     <div className="flex min-h-screen w-full bg-white">
       {/* Sidebar */}
       <AccountSidebar
+      user={user}
         selectedSection={selectedSection}
         setSelectedSection={(section) => {
           setSelectedSection(section);

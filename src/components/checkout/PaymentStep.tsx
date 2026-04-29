@@ -394,7 +394,7 @@ export default function PaymentStep({ data, onNext, onBack }: PaymentStepProps) 
         checkoutPayload
       );
 
-
+console.log("Payload:", checkoutPayload);
       console.log("Checkout Response:", response.data);
       const bookingData = {
         bookingId: response.data?.data?.bookingId,

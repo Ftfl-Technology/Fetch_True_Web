@@ -69,11 +69,27 @@
 
 "use client";
 
+import { useAuth } from "@/src/context/AuthContext";
 import { useCoupons } from "@/src/context/CoupanContext";
 import { Tag } from "lucide-react";
 
 export default function CouponsPage() {
   const { coupons, loading, error } = useCoupons();
+
+  const { user } = useAuth();
+
+if (!user?._id) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Please login to view coupons
+      </h2>
+      <p className="text-sm text-gray-500 mt-2">
+        Sign in to access and apply available coupons.
+      </p>
+    </div>
+  );
+}
 
   if (loading) return <p className="p-6 text-gray-700">Loading coupons...</p>;
   if (error) return <p className="p-6 text-red-500">Error: {error}</p>;

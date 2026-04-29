@@ -359,34 +359,37 @@ export default function BankKYC() {
 
   /* ================= SAVE / UPDATE ================= */
   const handleSave = async () => {
-    if (!validate()) return;
+  if (!validate()) return;
 
-    if (!user?._id) {
-      alert("User not loaded");
-      return;
-    }
+  if (!user?._id) {
+    alert("User not loaded");
+    return;
+  }
 
-    try {
-      const res = await axios.post(
-        `https://api.fetchtrue.com/api/wallet/add-beneficiary/${user._id}`,
-        {
-          accountNumber: formData.accountNumber,
-          ifsc: formData.ifscCode,
-          bankName: formData.bankName,
-          branchName: formData.branchName,
-        }
-      );
-
-      if (res.data.success) {
-        alert("KYC details saved ✅");
-      } else {
-        alert(res.data.message);
+  try {
+    const res = await axios.post(
+      `https://api.fetchtrue.com/api/wallet/add-beneficiary`,
+      {
+        userId: user._id,   // ✅ send in body
+        accountNumber: formData.accountNumber,
+        ifsc: formData.ifscCode,
+        bankName: formData.bankName,
+        branchName: formData.branchName,
       }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save KYC ❌");
+    );
+
+    if (res.data.success) {
+      alert("KYC details saved ✅");
+    } else {
+      alert(res.data.message);
     }
-  };
+  } catch (err: any) {
+  console.log("FULL ERROR:", err);
+  console.log("RESPONSE:", err?.response);
+  console.log("REQUEST:", err?.request);
+  alert("Failed to save KYC ❌");
+}
+};
 
   if (loadingKYC) return <p>Loading KYC...</p>;
 

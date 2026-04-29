@@ -79,13 +79,33 @@ import StatCard from "@/src/components/Account/FiveXReturn/StatCard";
 import { useFiveX } from "@/src/context/FiveXContext";
 import { useLeads } from "@/src/context/LeadsContext";
 import { useWallet } from "@/src/context/WalletContext";
+import Link from "next/link";
 
 export default function FiveXReturnPage() {
   const { config, loading: configLoading } = useFiveX();
   const { leads, loading: leadsLoading } = useLeads();
   const { wallet, loading: walletLoading } = useWallet();
 
-  
+
+if (!wallet?.userId) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Please login to access 5x Guarantee
+      </h2>
+      <p className="text-sm text-gray-500 mt-2">
+        Track your earnings and leads after signing in.
+      </p>
+
+      <Link
+        href="/Login"
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+      >
+        Go to Login
+      </Link>
+    </div>
+  );
+}
 
   const isPackageActive = wallet?.userId?.packageActive ?? false;
 
