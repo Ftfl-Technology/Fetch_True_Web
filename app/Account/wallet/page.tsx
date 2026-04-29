@@ -691,12 +691,15 @@ import {
 } from "lucide-react";
 import { useWallet } from "@/src/context/WalletContext";
 import { usePayouts } from "@/src/context/PayoutContext";
+import { useRouter } from "next/navigation";
 
 type Tab = "self" | "teamBuild" | "teamRevenue";
 
-export default function EarningsPage() {
+export default function EarningsPage({ setSelectedSection }: any) {
   const { wallet, loading, error, fetchWallet } = useWallet();
     const { payouts, fetchPayouts } = usePayouts();
+    const router = useRouter();
+
 
   const [activeTab, setActiveTab] = useState<Tab>("self");
 
@@ -823,9 +826,12 @@ export default function EarningsPage() {
             ₹ {wallet?.balance?.toFixed(2) ?? "0.00"}
           </p>
 
-          <button className="text-xs text-blue-600 font-medium">
-            History
-          </button>
+<button
+  onClick={() => setSelectedSection("History")}
+  className="text-xs text-blue-600 font-medium"
+>
+  History
+</button>
         </div>
       </div>
 

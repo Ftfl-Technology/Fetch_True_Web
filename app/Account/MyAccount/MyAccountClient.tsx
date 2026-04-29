@@ -82,6 +82,7 @@ import { useAuth } from "@/src/context/AuthContext";
 import AboutUsPage from "../aboutus/page";
   import { useSearchParams } from "next/navigation";
 import NotificationSettings from "../notification/page";
+import EarningHistoryPage from "@/src/components/Account/EarninigHistoryPage";
 
 
 export default function MyAccountPage() {
@@ -126,7 +127,11 @@ useEffect(() => {
       case "Delete Account":
         return <DeleteAccountSection />
       case "Wallet":
-        return <EarningsPage />;  
+        return <EarningsPage setSelectedSection={setSelectedSection}/>;  
+      case "History":
+  return (
+    <EarningHistoryPage setSelectedSection={setSelectedSection} />
+  );
 
       default:
         return <ProfilePage />;
